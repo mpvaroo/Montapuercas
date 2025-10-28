@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reportes · Dashboard | AutomAI Solutions</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body{background:#f8f9fa;font-family:'Segoe UI',sans-serif;overflow-x:hidden}
+    /* Sidebar */
+    .sidebar{width:240px;height:100vh;background:#fff;position:fixed;left:0;top:0;box-shadow:2px 0 10px rgba(0,0,0,.1);padding-top:1.5rem}
+    .sidebar h4{text-align:center;color:#0077b6;margin-bottom:2rem}
+    .sidebar a{display:block;color:#333;text-decoration:none;padding:10px 20px;border-radius:6px;margin:4px 10px;transition:.2s}
+    .sidebar a:hover,.sidebar a.active{background:#0077b6;color:#fff}
+    /* Navbar */
+    .navbar-top{margin-left:240px;height:60px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.1);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;position:sticky;top:0;z-index:100}
+    /* Main */
+    .main-content{margin-left:240px;padding:2rem}
+    .section-card{background:#fff;border:none;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+    .kpi{border-radius:12px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.05);padding:1.25rem}
+    .kpi .label{font-size:.9rem;color:#6c757d}
+    .kpi .value{font-size:1.8rem;font-weight:700}
+    .kpi .delta{font-size:.9rem}
+    .delta.up{color:#198754}.delta.down{color:#dc3545}
+    .chart-placeholder{background:repeating-linear-gradient(135deg,#eef2f6,#eef2f6 12px,#e6ecf3 12px,#e6ecf3 24px);border-radius:12px;border:1px dashed #cbd5e1;height:320px}
+    .mini-chart{height:220px}
+    .btn-primary{background:#0077b6;border:none}
+    .btn-primary:hover{background:#005f8c}
+    footer{text-align:center;padding:1rem;font-size:.9rem;color:#777;margin-top:3rem}
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h4>AutomAI</h4>
+    <a href="Dashboard.html">🏠 Dashboard</a>
+    <a href="Chatbot-Configuracion.html">🤖 Configurar Chatbot</a>
+    <a href="Integraciones-Canales.html">🔌 Integraciones</a>
+    <a href="Reportes-Dashboard.html" class="active">📊 Reportes</a>
+    <a href="Usuarios-Gestion.html">👥 Usuarios</a>
+    <a href="Configuracion-General.html">⚙️ Configuración</a>
+    <a href="Soporte-Ayuda.html">💬 Soporte</a>
+    <hr>
+    <a href="#" class="text-danger">🚪 Cerrar sesión</a>
+  </aside>
+
+  <!-- Navbar -->
+  <nav class="navbar-top">
+    <h5 class="m-0">Reportes y Métricas · Dashboard</h5>
+    <div class="user-info">
+      <span class="text-muted small me-2">Usuario: <strong>admin@empresa.com</strong></span>
+      <img src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="Usuario" width="35" height="35" class="rounded-circle">
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content">
+    <!-- Filtros rápidos -->
+    <div class="card section-card mb-4">
+      <div class="card-body">
+        <form class="row g-3 align-items-end">
+          <div class="col-md-3">
+            <label class="form-label">Rango de fechas</label>
+            <input type="date" class="form-control" value="2025-10-01">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label d-none d-md-block">&nbsp;</label>
+            <input type="date" class="form-control" value="2025-10-31">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Canal</label>
+            <select class="form-select">
+              <option value="">Todos</option>
+              <option>WhatsApp</option>
+              <option>Telegram</option>
+              <option>Web Chat</option>
+              <option>Gmail</option>
+            </select>
+          </div>
+          <div class="col-md-3 d-flex justify-content-end gap-2">
+            <a class="btn btn-outline-secondary" href="Reportes-Filtros.html">Filtros avanzados</a>
+            <button type="button" class="btn btn-primary">Aplicar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="kpi">
+          <div class="label">Interacciones totales</div>
+          <div class="value">12,845</div>
+          <div class="delta up">▲ +8.4% vs. periodo anterior</div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="kpi">
+          <div class="label">Tiempo medio de respuesta</div>
+          <div class="value">6.2 s</div>
+          <div class="delta up">▲ -12% (más rápido)</div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="kpi">
+          <div class="label">Satisfacción (CSAT)</div>
+          <div class="value">4.6 / 5</div>
+          <div class="delta up">▲ +0.3 pts</div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="kpi">
+          <div class="label">Horas ahorradas</div>
+          <div class="value">182 h</div>
+          <div class="delta up">▲ +15 h</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráficos principales -->
+    <div class="row g-4">
+      <div class="col-12 col-xl-8">
+        <div class="card section-card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5 class="m-0">Volumen de interacciones (diario)</h5>
+              <div class="btn-group btn-group-sm" role="group">
+                <button class="btn btn-outline-secondary active">Día</button>
+                <button class="btn btn-outline-secondary">Semana</button>
+                <button class="btn btn-outline-secondary">Mes</button>
+              </div>
+            </div>
+            <div class="chart-placeholder"></div>
+            <div class="text-muted small mt-2">Placeholder de gráfico (líneas/barras). Integraremos la librería en desarrollo.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-xl-4">
+        <div class="card section-card mb-4">
+          <div class="card-body">
+            <h5 class="mb-2">Distribución por canal</h5>
+            <div class="chart-placeholder mini-chart"></div>
+            <div class="text-muted small mt-2">Placeholder (donut/barras apiladas).</div>
+          </div>
+        </div>
+
+        <div class="card section-card">
+          <div class="card-body">
+            <h5 class="mb-2">Top intenciones</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Reservas / Citas <span class="badge bg-light text-dark">3,210</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Precios / Tarifas <span class="badge bg-light text-dark">2,740</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Horarios <span class="badge bg-light text-dark">1,980</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Soporte / Incidencias <span class="badge bg-light text-dark">1,604</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA a submódulos -->
+    <div class="d-flex justify-content-between align-items-center mt-4">
+      <div class="text-muted">¿Necesitas segmentar o exportar?</div>
+      <div class="d-flex gap-2">
+        <a href="Reportes-Filtros.html" class="btn btn-outline-secondary">Filtros y exportación</a>
+        <a href="Reportes-Historico.html" class="btn btn-outline-secondary">Histórico</a>
+      </div>
+    </div>
+
+    <footer>© 2025 AutomAI Solutions · Reportes y Métricas</footer>
+  </main>
+</body>
+</html>
