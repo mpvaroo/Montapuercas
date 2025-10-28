@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Soporte y Ayuda | AutomAI Solutions</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body{background:#f8f9fa;font-family:'Segoe UI',sans-serif;overflow-x:hidden}
+    /* Sidebar */
+    .sidebar{width:240px;height:100vh;background:#fff;position:fixed;left:0;top:0;box-shadow:2px 0 10px rgba(0,0,0,.1);padding-top:1.5rem}
+    .sidebar h4{text-align:center;color:#0077b6;margin-bottom:2rem}
+    .sidebar a{display:block;color:#333;text-decoration:none;padding:10px 20px;border-radius:6px;margin:4px 10px;transition:.2s}
+    .sidebar a:hover,.sidebar a.active{background:#0077b6;color:#fff}
+    /* Navbar */
+    .navbar-top{margin-left:240px;height:60px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.1);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;position:sticky;top:0;z-index:100}
+    /* Main */
+    .main-content{margin-left:240px;padding:2rem}
+    .section-card{background:#fff;border:none;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+    .btn-primary{background:#0077b6;border:none}.btn-primary:hover{background:#005f8c}
+    .chart-placeholder{background:repeating-linear-gradient(135deg,#eef2f6,#eef2f6 12px,#e6ecf3 12px,#e6ecf3 24px);border-radius:12px;border:1px dashed #cbd5e1;height:220px}
+    .small-help{font-size:.85rem;color:#6c757d}
+    .status-ok{background:#e7f7ee;color:#198754;border:1px solid #c8ebd6}
+    .status-issue{background:#fff8e6;color:#856404;border:1px solid #ffe7b8}
+    .status-down{background:#fdebea;color:#a71d2a;border:1px solid #f5c2c7}
+    .table thead th{white-space:nowrap}
+    footer{text-align:center;padding:1rem;font-size:.9rem;color:#777;margin-top:3rem}
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h4>AutomAI</h4>
+    <a href="Dashboard.html">🏠 Dashboard</a>
+    <a href="Chatbot-Configuracion.html">🤖 Configurar Chatbot</a>
+    <a href="Integraciones-Canales.html">🔌 Integraciones</a>
+    <a href="Reportes-Dashboard.html">📊 Reportes</a>
+    <a href="Usuarios-Gestion.html">👥 Usuarios</a>
+    <a href="Configuracion-General.html">⚙️ Configuración</a>
+    <a href="Soporte-Ayuda.html" class="active">💬 Soporte</a>
+    <hr><a href="#" class="text-danger">🚪 Cerrar sesión</a>
+  </aside>
+
+  <!-- Navbar -->
+  <nav class="navbar-top">
+    <h5 class="m-0">Soporte y Ayuda</h5>
+    <div class="text-muted small">admin@empresa.com</div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content">
+    <!-- Buscador y estado -->
+    <div class="row g-3 mb-3">
+      <div class="col-lg-8">
+        <div class="card section-card">
+          <div class="card-body">
+            <h5 class="mb-2">¿En qué podemos ayudarte?</h5>
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Buscar en documentación, FAQ o tickets…">
+              <button class="btn btn-primary">Buscar</button>
+            </div>
+            <div class="small-help mt-2">Ejemplos: “conectar WhatsApp”, “mapear campos CRM”, “exportar reportes”.</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card section-card">
+          <div class="card-body">
+            <h6 class="mb-2">Estado del sistema</h6>
+            <div class="p-2 rounded status-ok mb-2">API principal · Operativo</div>
+            <div class="p-2 rounded status-ok mb-2">Webhooks · Operativo</div>
+            <div class="p-2 rounded status-issue">Integración Gmail · Latencia moderada</div>
+            <div class="small-help mt-2">Última actualización: hace 5 min</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Documentación rápida -->
+    <div class="card section-card mb-4">
+      <div class="card-body">
+        <h5 class="mb-3">Centro de documentación</h5>
+        <div class="row g-3">
+          <div class="col-md-6 col-xl-3">
+            <a class="text-decoration-none" href="#">
+              <div class="p-3 border rounded-3 h-100">
+                <div class="fw-semibold">Primeros pasos</div>
+                <div class="text-muted small">Alta, canales y prueba inicial</div>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-6 col-xl-3">
+            <a class="text-decoration-none" href="#">
+              <div class="p-3 border rounded-3 h-100">
+                <div class="fw-semibold">Configuración de Chatbot</div>
+                <div class="text-muted small">Respuestas, IA y vista previa</div>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-6 col-xl-3">
+            <a class="text-decoration-none" href="#">
+              <div class="p-3 border rounded-3 h-100">
+                <div class="fw-semibold">Integraciones</div>
+                <div class="text-muted small">WhatsApp, Telegram, CRM, Sheets</div>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-6 col-xl-3">
+            <a class="text-decoration-none" href="#">
+              <div class="p-3 border rounded-3 h-100">
+                <div class="fw-semibold">Reportes & Métricas</div>
+                <div class="text-muted small">KPIs, exportación, histórico</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ + Contacto + Chat -->
+    <div class="row g-4">
+      <!-- FAQ -->
+      <div class="col-12 col-xl-6">
+        <div class="card section-card">
+          <div class="card-body">
+            <h5 class="mb-3">Preguntas frecuentes</h5>
+            <div class="accordion" id="faq">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="q1"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#a1" aria-expanded="true" aria-controls="a1">¿Cómo conecto WhatsApp Business API?</button></h2>
+                <div id="a1" class="accordion-collapse collapse show" aria-labelledby="q1" data-bs-parent="#faq">
+                  <div class="accordion-body">
+                    Entra en <em>Integraciones → Canales</em>, añade tu <strong>Access Token</strong> y <strong>Phone Number ID</strong>, y registra el <strong>Webhook</strong> en Meta. Luego pulsa <em>Probar canal</em>.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="q2"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a2" aria-expanded="false" aria-controls="a2">¿Cómo mapeo campos al CRM o a Google Sheets?</button></h2>
+                <div id="a2" class="accordion-collapse collapse" aria-labelledby="q2" data-bs-parent="#faq">
+                  <div class="accordion-body">
+                    Ve a <em>Integraciones → CRM & Sheets</em>, y en <strong>Mapeo de campos</strong> asigna origen (bot) a destino (CRM/columna). Guarda y prueba una sincronización.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="q3"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a3" aria-expanded="false" aria-controls="a3">¿Puedo entrenar la IA con mis políticas y FAQs?</button></h2>
+                <div id="a3" class="accordion-collapse collapse" aria-labelledby="q3" data-bs-parent="#faq">
+                  <div class="accordion-body">
+                    Sí. En <em>Configuración del Chatbot → Entrenamiento IA</em> sube documentos y define ejemplos de conversación. Prueba en <em>Vista previa</em>.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="q4"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a4" aria-expanded="false" aria-controls="a4">¿Dónde consulto los logs y el estado de integraciones?</button></h2>
+                <div id="a4" class="accordion-collapse collapse" aria-labelledby="q4" data-bs-parent="#faq">
+                  <div class="accordion-body">
+                    Visita <em>Integraciones → Historial</em> para ver cada evento con su resultado, duración y detalle del log.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="small-help mt-3">¿No ves tu duda aquí? Usa el formulario de la derecha o el chat.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contacto / Ticket -->
+      <div class="col-12 col-xl-3">
+        <div class="card section-card">
+          <div class="card-body">
+            <h5 class="mb-3">Abrir ticket</h5>
+            <form class="row g-2">
+              <div class="col-12">
+                <label class="form-label">Asunto</label>
+                <input type="text" class="form-control" placeholder="Describe el problema">
+              </div>
+              <div class="col-12">
+                <label class="form-label">Prioridad</label>
+                <select class="form-select">
+                  <option>Normal</option>
+                  <option>Alta</option>
+                  <option>Crítica</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Canal afectado</label>
+                <select class="form-select">
+                  <option>WhatsApp</option>
+                  <option>Telegram</option>
+                  <option>Gmail</option>
+                  <option>Web Chat</option>
+                  <option>CRM/Sheets</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Descripción</label>
+                <textarea class="form-control" rows="4" placeholder="Pasos para reproducir, capturas, IDs…"></textarea>
+              </div>
+              <div class="col-12">
+                <button class="btn btn-primary w-100" type="button">Enviar ticket</button>
+              </div>
+              <div class="col-12">
+                <div class="small-help">Tiempo medio de respuesta: 4 h laborables.</div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat en vivo (placeholder) -->
+      <div class="col-12 col-xl-3">
+        <div class="card section-card">
+          <div class="card-body">
+            <h5 class="mb-3">Chat en vivo</h5>
+            <div class="chart-placeholder d-flex align-items-center justify-content-center">
+              <div class="text-muted">Placeholder del widget de soporte</div>
+            </div>
+            <div class="d-grid gap-2 mt-3">
+              <button class="btn btn-outline-secondary btn-sm">Iniciar chat</button>
+              <button class="btn btn-outline-secondary btn-sm">Ver horarios</button>
+            </div>
+            <div class="small-help mt-2">Horario: L–V 9:00–18:00 CET</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Historial de tickets -->
+    <div class="card section-card mt-4">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="m-0">Historial de tickets</h5>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary btn-sm">Exportar CSV</button>
+            <button class="btn btn-outline-secondary btn-sm">Exportar PDF</button>
+          </div>
+        </div>
+        <div class="table-responsive mt-3">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Asunto</th>
+                <th>Estado</th>
+                <th>Prioridad</th>
+                <th>Actualizado</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#3421</td>
+                <td>Error 401 al conectar CRM</td>
+                <td><span class="badge bg-warning text-dark">En curso</span></td>
+                <td>Alta</td>
+                <td>31/10/2025 12:14</td>
+                <td class="text-end"><button class="btn btn-outline-secondary btn-sm">Ver</button></td>
+              </tr>
+              <tr>
+                <td>#3390</td>
+                <td>Retraso en notificaciones de Gmail</td>
+                <td><span class="badge bg-success">Resuelto</span></td>
+                <td>Normal</td>
+                <td>30/10/2025 17:02</td>
+                <td class="text-end"><button class="btn btn-outline-secondary btn-sm">Ver</button></td>
+              </tr>
+              <tr>
+                <td>#3358</td>
+                <td>Snippet Web Chat no carga</td>
+                <td><span class="badge bg-danger">Bloqueado</span></td>
+                <td>Crítica</td>
+                <td>29/10/2025 09:41</td>
+                <td class="text-end"><button class="btn btn-outline-secondary btn-sm">Ver</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Paginación -->
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <div class="text-muted small">Mostrando 1–3 de 28 tickets</div>
+          <ul class="pagination pagination-sm mb-0">
+            <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">»</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <footer>© 2025 AutomAI Solutions · Soporte y Ayuda</footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
