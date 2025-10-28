@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Integraciones · Historial | AutomAI Solutions</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body{background:#f8f9fa;font-family:'Segoe UI',sans-serif;overflow-x:hidden}
+    /* Sidebar */
+    .sidebar{width:240px;height:100vh;background:#fff;position:fixed;left:0;top:0;box-shadow:2px 0 10px rgba(0,0,0,.1);padding-top:1.5rem}
+    .sidebar h4{text-align:center;color:#0077b6;margin-bottom:2rem}
+    .sidebar a{display:block;color:#333;text-decoration:none;padding:10px 20px;border-radius:6px;margin:4px 10px;transition:.2s}
+    .sidebar a:hover,.sidebar a.active{background:#0077b6;color:#fff}
+    /* Navbar */
+    .navbar-top{margin-left:240px;height:60px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.1);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;position:sticky;top:0;z-index:100}
+    /* Main */
+    .main-content{margin-left:240px;padding:2rem}
+    .section-card{background:#fff;border:none;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+    .btn-primary{background:#0077b6;border:none}
+    .btn-primary:hover{background:#005f8c}
+    .small-help{font-size:.85rem;color:#6c757d}
+    .table thead th{white-space:nowrap}
+    .status-badge{font-weight:600}
+    .status-ok{background:#e7f7ee;color:#1e7e34;border:1px solid #c8ebd6}
+    .status-warn{background:#fff8e6;color:#856404;border:1px solid #ffe7b8}
+    .status-error{background:#fdebea;color:#a71d2a;border:1px solid #f5c2c7}
+    footer{text-align:center;padding:1rem;font-size:.9rem;color:#777;margin-top:3rem}
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h4>AutomAI</h4>
+    <a href="Dashboard.html">🏠 Dashboard</a>
+    <a href="Chatbot-Configuracion.html">🤖 Configurar Chatbot</a>
+    <a href="Integraciones-Canales.html">🔌 Canales</a>
+    <a href="Integraciones-CRMSheets.html">🧩 CRM & Sheets</a>
+    <a href="Integraciones-Historial.html" class="active">🗂️ Historial</a>
+    <a href="#">📊 Reportes</a>
+    <a href="#">👥 Usuarios</a>
+    <a href="#">⚙️ Ajustes</a>
+    <a href="#">💬 Soporte</a>
+    <hr>
+    <a href="#" class="text-danger">🚪 Cerrar sesión</a>
+  </aside>
+
+  <!-- Navbar -->
+  <nav class="navbar-top">
+    <h5 class="m-0">Integraciones · Historial de sincronización</h5>
+    <div class="user-info">
+      <span class="text-muted small me-2">Usuario: <strong>admin@empresa.com</strong></span>
+      <img src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="Usuario" width="35" height="35" class="rounded-circle">
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h4>Historial</h4>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary btn-sm">Exportar CSV</button>
+        <button class="btn btn-outline-secondary btn-sm">Exportar PDF</button>
+      </div>
+    </div>
+    <p class="text-muted">Consulta los eventos de sincronización y webhooks entre canales, CRM y Google Sheets.</p>
+
+    <!-- Filtros -->
+    <div class="card section-card mb-4">
+      <div class="card-body">
+        <form class="row g-3 align-items-end">
+          <div class="col-md-3">
+            <label class="form-label">Desde</label>
+            <input type="date" class="form-control" value="2025-10-01">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Hasta</label>
+            <input type="date" class="form-control" value="2025-10-31">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Origen</label>
+            <select class="form-select">
+              <option value="">Todos</option>
+              <option>WhatsApp</option>
+              <option>Telegram</option>
+              <option>Gmail</option>
+              <option>Web Chat</option>
+              <option>CRM</option>
+              <option>Google Sheets</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Estado</label>
+            <select class="form-select">
+              <option value="">Todos</option>
+              <option>OK</option>
+              <option>Warning</option>
+              <option>Error</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Buscar</label>
+            <input type="text" class="form-control" placeholder="ID, email, phone, mensaje, etc.">
+          </div>
+          <div class="col-md-6 d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-outline-secondary">Limpiar filtros</button>
+            <button type="button" class="btn btn-primary">Aplicar filtros</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tabla historial -->
+    <div class="card section-card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Fecha / Hora</th>
+                <th>Origen</th>
+                <th>Tipo</th>
+                <th>Elemento</th>
+                <th>Resultado</th>
+                <th>Duración</th>
+                <th>Detalle</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>31/10/2025 · 12:14</td>
+                <td>Google Sheets</td>
+                <td>Escritura</td>
+                <td>Hoja: Leads!A1:D</td>
+                <td><span class="badge status-badge status-ok">OK</span></td>
+                <td>420 ms</td>
+                <td class="text-muted small">148 registros (145 ok · 3 avisos)</td>
+                <td class="text-end">
+                  <button class="btn btn-outline-secondary btn-sm">Ver log</button>
+                </td>
+              </tr>
+              <tr>
+                <td>31/10/2025 · 11:02</td>
+                <td>WhatsApp</td>
+                <td>Webhook</td>
+                <td>Msg ID 9f2a…</td>
+                <td><span class="badge status-badge status-warn">Warning</span></td>
+                <td>180 ms</td>
+                <td class="text-muted small">Plantilla no aprobada · fallback aplicado</td>
+                <td class="text-end">
+                  <button class="btn btn-outline-secondary btn-sm">Ver log</button>
+                </td>
+              </tr>
+              <tr>
+                <td>31/10/2025 · 10:41</td>
+                <td>CRM</td>
+                <td>Alta lead</td>
+                <td>contacts.email = juan@ejemplo.com</td>
+                <td><span class="badge status-badge status-error">Error</span></td>
+                <td>350 ms</td>
+                <td class="text-muted small">API key inválida / 401</td>
+                <td class="text-end">
+                  <button class="btn btn-outline-secondary btn-sm">Ver log</button>
+                </td>
+              </tr>
+              <tr>
+                <td>31/10/2025 · 09:28</td>
+                <td>Telegram</td>
+                <td>Webhook</td>
+                <td>@MiBot · update_id 7342…</td>
+                <td><span class="badge status-badge status-ok">OK</span></td>
+                <td>95 ms</td>
+                <td class="text-muted small">Mensaje procesado correctamente</td>
+                <td class="text-end">
+                  <button class="btn btn-outline-secondary btn-sm">Ver log</button>
+                </td>
+              </tr>
+              <tr>
+                <td>30/10/2025 · 18:03</td>
+                <td>Gmail</td>
+                <td>Ticket</td>
+                <td>soporte@tuempresa.com</td>
+                <td><span class="badge status-badge status-ok">OK</span></td>
+                <td>610 ms</td>
+                <td class="text-muted small">Hilo agrupado por asunto</td>
+                <td class="text-end">
+                  <button class="btn btn-outline-secondary btn-sm">Ver log</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Paginación mock -->
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <div class="text-muted small">Mostrando 1–5 de 248 eventos</div>
+          <nav>
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
+              <li class="page-item active"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">»</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <footer>© 2025 AutomAI Solutions · Historial de sincronización</footer>
+  </main>
+</body>
+</html>
