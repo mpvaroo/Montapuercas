@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reportes · Filtros y exportación | AutomAI Solutions</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body{background:#f8f9fa;font-family:'Segoe UI',sans-serif;overflow-x:hidden}
+    .sidebar{width:240px;height:100vh;background:#fff;position:fixed;left:0;top:0;box-shadow:2px 0 10px rgba(0,0,0,.1);padding-top:1.5rem}
+    .sidebar h4{text-align:center;color:#0077b6;margin-bottom:2rem}
+    .sidebar a{display:block;color:#333;text-decoration:none;padding:10px 20px;border-radius:6px;margin:4px 10px;transition:.2s}
+    .sidebar a:hover,.sidebar a.active{background:#0077b6;color:#fff}
+    .navbar-top{margin-left:240px;height:60px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.1);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;position:sticky;top:0;z-index:100}
+    .main-content{margin-left:240px;padding:2rem}
+    .section-card{background:#fff;border:none;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+    .btn-primary{background:#0077b6;border:none}.btn-primary:hover{background:#005f8c}
+    .kpi{border-radius:12px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.05);padding:1rem}
+    footer{text-align:center;padding:1rem;font-size:.9rem;color:#777;margin-top:3rem}
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <h4>AutomAI</h4>
+    <a href="Dashboard.html">🏠 Dashboard</a>
+    <a href="Chatbot-Configuracion.html">🤖 Configurar Chatbot</a>
+    <a href="Integraciones-Canales.html">🔌 Integraciones</a>
+    <a href="Reportes-Dashboard.html">📊 Reportes</a>
+    <a href="Reportes-Filtros.html" class="active">🧪 Filtros y exportación</a>
+    <a href="Reportes-Historico.html">🗂️ Histórico</a>
+    <a href="Usuarios-Gestion.html">👥 Usuarios</a>
+    <a href="Configuracion-General.html">⚙️ Configuración</a>
+    <a href="Soporte-Ayuda.html">💬 Soporte</a>
+    <hr><a href="#" class="text-danger">🚪 Cerrar sesión</a>
+  </aside>
+
+  <nav class="navbar-top">
+    <h5 class="m-0">Reportes · Filtros avanzados y exportación</h5>
+    <div class="text-muted small">admin@empresa.com</div>
+  </nav>
+
+  <main class="main-content">
+    <!-- Presets -->
+    <div class="card section-card mb-4">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <h5 class="m-0">Presets de filtros</h5>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary btn-sm">Guardar como preset</button>
+            <button class="btn btn-outline-secondary btn-sm">Eliminar preset</button>
+          </div>
+        </div>
+        <div class="row g-3 mt-2">
+          <div class="col-md-6 col-lg-4">
+            <label class="form-label">Seleccionar preset</label>
+            <select class="form-select">
+              <option>—</option>
+              <option>Mensual · Todos los canales</option>
+              <option>WhatsApp · Últimos 7 días</option>
+              <option>Leads e-commerce · 30 días</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtros avanzados -->
+    <div class="card section-card mb-4">
+      <div class="card-body">
+        <h5 class="mb-3">Filtros</h5>
+        <form class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label">Desde</label>
+            <input type="date" class="form-control" value="2025-10-01">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Hasta</label>
+            <input type="date" class="form-control" value="2025-10-31">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Canal</label>
+            <select class="form-select">
+              <option value="">Todos</option><option>WhatsApp</option><option>Telegram</option><option>Web Chat</option><option>Gmail</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Sector/Nicho</label>
+            <select class="form-select">
+              <option value="">Todos</option><option>Restaurante</option><option>Gimnasio</option><option>E-commerce</option><option>Academia</option>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Intención</label>
+            <select class="form-select">
+              <option value="">Todas</option><option>Reservas/Citas</option><option>Precios</option><option>Soporte</option><option>Horarios</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Resultado</label>
+            <select class="form-select">
+              <option value="">Todos</option><option>Resuelto por bot</option><option>Derivado a agente</option><option>Sin respuesta</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Satisfacción mínima</label>
+            <select class="form-select">
+              <option>—</option><option>3+</option><option>4+</option><option>4.5+</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Tiempo resp. (máx. seg)</label>
+            <input type="number" class="form-control" placeholder="ej. 10">
+          </div>
+
+          <div class="col-12 d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-outline-secondary">Limpiar</button>
+            <button type="button" class="btn btn-primary">Aplicar filtros</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- KPIs resumidos según filtros -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-3"><div class="kpi"><div class="text-muted">Interacciones</div><div class="fs-4 fw-bold">2,314</div></div></div>
+      <div class="col-md-3"><div class="kpi"><div class="text-muted">CSAT medio</div><div class="fs-4 fw-bold">4.5</div></div></div>
+      <div class="col-md-3"><div class="kpi"><div class="text-muted">% Resuelto por bot</div><div class="fs-4 fw-bold">72%</div></div></div>
+      <div class="col-md-3"><div class="kpi"><div class="text-muted">Tiempo medio</div><div class="fs-4 fw-bold">5.8 s</div></div></div>
+    </div>
+
+    <!-- Acciones de exportación -->
+    <div class="card section-card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="m-0">Exportar resultados</h5>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary">Exportar CSV</button>
+            <button class="btn btn-outline-secondary">Exportar PDF</button>
+          </div>
+        </div>
+        <p class="text-muted mt-2 mb-0">La exportación respeta los filtros activos y el orden de columnas por defecto.</p>
+      </div>
+    </div>
+
+    <footer>© 2025 AutomAI Solutions · Filtros avanzados</footer>
+  </main>
+</body>
+</html>
