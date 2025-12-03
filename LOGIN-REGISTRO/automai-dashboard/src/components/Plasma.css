@@ -1,0 +1,9 @@
+.plasma-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;          /* va detrás del dashboard */
+  pointer-events: none; /* no bloquea clics */
+}
