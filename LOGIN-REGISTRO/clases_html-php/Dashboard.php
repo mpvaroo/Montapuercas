@@ -1,10 +1,55 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Dashboard.php (SOLO VISUAL)
+ * - NO usa sesiones
+ * - NO hace consultas
+ * - Los datos son MOCK para que luego los conectes a BD
+ */
+
+// ----------------------------
+// MOCK DATA (luego vendrá de BD)
+// ----------------------------
+$usuario = [
+  "email" => "admin@empresa.com",
+  "rol" => "admin",
+  "empresa" => "AutomAI Demo",
+  "plan" => "Premium"
+];
+
+$kpis = [
+  ["label" => "Consultas este mes", "value" => "76k", "tag" => "+14% vs mes anterior"],
+  ["label" => "Usuarios únicos", "value" => "1.5M", "tag" => "Omnicanal"],
+  ["label" => "Valor generado", "value" => "€3.6k", "tag" => "Tickets automatizados"],
+  ["label" => "CSAT promedio", "value" => "4.7★", "tag" => "Basado en encuestas"],
+];
+
+$canales = [
+  ["label" => "WhatsApp", "value" => "+32%", "trend" => "Canal más activo", "trend_color" => "#bbf7d0"],
+  ["label" => "Web Chat", "value" => "18.4k", "trend" => "Sesiones esta semana", "trend_color" => "#bbf7d0"],
+  ["label" => "Instagram DM", "value" => "8.9k", "trend" => "Campaña en curso", "trend_color" => "#fed7aa"],
+  ["label" => "Tasa de automatización", "value" => "87%", "trend" => "Resueltas sin agente", "trend_color" => "#bbf7d0"],
+];
+
+$topChatbots = [
+  ["titulo" => "Soporte Ecommerce · ES", "sub" => "Canales: Web, WhatsApp", "kpi1" => "24.5k consultas", "kpi2" => "↑ 18% rendimiento", "kpi2_color" => "#bbf7d0"],
+  ["titulo" => "Onboarding SaaS · LATAM", "sub" => "Canales: Web, Instagram", "kpi1" => "11.2k consultas", "kpi2" => "T. resp.: 1.9s", "kpi2_color" => "#bfdbfe"],
+  ["titulo" => "Soporte técnico nivel 1", "sub" => "Canales: Web, Telegram", "kpi1" => "8.7k consultas", "kpi2" => "Derivación: 9%", "kpi2_color" => "#fed7aa"],
+];
+
+?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard | AutomAI Solutions</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -13,12 +58,12 @@
       --bg-soft: rgba(15, 23, 42, 0.88);
       --accent: #38bdf8;
       --accent-strong: #0ea5e9;
-      --accent-amber: #f59e0b;
-      --accent-pink: #ec4899;
       --text-main: #f9fafb;
-      --text-muted: #9ca3af;
-      --border-subtle: rgba(148, 163, 184, 0.4);
+      --text-muted: rgba(203, 213, 245, .75);
+      --border-subtle: rgba(148, 163, 184, 0.40);
+      --shadow-strong: 0 18px 45px rgba(15, 23, 42, 0.9), 0 0 60px rgba(15, 23, 42, 0.95);
       --radius-lg: 1.5rem;
+      --sidebar-w: 240px;
     }
 
     * {
@@ -34,7 +79,7 @@
         radial-gradient(circle at top right, #a855f7 0, transparent 40%),
         var(--bg-main);
       background-attachment: fixed;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       color: var(--text-main);
       overflow-x: hidden;
     }
@@ -48,139 +93,91 @@
       z-index: -1;
     }
 
-    /* SIDEBAR */
+    /* =========================================================
+       SIDEBAR (IGUAL A CONFIG/USUARIOS) - 240px
+       ========================================================= */
     .sidebar {
-      width: 80px;
+      width: var(--sidebar-w);
       height: 100vh;
       position: fixed;
       inset-block: 0;
       left: 0;
-      padding: 1.4rem .9rem;
-      background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.92));
-      border-right: 1px solid rgba(15, 23, 42, 1);
-      box-shadow:
-        0 0 0 1px rgba(15, 23, 42, 1),
-        0 18px 45px rgba(15, 23, 42, 0.95);
+      padding: 1.75rem 1.25rem;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.90));
+      border-right: 1px solid var(--border-subtle);
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 1), 0 18px 45px rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(18px);
-      z-index: 40;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
+      z-index: 50;
     }
 
-    .sidebar-logo {
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle at 20% 0, #38bdf8, #0f172a);
-      box-shadow:
-        0 0 0 1px rgba(148, 163, 184, 0.5),
-        0 0 22px rgba(56, 189, 248, 0.8);
-      font-size: 1.2rem;
-    }
-
-    .sidebar-nav {
-      display: flex;
-      flex-direction: column;
-      gap: .6rem;
-      margin-top: .5rem;
+    .sidebar h4 {
+      text-align: center;
+      color: #e5f7ff;
+      margin-bottom: 2rem;
+      letter-spacing: .12em;
+      font-size: .85rem;
+      text-transform: uppercase;
+      font-weight: 800;
     }
 
     .sidebar a {
-      width: 46px;
-      height: 46px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: block;
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 1.2rem;
+      padding: 10px 16px;
+      border-radius: .75rem;
+      margin: 4px 6px;
+      font-size: .92rem;
+      transition: .18s;
       position: relative;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(30, 64, 175, 0.45);
-      transition: background .22s ease, transform .18s ease, box-shadow .22s ease, color .22s ease;
-    }
-
-    .sidebar a span.tooltip {
-      position: absolute;
-      left: 54px;
-      padding: .25rem .6rem;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.98);
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      color: #e5f0ff;
-      font-size: .7rem;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      white-space: nowrap;
-      opacity: 0;
-      transform: translateX(-4px);
-      pointer-events: none;
-      transition: opacity .16s ease, transform .16s ease;
-    }
-
-    .sidebar a:hover span.tooltip {
-      opacity: 1;
-      transform: translateX(0);
+      font-weight: 700;
     }
 
     .sidebar a:hover {
-      background: radial-gradient(circle at 20% 0, rgba(56,189,248,0.35), rgba(15,23,42,0.95));
+      background: rgba(15, 23, 42, 0.95);
       color: #f9fafb;
-      transform: translateX(2px) translateY(-1px);
-      box-shadow:
-        0 10px 28px rgba(15, 23, 42, 0.9),
-        0 0 22px rgba(56, 189, 248, .65);
+      transform: translateX(1px);
     }
 
     .sidebar a.active {
-      background: linear-gradient(145deg, #38bdf8, #2563eb);
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.22), rgba(15, 23, 42, 0.96));
       color: #f9fafb;
-      box-shadow:
-        0 14px 32px rgba(37, 99, 235, 0.9),
-        0 0 28px rgba(56, 189, 248, 1);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
     }
 
-    .sidebar-footer {
-      margin-top: auto;
+    .sidebar a.text-danger {
+      color: #fecaca !important;
+      background: rgba(127, 29, 29, 0.15);
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      margin-top: .75rem;
     }
 
-    .sidebar a.logout {
-      border-color: rgba(248, 113, 113, 0.45);
-      background: rgba(127, 29, 29, 0.25);
-      color: #fecaca;
+    .sidebar a.text-danger:hover {
+      background: rgba(153, 27, 27, 0.45);
+      transform: none;
     }
 
-    .sidebar a.logout:hover {
-      background: rgba(190, 24, 24, 0.75);
-      box-shadow:
-        0 12px 30px rgba(127, 29, 29, 0.9),
-        0 0 20px rgba(248, 113, 113, 0.85);
+    .sidebar hr {
+      border-color: rgba(51, 65, 85, 0.8);
+      margin: 1.1rem 0;
     }
 
-    /* NAVBAR SUPERIOR */
+    /* =========================================================
+       NAVBAR TOP (alineada al sidebar 240px)
+       ========================================================= */
     .navbar-top {
       height: 72px;
       padding: 0 2.4rem;
-      margin-left: 80px;
+      margin-left: var(--sidebar-w);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(90deg,
-        rgba(6, 16, 40, 0.98),
-        rgba(15, 23, 42, 0.96),
-        rgba(6, 16, 40, 0.98));
-      border-bottom: 1px solid rgba(30, 64, 175, 0.6);
-      box-shadow:
-        0 12px 34px rgba(15, 23, 42, 0.95);
+      background: linear-gradient(90deg, rgba(6, 16, 40, .98), rgba(15, 23, 42, .96), rgba(6, 16, 40, .98));
+      border-bottom: 1px solid rgba(148, 163, 184, .35);
+      box-shadow: 0 12px 34px rgba(15, 23, 42, .95);
       position: sticky;
       top: 0;
-      z-index: 30;
+      z-index: 40;
       backdrop-filter: blur(20px);
     }
 
@@ -200,9 +197,10 @@
     .navbar-title h5 {
       margin: 0;
       font-size: 1.15rem;
-      font-weight: 600;
+      font-weight: 800;
       letter-spacing: .04em;
       text-transform: uppercase;
+      color: var(--text-main);
     }
 
     .user-info {
@@ -216,11 +214,12 @@
     .user-pill {
       display: flex;
       align-items: center;
-      gap: .5rem;
+      gap: .55rem;
       padding: .3rem .85rem;
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.65);
       background: rgba(15, 23, 42, 0.8);
+      color: rgba(249, 250, 251, .92);
     }
 
     .user-avatar {
@@ -228,16 +227,20 @@
       height: 34px;
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.6);
-      background: radial-gradient(circle at 30% 0, #38bdf8, #0f172a);
+      background: radial-gradient(circle at 30% 0, var(--accent), #0f172a);
       padding: 2px;
       box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
     }
 
-    /* MAIN CONTENT LAYOUT */
+    /* MAIN */
     .main-content {
-      margin-left: 80px;
+      margin-left: var(--sidebar-w);
       padding: 1.8rem 2.4rem 2.6rem;
     }
+
+    /* =========================================================
+       TU DASHBOARD (mismo contenido, sin tocar lógica)
+       ========================================================= */
 
     .dashboard-grid {
       display: grid;
@@ -250,20 +253,19 @@
       background: var(--bg-elevated);
       border-radius: var(--radius-lg);
       border: 1px solid var(--border-subtle);
-      box-shadow:
-        0 18px 45px rgba(15, 23, 42, 0.9),
-        0 0 60px rgba(15, 23, 42, 0.95);
+      box-shadow: var(--shadow-strong);
       backdrop-filter: blur(22px);
       position: relative;
       overflow: hidden;
     }
 
-    /* HERO CARD */
+    /* HERO */
     .hero-card {
       padding: 1.8rem 1.8rem 1.6rem;
-      background: radial-gradient(circle at top left, rgba(56,189,248,0.3), transparent 55%),
-                  radial-gradient(circle at bottom, rgba(236,72,153,0.22), transparent 55%),
-                  var(--bg-soft);
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.3), transparent 55%),
+        radial-gradient(circle at bottom, rgba(236, 72, 153, 0.22), transparent 55%),
+        var(--bg-soft);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -282,7 +284,7 @@
       z-index: 2;
     }
 
-    .hero-title-block span.badge-kpi {
+    .badge-kpi {
       display: inline-flex;
       align-items: center;
       gap: .4rem;
@@ -294,14 +296,16 @@
       border: 1px solid rgba(56, 189, 248, 0.65);
       color: #e0f2fe;
       background: rgba(15, 23, 42, 0.9);
+      font-weight: 800;
     }
 
     .hero-title-block h1 {
       margin: .9rem 0 .35rem;
       font-size: 1.7rem;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: .04em;
       text-transform: uppercase;
+      color: var(--text-main);
     }
 
     .hero-title-block p {
@@ -323,26 +327,25 @@
       border: none;
       padding: .55rem 1.4rem;
       font-size: .9rem;
-      font-weight: 600;
+      font-weight: 800;
       display: inline-flex;
       align-items: center;
       gap: .4rem;
       color: #f9fafb;
       background: radial-gradient(circle at 10% 0, #38bdf8, #2563eb);
-      box-shadow:
-        0 10px 25px rgba(59, 130, 246, 0.7),
-        0 0 26px rgba(56, 189, 248, 0.95);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.7), 0 0 26px rgba(56, 189, 248, 0.95);
       transition: transform .18s ease, box-shadow .22s ease, background .18s ease;
       cursor: pointer;
       position: relative;
       overflow: hidden;
+      text-decoration: none;
     }
 
     .btn-primary-glow::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.25), transparent);
       transform: translateX(-120%);
       opacity: 0;
       pointer-events: none;
@@ -351,9 +354,7 @@
     .btn-primary-glow:hover {
       transform: translateY(-1px);
       background: radial-gradient(circle at 10% 0, #0ea5e9, #1d4ed8);
-      box-shadow:
-        0 16px 35px rgba(37, 99, 235, 0.9),
-        0 0 32px rgba(56, 189, 248, 1);
+      box-shadow: 0 16px 35px rgba(37, 99, 235, 0.9), 0 0 32px rgba(56, 189, 248, 1);
     }
 
     .btn-primary-glow:hover::after {
@@ -390,12 +391,13 @@
 
     .hero-stat-value {
       font-size: 1.05rem;
-      font-weight: 600;
+      font-weight: 800;
     }
 
     .hero-stat-tag {
       font-size: .7rem;
       color: #bbf7d0;
+      font-weight: 700;
     }
 
     .hero-image-wrapper {
@@ -405,16 +407,14 @@
       border-radius: 2.2rem;
       overflow: hidden;
       flex-shrink: 0;
-      box-shadow:
-        0 20px 45px rgba(15, 23, 42, 0.95),
-        0 0 40px rgba(56, 189, 248, .65);
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.95), 0 0 40px rgba(56, 189, 248, .65);
     }
 
     .hero-image-wrapper::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at top, rgba(0,0,0,0), rgba(15,23,42,0.6));
+      background: radial-gradient(circle at top, rgba(0, 0, 0, 0), rgba(15, 23, 42, 0.6));
       pointer-events: none;
     }
 
@@ -435,12 +435,12 @@
       inset: auto -40%;
       height: 60px;
       bottom: -16px;
-      background: radial-gradient(circle at 50% 0, rgba(56,189,248,0.7), transparent 65%);
+      background: radial-gradient(circle at 50% 0, rgba(56, 189, 248, 0.7), transparent 65%);
       opacity: .75;
       filter: blur(10px);
     }
 
-    /* RIGHT COLUMN CARDS */
+    /* RIGHT */
     .card-analytics {
       padding: 1.4rem 1.5rem;
       display: flex;
@@ -461,40 +461,32 @@
       border: 1px solid rgba(148, 163, 184, 0.6);
       color: var(--text-muted);
       font-size: .7rem;
+      font-weight: 800;
+      background: rgba(15, 23, 42, .65);
     }
 
     .chart-placeholder {
       height: 150px;
       border-radius: 1rem;
-      background: radial-gradient(circle at top, rgba(56,189,248,0.24), transparent 65%),
-                  linear-gradient(135deg, rgba(15,23,42,0.95), rgba(15,23,42,0.9));
+      background:
+        radial-gradient(circle at top, rgba(56, 189, 248, 0.24), transparent 65%),
+        linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.9));
       position: relative;
       overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, .25);
     }
 
     .chart-line {
       position: absolute;
       inset: 0;
-      background:
-        repeating-linear-gradient(
-          to right,
-          transparent 0,
-          transparent 16px,
-          rgba(30,64,175,0.45) 16px,
-          rgba(30,64,175,0.45) 17px
-        );
+      background: repeating-linear-gradient(to right, transparent 0, transparent 16px, rgba(30, 64, 175, 0.45) 16px, rgba(30, 64, 175, 0.45) 17px);
       opacity: .4;
     }
 
     .chart-curve {
       position: absolute;
       inset: 0;
-      background: conic-gradient(from 180deg,
-        rgba(56,189,248,.0),
-        rgba(56,189,248,.9),
-        rgba(14,165,233,.0),
-        rgba(236,72,153,.9),
-        rgba(56,189,248,.0));
+      background: conic-gradient(from 180deg, rgba(56, 189, 248, .0), rgba(56, 189, 248, .9), rgba(14, 165, 233, .0), rgba(236, 72, 153, .9), rgba(56, 189, 248, .0));
       mix-blend-mode: screen;
       filter: blur(18px);
       animation: chartPulse 5s ease-in-out infinite alternate;
@@ -514,18 +506,33 @@
       height: 10px;
       border-radius: 999px;
       background: #38bdf8;
-      box-shadow: 0 0 14px rgba(56,189,248,0.9);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.9);
       transform-origin: bottom;
       animation: floatDot 4s ease-in-out infinite alternate;
     }
 
-    .chart-dot:nth-child(2) { height: 50%; animation-delay: .2s; }
-    .chart-dot:nth-child(3) { height: 70%; animation-delay: .35s; background:#f97316; box-shadow: 0 0 14px rgba(249,115,22,0.9); }
-    .chart-dot:nth-child(4) { height: 40%; animation-delay: .5s; background:#22c55e; box-shadow: 0 0 14px rgba(34,197,94,0.9); }
+    .chart-dot:nth-child(2) {
+      height: 50%;
+      animation-delay: .2s;
+    }
+
+    .chart-dot:nth-child(3) {
+      height: 70%;
+      animation-delay: .35s;
+      background: #f97316;
+      box-shadow: 0 0 14px rgba(249, 115, 22, 0.9);
+    }
+
+    .chart-dot:nth-child(4) {
+      height: 40%;
+      animation-delay: .5s;
+      background: #22c55e;
+      box-shadow: 0 0 14px rgba(34, 197, 94, 0.9);
+    }
 
     .mini-metrics {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: .8rem;
       font-size: .8rem;
     }
@@ -534,7 +541,7 @@
       padding: .6rem .75rem;
       border-radius: 1rem;
       background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(30, 64, 175, 0.7);
+      border: 1px solid rgba(148, 163, 184, .35);
     }
 
     .mini-metric span.label {
@@ -544,16 +551,19 @@
     }
 
     .mini-metric span.value {
-      font-weight: 600;
+      font-weight: 800;
       font-size: .95rem;
+      color: rgba(249, 250, 251, .92);
     }
 
     .mini-metric span.trend {
-      font-size: .7rem;
-      color: #bbf7d0;
+      display: block;
+      margin-top: .15rem;
+      font-weight: 700;
+      font-size: .76rem;
     }
 
-    /* LOWER SECTION */
+    /* LOWER */
     .bottom-row {
       margin-top: 1.8rem;
       display: grid;
@@ -577,6 +587,20 @@
       font-size: .9rem;
       letter-spacing: .08em;
       text-transform: uppercase;
+      color: rgba(249, 250, 251, .92);
+      font-weight: 900;
+    }
+
+    .badge-soft {
+      padding: .16rem .5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      font-size: .7rem;
+      color: var(--text-muted);
+      background: rgba(15, 23, 42, .65);
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
     }
 
     .list-item {
@@ -584,7 +608,7 @@
       align-items: center;
       justify-content: space-between;
       padding: .7rem .2rem;
-      border-bottom: 1px dashed rgba(51,65,85,0.8);
+      border-bottom: 1px dashed rgba(51, 65, 85, 0.8);
       font-size: .82rem;
     }
 
@@ -599,7 +623,7 @@
     }
 
     .list-item-title {
-      font-weight: 500;
+      font-weight: 800;
     }
 
     .list-item-sub {
@@ -610,14 +634,7 @@
     .list-item-kpi {
       text-align: right;
       font-size: .78rem;
-    }
-
-    .badge-soft {
-      padding: .16rem .5rem;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.6);
-      font-size: .7rem;
-      color: var(--text-muted);
+      font-weight: 800;
     }
 
     .highlight-card {
@@ -637,11 +654,12 @@
       width: 52px;
       height: 52px;
       border-radius: 1.2rem;
-      background: radial-gradient(circle at top, rgba(56,189,248,0.45), rgba(15,23,42,1));
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.45), rgba(15, 23, 42, 1));
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.6rem;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, .85);
     }
 
     footer {
@@ -651,86 +669,133 @@
       color: var(--text-muted);
     }
 
-    /* ANIMACIONES */
+    /* ANIM */
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @keyframes chartPulse {
-      from { transform: translateY(10px) scale(1); opacity: .9; }
-      to   { transform: translateY(-4px) scale(1.05); opacity: 1; }
+      from {
+        transform: translateY(10px) scale(1);
+        opacity: .9;
+      }
+
+      to {
+        transform: translateY(-4px) scale(1.05);
+        opacity: 1;
+      }
     }
 
     @keyframes floatDot {
-      from { transform: scaleY(.8) translateY(4px); }
-      to   { transform: scaleY(1) translateY(-4px); }
+      from {
+        transform: scaleY(.8) translateY(4px);
+      }
+
+      to {
+        transform: scaleY(1) translateY(-4px);
+      }
     }
 
     .fade-in {
       opacity: 0;
       animation: fadeInUp .6s ease-out forwards;
     }
-    .delay-1 { animation-delay: .08s; }
-    .delay-2 { animation-delay: .16s; }
-    .delay-3 { animation-delay: .24s; }
-    .delay-4 { animation-delay: .3s; }
+
+    .delay-1 {
+      animation-delay: .08s;
+    }
+
+    .delay-2 {
+      animation-delay: .16s;
+    }
+
+    .delay-3 {
+      animation-delay: .24s;
+    }
+
+    .delay-4 {
+      animation-delay: .3s;
+    }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bottom-row {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-title-block {
+        max-width: 100%;
+      }
+
+      .hero-image-wrapper {
+        display: none;
+      }
+
+      .hero-stats-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 992px) {
+      .navbar-top {
+        margin-left: 0;
+        padding: 0 1.2rem;
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 1.2rem 1.2rem 2rem;
+      }
+
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+      }
+    }
   </style>
 </head>
+
 <body>
 
-  <!-- Sidebar -->
+  <!-- Sidebar (igual Config/Usuarios) -->
   <aside class="sidebar">
-    <div class="sidebar-logo">A</div>
+    <h4>AutomAI</h4>
 
-    <nav class="sidebar-nav">
-      <a href="Dashboard.html" class="active">
-        🏠
-        <span class="tooltip">Dashboard</span>
-      </a>
-      <a href="Chatbot-Configuracion.html">
-        🤖
-        <span class="tooltip">Chatbots</span>
-      </a>
-      <a href="Integraciones-Canales.html">
-        🔌
-        <span class="tooltip">Integraciones</span>
-      </a>
-      <a href="Reportes-Dashboard.html">
-        📊
-        <span class="tooltip">Reportes</span>
-      </a>
-      <a href="Usuarios-Gestion.html">
-        👥
-        <span class="tooltip">Usuarios</span>
-      </a>
-      <a href="Configuracion-General.html">
-        ⚙️
-        <span class="tooltip">Ajustes</span>
-      </a>
-      <a href="Soporte-Ayuda.html">
-        💬
-        <span class="tooltip">Soporte</span>
-      </a>
-    </nav>
+    <a href="Dashboard.php" class="active">🏠 Dashboard</a>
+    <a href="Chatbot-Configuracion.php">🤖 Configurar Chatbot</a>
+    <a href="Integraciones-Canales.php">🔌 Integraciones</a>
+    <a href="Reportes-Dashboard.php">📊 Reportes</a>
+    <a href="Usuarios-Gestion.php">👥 Usuarios</a>
+    <a href="Configuracion-General.php">⚙️ Configuración</a>
+    <a href="Soporte-Ayuda.php">💬 Soporte</a>
 
-    <div class="sidebar-footer">
-      <a href="Logout.html" class="logout">
-        🚪
-        <span class="tooltip">Cerrar sesión</span>
-      </a>
-    </div>
+    <hr>
+    <a href="Logout.php" class="text-danger">🚪 Cerrar sesión</a>
   </aside>
 
   <!-- Navbar superior -->
   <header class="navbar-top">
     <div class="navbar-title">
-      <span>AutomAI Solutions</span>
+      <span><?= htmlspecialchars($usuario["empresa"], ENT_QUOTES, "UTF-8"); ?></span>
       <h5>Panel de Control</h5>
     </div>
+
     <div class="user-info">
       <div class="user-pill">
-        <span>admin@empresa.com</span>
+        <span><?= htmlspecialchars($usuario["email"], ENT_QUOTES, "UTF-8"); ?></span>
         <img src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="Avatar usuario" class="user-avatar">
       </div>
     </div>
@@ -745,9 +810,8 @@
       <section class="section-card hero-card fade-in">
         <div class="hero-header">
           <div class="hero-title-block">
-            <span class="badge-kpi">
-              ● Live Analytics · Chatbots
-            </span>
+            <span class="badge-kpi">● Live Analytics · Chatbots</span>
+
             <h1>Optimiza tus métricas de atención</h1>
             <p>
               Visualiza en tiempo real el rendimiento de tus chatbots, la satisfacción
@@ -755,9 +819,7 @@
             </p>
 
             <div class="hero-cta-row">
-              <button class="btn-primary-glow">
-                ⚡ Mejorar flujo ahora
-              </button>
+              <a class="btn-primary-glow" href="Chatbot-Configuracion.php">⚡ Mejorar flujo ahora</a>
               <small>+23% de reducción media en tiempo de respuesta</small>
             </div>
           </div>
@@ -769,26 +831,13 @@
         </div>
 
         <div class="hero-stats-row">
-          <div class="hero-stat">
-            <div class="hero-stat-label">Consultas este mes</div>
-            <div class="hero-stat-value">76k</div>
-            <div class="hero-stat-tag">+14% vs mes anterior</div>
-          </div>
-          <div class="hero-stat">
-            <div class="hero-stat-label">Usuarios únicos</div>
-            <div class="hero-stat-value">1.5M</div>
-            <div class="hero-stat-tag">Omnicanal</div>
-          </div>
-          <div class="hero-stat">
-            <div class="hero-stat-label">Valor generado</div>
-            <div class="hero-stat-value">$3.6k</div>
-            <div class="hero-stat-tag">Tickets automatizados</div>
-          </div>
-          <div class="hero-stat">
-            <div class="hero-stat-label">CSAT promedio</div>
-            <div class="hero-stat-value">4.7★</div>
-            <div class="hero-stat-tag">Basado en encuestas</div>
-          </div>
+          <?php foreach ($kpis as $k): ?>
+            <div class="hero-stat">
+              <div class="hero-stat-label"><?= htmlspecialchars($k["label"], ENT_QUOTES, "UTF-8"); ?></div>
+              <div class="hero-stat-value"><?= htmlspecialchars($k["value"], ENT_QUOTES, "UTF-8"); ?></div>
+              <div class="hero-stat-tag"><?= htmlspecialchars($k["tag"], ENT_QUOTES, "UTF-8"); ?></div>
+            </div>
+          <?php endforeach; ?>
         </div>
       </section>
 
@@ -816,26 +865,15 @@
         </div>
 
         <div class="mini-metrics">
-          <div class="mini-metric">
-            <span class="label">WhatsApp</span>
-            <span class="value">+32%</span>
-            <span class="trend">Canal más activo</span>
-          </div>
-          <div class="mini-metric">
-            <span class="label">Web Chat</span>
-            <span class="value">18.4k</span>
-            <span class="trend">Sesiones esta semana</span>
-          </div>
-          <div class="mini-metric">
-            <span class="label">Instagram DM</span>
-            <span class="value">8.9k</span>
-            <span class="trend" style="color:#fed7aa;">Campaña en curso</span>
-          </div>
-          <div class="mini-metric">
-            <span class="label">Tasa de automatización</span>
-            <span class="value">87%</span>
-            <span class="trend">Resueltas sin agente</span>
-          </div>
+          <?php foreach ($canales as $c): ?>
+            <div class="mini-metric">
+              <span class="label"><?= htmlspecialchars($c["label"], ENT_QUOTES, "UTF-8"); ?></span>
+              <span class="value"><?= htmlspecialchars($c["value"], ENT_QUOTES, "UTF-8"); ?></span>
+              <span class="trend" style="color: <?= htmlspecialchars($c["trend_color"], ENT_QUOTES, "UTF-8"); ?>">
+                <?= htmlspecialchars($c["trend"], ENT_QUOTES, "UTF-8"); ?>
+              </span>
+            </div>
+          <?php endforeach; ?>
         </div>
       </section>
 
@@ -843,44 +881,28 @@
 
     <!-- FILA INFERIOR -->
     <div class="bottom-row">
+
       <section class="section-card list-card fade-in delay-2">
         <div class="list-header">
           <h6>Top chatbots este periodo</h6>
           <span class="badge-soft">Ordenado por volumen</span>
         </div>
 
-        <div class="list-item">
-          <div class="list-item-main">
-            <span class="list-item-title">Soporte Ecommerce · ES</span>
-            <span class="list-item-sub">Canales: Web, WhatsApp</span>
-          </div>
-          <div class="list-item-kpi">
-            <div>24.5k consultas</div>
-            <div style="color:#bbf7d0;">↑ 18% rendimiento</div>
-          </div>
-        </div>
+        <?php foreach ($topChatbots as $bot): ?>
+          <div class="list-item">
+            <div class="list-item-main">
+              <span class="list-item-title"><?= htmlspecialchars($bot["titulo"], ENT_QUOTES, "UTF-8"); ?></span>
+              <span class="list-item-sub"><?= htmlspecialchars($bot["sub"], ENT_QUOTES, "UTF-8"); ?></span>
+            </div>
 
-        <div class="list-item">
-          <div class="list-item-main">
-            <span class="list-item-title">Onboarding SaaS · LATAM</span>
-            <span class="list-item-sub">Canales: Web, Instagram</span>
+            <div class="list-item-kpi">
+              <div><?= htmlspecialchars($bot["kpi1"], ENT_QUOTES, "UTF-8"); ?></div>
+              <div style="color: <?= htmlspecialchars($bot["kpi2_color"], ENT_QUOTES, "UTF-8"); ?>">
+                <?= htmlspecialchars($bot["kpi2"], ENT_QUOTES, "UTF-8"); ?>
+              </div>
+            </div>
           </div>
-          <div class="list-item-kpi">
-            <div>11.2k consultas</div>
-            <div style="color:#bfdbfe;">T. resp.: 1.9s</div>
-          </div>
-        </div>
-
-        <div class="list-item">
-          <div class="list-item-main">
-            <span class="list-item-title">Soporte técnico nivel 1</span>
-            <span class="list-item-sub">Canales: Web, Telegram</span>
-          </div>
-          <div class="list-item-kpi">
-            <div>8.7k consultas</div>
-            <div style="color:#fed7aa;">Derivación: 9%</div>
-          </div>
-        </div>
+        <?php endforeach; ?>
       </section>
 
       <section class="section-card highlight-card fade-in delay-3">
@@ -890,11 +912,9 @@
         </div>
 
         <div class="product-chip">
-          <div class="product-thumb">
-            💬
-          </div>
+          <div class="product-thumb">💬</div>
           <div>
-            <div style="font-weight:500;">Satisfacción del cliente</div>
+            <div style="font-weight:800;">Satisfacción del cliente</div>
             <div style="font-size:.8rem; color:var(--text-muted);">
               94% de valoraciones positivas en las últimas 500 interacciones.
             </div>
@@ -905,21 +925,25 @@
           <div class="mini-metric">
             <span class="label">Tiempo medio respuesta</span>
             <span class="value">2.1s</span>
-            <span class="trend">Optimizado</span>
+            <span class="trend" style="color:#bbf7d0;">Optimizado</span>
           </div>
           <div class="mini-metric">
             <span class="label">Ahorro estimado</span>
-            <span class="value">$ 586</span>
+            <span class="value">€ 586</span>
             <span class="trend" style="color:#fee2e2;">Mensual en soporte</span>
           </div>
         </div>
       </section>
+
     </div>
 
     <footer>
-      © 2025 AutomAI Solutions · Dashboard de Analítica de Canales
+      © 2026 AutomAI Solutions · Dashboard de Analítica de Canales
+      · Plan: <?= htmlspecialchars($usuario["plan"], ENT_QUOTES, "UTF-8"); ?>
     </footer>
+
   </main>
 
 </body>
+
 </html>
