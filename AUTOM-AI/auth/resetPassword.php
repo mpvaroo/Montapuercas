@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 session_start();
-require_once __DIR__ . "/modelos/Conexion.php";
+require_once __DIR__ . "../modelos/Conexion.php";
 
 $bd = (new Conexion())->getConexion();
 
@@ -76,8 +76,10 @@ if ($okToken && $_SERVER["REQUEST_METHOD"] === "POST") {
             if ($mark->rowCount() !== 1) {
                 throw new RuntimeException("Token ya usado.");
             }
-
             $bd->commit();
+
+            // ✅ Marca para permitir entrar en SuccessPassword.php
+            $_SESSION["password_reset_ok"] = 1;
 
             header("Location: successPassword.php");
             exit;

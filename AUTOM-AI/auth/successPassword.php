@@ -2,6 +2,17 @@
 
 declare(strict_types=1);
 
+session_start();
+
+// ✅ Protección: solo se puede entrar si vienes de resetPassword.php
+if (!isset($_SESSION["password_reset_ok"]) || $_SESSION["password_reset_ok"] !== 1) {
+    header("Location: login.php");
+    exit;
+}
+
+// ✅ Consumimos la marca para que no puedan refrescar y volver a entrar
+unset($_SESSION["password_reset_ok"]);
+
 class SuccessPassword
 {
     public static function render(): void
@@ -347,13 +358,28 @@ class SuccessPassword
                     <h1 class="title">Contraseña actualizada</h1>
                     <p class="subtitle">
                         Tu nueva contraseña se ha guardado correctamente.<br>
-                        Ahora puedes iniciar sesión con tus nuevas credenciales.
+                        Te redirigimos al login en <span id="seconds">4</span> segundos…
                     </p>
 
-                    <a href="Login.php" class="btn-premium">Volver al inicio de sesión</a>
-                    <a href="Register.php" class="btn-ghost">Crear una cuenta nueva</a>
+                    <a href="login.php" class="btn-premium">Volver al inicio de sesión</a>
+                    <a href="register.php" class="btn-ghost">Crear una cuenta nueva</a>
                 </div>
             </div>
+
+            <script>
+                (function() {
+                    let s = 4;
+                    const el = document.getElementById('seconds');
+                    const timer = setInterval(() => {
+                        s--;
+                        if (el) el.textContent = String(s);
+                        if (s <= 0) {
+                            clearInterval(timer);
+                            window.location.href = "login.php";
+                        }
+                    }, 1000);
+                })();
+            </script>
         </body>
 
         </html>
