@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . "/modelos/Conexion.php";
+session_start();
+
+require_once __DIR__ . "/../controladores/Conexion.php";
+require_once __DIR__ . "/../controladores/controladorAuth.php";
 
 $bd = (new Conexion())->getConexion();
 
@@ -10,110 +13,35 @@ $ok  = isset($_GET["ok"]);
 $err = isset($_GET["err"]);
 
 $errores = [];
-$mensajeOk = "";
 
 // -------------------------
-// Cargar sectores y planes desde BD
-// -------------------------
+// Cargar sectores y planes desde BD (visual)
+/// -------------------------
 $sectores = $bd->query("SELECT id, nombre FROM sector WHERE activo = 1 ORDER BY id")->fetchAll();
 $planes   = $bd->query("SELECT id, codigo, nombre, precio_mensual FROM plan WHERE activo = 1 ORDER BY id")->fetchAll();
 
 // -------------------------
-// Prefill (para no perder datos al validar)
-// -------------------------
-$prefillCompany = $_POST["company"] ?? "";
-$prefillEmail   = $_POST["email"] ?? "";
-$prefillPhone   = $_POST["phone"] ?? "";
-$prefillSector  = $_POST["sector_id"] ?? "";
-$prefillPlan    = $_POST["plan_id"] ?? "";
+// Prefill (para no perder datos)
+/// -------------------------
+$prefillCompany = (string)($_POST["company"] ?? "");
+$prefillEmail   = (string)($_POST["email"] ?? "");
+$prefillPhone   = (string)($_POST["phone"] ?? "");
+$prefillSector  = (string)($_POST["sector_id"] ?? "");
+$prefillPlan    = (string)($_POST["plan_id"] ?? "");
 
 // -------------------------
-// Procesar registro (POST)
+// POST -> controlador
 // -------------------------
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $errores = controladorAuth::registrar();
 
-    $company   = trim((string)($_POST["company"] ?? ""));
-    $email     = trim((string)($_POST["email"] ?? ""));
-    $phone     = trim((string)($_POST["phone"] ?? ""));
-    $sectorId  = (int)($_POST["sector_id"] ?? 0);
-    $pass      = (string)($_POST["pass"] ?? "");
-    $planId    = (int)($_POST["plan_id"] ?? 0);
-
-    // Validaciones básicas
-    if ($company === "" || mb_strlen($company) < 2) {
-        $errores[] = "Nombre de empresa inválido.";
-    }
-    if ($email === "" || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errores[] = "Correo electrónico inválido.";
-    }
-    if ($pass === "" || strlen($pass) < 8) {
-        $errores[] = "La contraseña debe tener al menos 8 caracteres.";
-    }
-    if ($sectorId <= 0) {
-        $errores[] = "Debes seleccionar un sector.";
-    }
-    if ($planId <= 0) {
-        $errores[] = "Debes seleccionar un plan.";
-    }
-
-    // Comprobar que sector y plan existen (evita que te manden IDs inventados)
-    if (empty($errores)) {
-        $stmt = $bd->prepare("SELECT COUNT(*) FROM sector WHERE id = ? AND activo = 1");
-        $stmt->execute([$sectorId]);
-        if ((int)$stmt->fetchColumn() === 0) {
-            $errores[] = "Sector no válido.";
-        }
-
-        $stmt = $bd->prepare("SELECT COUNT(*) FROM plan WHERE id = ? AND activo = 1");
-        $stmt->execute([$planId]);
-        if ((int)$stmt->fetchColumn() === 0) {
-            $errores[] = "Plan no válido.";
-        }
-    }
-
-    // Comprobar email duplicado en usuario
-    if (empty($errores)) {
-        $stmt = $bd->prepare("SELECT id FROM usuario WHERE email = ? LIMIT 1");
-        $stmt->execute([$email]);
-        if ($stmt->fetch()) {
-            $errores[] = "Ya existe un usuario con ese email.";
-        }
-    }
-
-    // Insertar empresa + usuario en transacción
-    if (empty($errores)) {
-        try {
-            $bd->beginTransaction();
-
-            // Insert empresa
-            $stmt = $bd->prepare("
-                INSERT INTO empresa (nombre, email_contacto, telefono, sector_id, plan_id, estado)
-                VALUES (?, ?, ?, ?, ?, 'ACTIVA')
-            ");
-            $stmt->execute([$company, $email, $phone !== "" ? $phone : null, $sectorId, $planId]);
-
-            $empresaId = (int)$bd->lastInsertId();
-
-            // Insert usuario (este será el usuario inicial de la empresa)
-            $passwordHash = password_hash($pass, PASSWORD_BCRYPT);
-
-            $stmt = $bd->prepare("
-                INSERT INTO usuario (empresa_id, email, password_hash, email_verificado, estado)
-                VALUES (?, ?, ?, 0, 'ACTIVO')
-            ");
-            $stmt->execute([$empresaId, $email, $passwordHash]);
-
-            $bd->commit();
-
-            header("Location: login.php?ok=1");
-            exit;
-        } catch (Throwable $e) {
-            if ($bd->inTransaction()) {
-                $bd->rollBack();
-            }
-            $errores[] = "No se pudo completar el registro. Intenta de nuevo.";
-        }
-    }
+    // si OK -> el controlador redirige a login.php?ok=1
+    // si hay errores -> se muestran y el prefill ya está con $_POST
+    $prefillCompany = (string)($_POST["company"] ?? "");
+    $prefillEmail   = (string)($_POST["email"] ?? "");
+    $prefillPhone   = (string)($_POST["phone"] ?? "");
+    $prefillSector  = (string)($_POST["sector_id"] ?? "");
+    $prefillPlan    = (string)($_POST["plan_id"] ?? "");
 }
 ?>
 <!DOCTYPE html>
@@ -250,7 +178,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         .card-glass {
-            width: min(96vw, 1050px);
+            width: min(96vw, 560px);
             border-radius: var(--radius);
             border: 1px solid var(--stroke);
             background: linear-gradient(180deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, .06));
@@ -273,90 +201,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
         }
 
-        .left {
-            padding: 34px;
-            min-height: 600px;
-            border-right: 1px solid rgba(255, 255, 255, .10);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
         .right {
             padding: 34px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .logo {
-            width: 54px;
-            height: 54px;
-            border-radius: 16px;
-            background: rgba(255, 255, 255, .10);
-            border: 1px solid rgba(255, 255, 255, .16);
-            display: grid;
-            place-items: center;
-            box-shadow: 0 14px 34px rgba(0, 0, 0, .35);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .logo::before {
-            content: "";
-            position: absolute;
-            inset: -2px;
-            background: conic-gradient(from 180deg,
-                    rgba(94, 234, 212, .35),
-                    rgba(96, 165, 250, .35),
-                    rgba(167, 139, 250, .35),
-                    rgba(244, 114, 182, .35),
-                    rgba(94, 234, 212, .35));
-            filter: blur(16px);
-            opacity: .55;
-        }
-
-        .logo svg {
-            position: relative;
-            z-index: 1;
-        }
-
-        .headline {
-            margin: 18px 0 10px;
-            font-size: 2rem;
-            line-height: 1.05;
-            letter-spacing: -.5px;
-        }
-
-        .sub {
-            margin: 0;
-            color: var(--muted);
-            max-width: 48ch;
-            line-height: 1.45;
-        }
-
-        .step {
-            margin-top: 16px;
-            padding: 12px 14px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, .10);
-            background: rgba(10, 14, 30, .35);
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-top: 6px;
-            background: linear-gradient(90deg, var(--a1), var(--a2), var(--a3));
-            box-shadow: 0 0 0 6px rgba(94, 234, 212, .08);
-            flex: 0 0 auto;
         }
 
         .form-title {
@@ -525,16 +371,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         @media (max-width: 992px) {
-            .left {
-                display: none;
-            }
-
             .right {
                 padding: 28px 22px;
-            }
-
-            .card-glass {
-                width: min(96vw, 560px);
             }
 
             .plans {
@@ -564,154 +402,96 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <main class="page">
         <section class="card-glass">
-            <div class="row g-0">
-                <!-- LEFT -->
-                <div class="col-lg-6">
-                    <div class="left">
-                        <div>
-                            <div class="brand">
-                                <div class="logo">
-                                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                                        <path d="M12 2l8.5 5v10L12 22 3.5 17V7L12 2Z" stroke="white" stroke-opacity=".9" stroke-width="1.6" />
-                                        <path d="M7.5 9.2l4.5 2.7 4.5-2.7" stroke="white" stroke-opacity=".85" stroke-width="1.6" stroke-linecap="round" />
-                                        <path d="M12 11.9v6.3" stroke="white" stroke-opacity=".75" stroke-width="1.6" stroke-linecap="round" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <div style="font-weight:900; font-size:1.1rem;">AutomAI Solutions</div>
-                                    <div style="color: var(--muted); font-size:.92rem;">Registro de empresa</div>
-                                </div>
-                            </div>
+            <div class="right">
+                <h3 class="form-title">Registro</h3>
+                <p class="hint">Crea una empresa + su usuario inicial.</p>
 
-                            <h2 class="headline">Crea tu empresa<br>en 30 segundos.</h2>
-                            <p class="sub">
-                                Registro real con MySQL (automai_mvp).
-                            </p>
-
-                            <div class="step">
-                                <div class="dot"></div>
-                                <div>
-                                    <div style="font-weight:900;">1) Datos básicos</div>
-                                    <div style="color: var(--muted); font-size:.92rem; margin-top:2px;">Empresa, email, teléfono y sector.</div>
-                                </div>
-                            </div>
-                            <div class="step">
-                                <div class="dot"></div>
-                                <div>
-                                    <div style="font-weight:900;">2) Plan</div>
-                                    <div style="color: var(--muted); font-size:.92rem; margin-top:2px;">Básico / Avanzado / Premium.</div>
-                                </div>
-                            </div>
-                            <div class="step">
-                                <div class="dot"></div>
-                                <div>
-                                    <div style="font-weight:900;">3) Acceso al panel</div>
-                                    <div style="color: var(--muted); font-size:.92rem; margin-top:2px;">Te mandamos al login.</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style="color: rgba(236,242,255,.55); font-size:.9rem;">
-                            ¿Ya tienes cuenta? <a href="login.php">Login</a>
-                        </div>
+                <?php if (!empty($errores)): ?>
+                    <div class="alert-glass error">
+                        <div style="font-weight:900; margin-bottom:6px;">❌ Revisa esto:</div>
+                        <ul style="margin:0; padding-left:18px;">
+                            <?php foreach ($errores as $e): ?>
+                                <li><?= htmlspecialchars((string)$e, ENT_QUOTES, "UTF-8") ?></li>
+                            <?php endforeach; ?>
+                        </ul>
                     </div>
-                </div>
+                <?php endif; ?>
 
-                <!-- RIGHT -->
-                <div class="col-lg-6">
-                    <div class="right">
-                        <h3 class="form-title">Registro</h3>
-                        <p class="hint">Crea una empresa + su usuario inicial.</p>
+                <?php if ($ok): ?>
+                    <div class="alert-glass success">✅ Registro completado. Ya puedes iniciar sesión.</div>
+                <?php endif; ?>
 
-                        <?php if (!empty($errores)): ?>
-                            <div class="alert-glass error">
-                                <div style="font-weight:900; margin-bottom:6px;">❌ Revisa esto:</div>
-                                <ul style="margin:0; padding-left:18px;">
-                                    <?php foreach ($errores as $e): ?>
-                                        <li><?= htmlspecialchars($e, ENT_QUOTES, "UTF-8") ?></li>
+                <form action="" method="post" autocomplete="off">
+                    <div class="row g-2">
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="company" name="company" placeholder="Empresa"
+                                    value="<?= htmlspecialchars($prefillCompany, ENT_QUOTES, "UTF-8") ?>">
+                                <label for="company">Nombre de la empresa</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-floating mt-2">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Email"
+                                    value="<?= htmlspecialchars($prefillEmail, ENT_QUOTES, "UTF-8") ?>">
+                                <label for="email">Correo electrónico</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating mt-2">
+                                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Teléfono"
+                                    value="<?= htmlspecialchars($prefillPhone, ENT_QUOTES, "UTF-8") ?>">
+                                <label for="phone">Teléfono</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mt-2">
+                                <select class="form-select py-3" id="sector_id" name="sector_id">
+                                    <option value="">Sector</option>
+                                    <?php foreach ($sectores as $s): ?>
+                                        <option value="<?= (int)$s["id"] ?>" <?= ($prefillSector === (string)$s["id"]) ? "selected" : "" ?>>
+                                            <?= htmlspecialchars((string)$s["nombre"], ENT_QUOTES, "UTF-8") ?>
+                                        </option>
                                     <?php endforeach; ?>
-                                </ul>
+                                </select>
                             </div>
-                        <?php endif; ?>
+                        </div>
 
-                        <?php if ($ok): ?>
-                            <div class="alert-glass success">✅ Registro completado. Ya puedes iniciar sesión.</div>
-                        <?php endif; ?>
-
-                        <form action="" method="post">
-                            <div class="row g-2">
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="company" name="company" placeholder="Empresa"
-                                            value="<?= htmlspecialchars((string)$prefillCompany, ENT_QUOTES, "UTF-8") ?>">
-                                        <label for="company">Nombre de la empresa</label>
-                                    </div>
-                                </div>
-
-                                <div class="col-12">
-                                    <div class="form-floating mt-2">
-                                        <input type="email" class="form-control" id="email" name="email" placeholder="Email"
-                                            value="<?= htmlspecialchars((string)$prefillEmail, ENT_QUOTES, "UTF-8") ?>">
-                                        <label for="email">Correo electrónico</label>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-floating mt-2">
-                                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Teléfono"
-                                            value="<?= htmlspecialchars((string)$prefillPhone, ENT_QUOTES, "UTF-8") ?>">
-                                        <label for="phone">Teléfono</label>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="mt-2">
-                                        <select class="form-select py-3" id="sector_id" name="sector_id">
-                                            <option value="">Sector</option>
-                                            <?php foreach ($sectores as $s): ?>
-                                                <option value="<?= (int)$s["id"] ?>" <?= ((string)$prefillSector === (string)$s["id"]) ? "selected" : "" ?>>
-                                                    <?= htmlspecialchars($s["nombre"], ENT_QUOTES, "UTF-8") ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-12">
-                                    <div class="form-floating mt-2">
-                                        <input type="password" class="form-control" id="pass" name="pass" placeholder="Contraseña">
-                                        <label for="pass">Contraseña (mín. 8)</label>
-                                    </div>
-                                </div>
+                        <div class="col-12">
+                            <div class="form-floating mt-2">
+                                <input type="password" class="form-control" id="pass" name="pass" placeholder="Contraseña">
+                                <label for="pass">Contraseña (mín. 8)</label>
                             </div>
-
-                            <div class="mt-3" style="font-weight:900; color: rgba(236,242,255,.88);">
-                                Elige un plan
-                            </div>
-
-                            <input type="hidden" name="plan_id" id="plan_id" value="<?= htmlspecialchars((string)$prefillPlan, ENT_QUOTES, "UTF-8") ?>">
-
-                            <div class="plans mt-2">
-                                <?php foreach ($planes as $p): ?>
-                                    <div class="plan" data-plan-id="<?= (int)$p["id"] ?>">
-                                        <p class="name" style="color: rgba(94,234,212,.95);">
-                                            <?= htmlspecialchars($p["nombre"], ENT_QUOTES, "UTF-8") ?>
-                                        </p>
-                                        <p class="price"><?= number_format((float)$p["precio_mensual"], 2) ?> €/mes</p>
-                                        <span class="pill"><?= htmlspecialchars($p["codigo"], ENT_QUOTES, "UTF-8") ?></span>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-
-                            <button class="btn btn-glow w-100 mt-3" type="submit">Crear cuenta</button>
-
-                            <p class="fineprint">
-                                ¿Ya tienes cuenta? <a href="login.php">Inicia sesión</a>
-                            </p>
-                        </form>
-
+                        </div>
                     </div>
-                </div>
+
+                    <div class="mt-3" style="font-weight:900; color: rgba(236,242,255,.88);">
+                        Elige un plan
+                    </div>
+
+                    <input type="hidden" name="plan_id" id="plan_id" value="<?= htmlspecialchars($prefillPlan, ENT_QUOTES, "UTF-8") ?>">
+
+                    <div class="plans mt-2">
+                        <?php foreach ($planes as $p): ?>
+                            <div class="plan" data-plan-id="<?= (int)$p["id"] ?>">
+                                <p class="name" style="color: rgba(94,234,212,.95);">
+                                    <?= htmlspecialchars((string)$p["nombre"], ENT_QUOTES, "UTF-8") ?>
+                                </p>
+                                <p class="price"><?= number_format((float)$p["precio_mensual"], 2) ?> €/mes</p>
+                                <span class="pill"><?= htmlspecialchars((string)$p["codigo"], ENT_QUOTES, "UTF-8") ?></span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <button class="btn btn-glow w-100 mt-3" type="submit">Crear cuenta</button>
+
+                    <p class="fineprint">
+                        ¿Ya tienes cuenta? <a href="login.php">Inicia sesión</a>
+                    </p>
+                </form>
             </div>
         </section>
     </main>

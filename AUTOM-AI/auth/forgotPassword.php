@@ -3,54 +3,23 @@
 declare(strict_types=1);
 
 session_start();
-require_once __DIR__ . "/modelos/Conexion.php";
 
-$bd = (new Conexion())->getConexion();
+require_once __DIR__ . "/../controladores/controladorAuth.php";
 
 $ok = false;
 $err = false;
-
-$email = "";
-$demoLink = "";
 $mensajeError = "";
+$email = "";
 
-// POST real
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
     $email = trim((string)($_POST["email"] ?? ""));
 
-    if ($email === "" || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        // Para UI: puedes enseñar error de formato si quieres (no es “filtración”)
-        $err = true;
-        $mensajeError = "Introduce un correo válido.";
-    } else {
-        // Por privacidad: siempre damos OK aunque no exista
-        $ok = true;
+    $res = controladorAuth::forgotPassword();
 
-        // Intentamos localizar usuario ACTIVO
-        $stmt = $bd->prepare("SELECT id FROM usuario WHERE email = ? AND estado = 'ACTIVO' LIMIT 1");
-        $stmt->execute([$email]);
-        $u = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($u) {
-            $usuarioId = (int)$u["id"];
-
-            // Token real
-            $token = bin2hex(random_bytes(32)); // 64 hex
-            $tokenHash = hash("sha256", $token);
-
-            // Guardar en BD (expira en 30 min)
-            $ins = $bd->prepare("
-                INSERT INTO password_reset (usuario_id, token_hash, expires_at)
-                VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 30 MINUTE))
-            ");
-            $ins->execute([$usuarioId, $tokenHash]);
-
-            // Demo link para probar (en producción se enviaría por email)
-            $demoLink = "resetPassword.php?token=" . rawurlencode($token);
-        }
-
-        // Si no existe, no hacemos nada. Igual devolvemos OK.
-    }
+    $ok = (bool)($res["ok"] ?? false);
+    $err = (bool)($res["err"] ?? false);
+    $mensajeError = (string)($res["mensaje"] ?? "");
 }
 
 $emailSafe = htmlspecialchars($email, ENT_QUOTES, "UTF-8");
@@ -389,21 +358,6 @@ $emailSafe = htmlspecialchars($email, ENT_QUOTES, "UTF-8");
             box-shadow: 0 18px 52px rgba(0, 0, 0, .55);
         }
 
-        .demo-box {
-            margin-top: 12px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, .14);
-            background: rgba(10, 14, 30, .45);
-            padding: 10px 12px;
-            font-size: .88rem;
-            color: rgba(236, 242, 255, .82);
-            word-break: break-all;
-        }
-
-        .demo-box strong {
-            color: rgba(94, 234, 212, .95);
-        }
-
         .fineprint {
             color: rgba(236, 242, 255, .60);
             font-size: .88rem;
@@ -477,7 +431,7 @@ $emailSafe = htmlspecialchars($email, ENT_QUOTES, "UTF-8");
 
                             <h2 class="headline">Recupera el acceso<br>sin perder tiempo.</h2>
                             <p class="sub">
-                                Generamos un token seguro, lo guardamos en BD y (en producción) lo enviaríamos por email.
+                                Te enviaremos un enlace por correo si existe una cuenta con ese email.
                             </p>
 
                             <div class="tip">
@@ -493,9 +447,9 @@ $emailSafe = htmlspecialchars($email, ENT_QUOTES, "UTF-8");
                             <div class="tip">
                                 <div class="dot"></div>
                                 <div>
-                                    <div style="font-weight:900;">Control</div>
+                                    <div style="font-weight:900;">Seguridad</div>
                                     <div style="color: var(--muted); font-size:.92rem; margin-top:2px;">
-                                        Guardamos token + expiración (30 min) y marcamos “used_at” al usarlo.
+                                        El enlace expira y solo se puede usar una vez.
                                     </div>
                                 </div>
                             </div>
@@ -521,18 +475,8 @@ $emailSafe = htmlspecialchars($email, ENT_QUOTES, "UTF-8");
                             <div class="alert-glass success">
                                 ✅ Si el correo existe en AutomAI, te enviaremos un enlace para restablecer la contraseña.
                             </div>
-
-                            <?php if ($demoLink !== ''): ?>
-                                <div class="demo-box">
-                                    <strong>Demo link:</strong><br>
-                                    <a href="<?= htmlspecialchars($demoLink, ENT_QUOTES, "UTF-8"); ?>">
-                                        <?= htmlspecialchars($demoLink, ENT_QUOTES, "UTF-8"); ?>
-                                    </a>
-                                </div>
-                            <?php endif; ?>
                         <?php endif; ?>
 
-                        <!-- Form REAL (POST) -->
                         <form id="forgotForm" action="forgotPassword.php" method="post">
                             <div class="form-floating mb-3">
                                 <input type="email" class="form-control" id="email" name="email" placeholder="nombre@empresa.com"
