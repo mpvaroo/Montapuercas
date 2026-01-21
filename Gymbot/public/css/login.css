@@ -1,0 +1,114 @@
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    /* Fondo con imagen de gimnasio y superposición oscura */
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url("../assets/gym_background.png") center/cover no-repeat fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    color: #fff;
+}
+
+.login-container {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    width: 360px;
+    text-align: center;
+}
+
+.login-container h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.login-container p.motivacion {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #cccccc;
+}
+
+.login-container input[type="email"],
+.login-container input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    box-sizing: border-box;
+}
+
+.login-container input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.login-container input:focus {
+    outline: none;
+    box-shadow: 0 0 5px #e67e22;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 12px;
+    background-color: #e67e22;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.3s ease;
+}
+
+.login-container button:hover {
+    background-color: #cf6812;
+}
+
+.login-container .enlace {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.login-container .enlace a {
+    color: #e67e22;
+    text-decoration: none;
+}
+
+.login-container .enlace a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para mensajes de error y éxito */
+.alert {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.alert-danger {
+    background-color: rgba(231, 76, 60, 0.2);
+    border: 1px solid rgba(231, 76, 60, 0.5);
+    color: #e74c3c;
+}
+
+.alert-success {
+    background-color: rgba(46, 204, 113, 0.2);
+    border: 1px solid rgba(46, 204, 113, 0.5);
+    color: #2ecc71;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: left;
+}
