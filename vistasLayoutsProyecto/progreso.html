@@ -1,0 +1,1188 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>AutomAI Gym — Progreso</title>
+
+    <!-- Premium Serif Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --------------------------------------------------------------------------
+      BASE (MISMA FAMILIA QUE DASHBOARD / RUTINAS)
+    -------------------------------------------------------------------------- */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            background: #070605;
+        }
+
+        :root {
+            --serif: 'Playfair Display', ui-serif, Georgia, "Times New Roman", Times, serif;
+            --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
+
+            --cream: rgba(239, 231, 214, .92);
+            --cream-2: rgba(239, 231, 214, .76);
+            --cream-3: rgba(239, 231, 214, .58);
+
+            --stroke: rgba(239, 231, 214, .18);
+            --stroke2: rgba(255, 195, 32, 0.10);
+
+            --glass: rgba(0, 0, 0, 0.12);
+            --panel: rgba(0, 0, 0, 0.20);
+
+            --bronze1: rgba(190, 145, 85, .26);
+            --bronze2: rgba(190, 145, 85, .10);
+
+            --greenGlow: rgba(22, 250, 22, 0.18);
+            --greenBtn1: rgba(70, 98, 72, .92);
+            --greenBtn2: rgba(43, 70, 43, 0.98);
+
+            --shadow-xl: 0 34px 110px rgba(56, 52, 32, 0.72);
+            --shadow-lg: 0 18px 52px rgba(0, 0, 0, .55);
+
+            --r: 14px;
+            --r2: 14px;
+        }
+
+        /* --------------------------------------------------------------------------
+      STAGE & BACKGROUND
+    -------------------------------------------------------------------------- */
+        .stage {
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            font-family: var(--sans);
+        }
+
+        .bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.02);
+            filter: saturate(.82) contrast(1.06) brightness(.62);
+            z-index: -4;
+        }
+
+        .vignette {
+            position: absolute;
+            inset: 0;
+            z-index: -3;
+            pointer-events: none;
+            background:
+                radial-gradient(1200px 800px at 55% 45%, rgba(0, 0, 0, .08), transparent 58%),
+                radial-gradient(1100px 900px at 20% 50%, rgba(0, 0, 0, .34), transparent 60%),
+                linear-gradient(180deg, rgba(0, 0, 0, .62), rgba(0, 0, 0, .28), rgba(0, 0, 0, .62));
+        }
+
+        .grade {
+            position: absolute;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            background:
+                linear-gradient(180deg, rgba(30, 18, 10, .62), rgba(18, 12, 8, .22), rgba(12, 10, 8, .65)),
+                radial-gradient(900px 650px at 70% 40%, rgba(210, 160, 95, .10), transparent 60%);
+            mix-blend-mode: multiply;
+            opacity: .95;
+        }
+
+        .haze {
+            position: absolute;
+            inset: -8%;
+            z-index: -1;
+            pointer-events: none;
+            background: radial-gradient(900px 520px at 55% 45%, rgba(255, 235, 205, .08), transparent 62%);
+            filter: blur(18px);
+            opacity: .38;
+        }
+
+        .grain {
+            position: absolute;
+            inset: -20%;
+            z-index: 0;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+            mix-blend-mode: soft-light;
+            opacity: .16;
+            transform: rotate(-6deg);
+        }
+
+        /* --------------------------------------------------------------------------
+      APP GRID
+    -------------------------------------------------------------------------- */
+        .app {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 22px;
+            padding: 28px 28px 28px 10px;
+        }
+
+        /* --------------------------------------------------------------------------
+      SIDEBAR (CLON EXACTO ESTÉTICA)
+    -------------------------------------------------------------------------- */
+        .sidebar {
+            position: sticky;
+            top: 28px;
+            height: calc(100vh - 56px);
+            padding: 18px 14px;
+            background: transparent;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .brand {
+            text-align: left;
+            font-family: var(--sans);
+            text-transform: uppercase;
+            letter-spacing: .30em;
+            font-weight: 700;
+            font-size: 11px;
+            color: var(--cream-3);
+            padding: 8px 10px 14px;
+        }
+
+        .brand b {
+            display: block;
+            font-size: 16px;
+            letter-spacing: .34em;
+            color: rgba(239, 231, 214, .90);
+            margin-bottom: 2px;
+        }
+
+        .nav {
+            display: grid;
+            gap: 6px;
+            padding: 8px 8px 14px;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 10px;
+            border-radius: 14px;
+            text-decoration: none;
+            color: rgba(239, 231, 214, .72);
+            border: 1px solid transparent;
+            transition: all .18s ease;
+            user-select: none;
+        }
+
+        .nav a:hover {
+            transform: translateX(2px);
+            background: rgba(0, 0, 0, .12);
+            border-color: rgba(239, 231, 214, .14);
+            color: rgba(239, 231, 214, .92);
+        }
+
+        .nav a.active {
+            background:
+                radial-gradient(120% 160% at 30% 0%, rgba(22, 250, 22, 0.12), transparent 35%),
+                linear-gradient(180deg, rgba(0, 0, 0, .20), rgba(0, 0, 0, .12));
+            border-color: rgba(239, 231, 214, .16);
+            color: rgba(239, 231, 214, .95);
+        }
+
+        .ico {
+            width: 18px;
+            height: 18px;
+            flex: 0 0 18px;
+            opacity: .9;
+        }
+
+        .ico svg {
+            width: 18px;
+            height: 18px;
+            display: block;
+            fill: currentColor;
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 10px;
+            border-radius: 16px;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(0, 0, 0, .10);
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            border: 1px solid rgba(239, 231, 214, .18);
+            overflow: hidden;
+            background: rgba(0, 0, 0, .20);
+            flex: 0 0 38px;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .user .name {
+            font-family: var(--sans);
+            font-weight: 700;
+            letter-spacing: .02em;
+            color: rgba(239, 231, 214, .92);
+            font-size: 14px;
+            line-height: 1.15;
+        }
+
+        .user .role {
+            font-size: 12px;
+            color: rgba(239, 231, 214, .55);
+            margin-top: 2px;
+        }
+
+        /* --------------------------------------------------------------------------
+      MAIN LAYOUT
+    -------------------------------------------------------------------------- */
+        .main {
+            min-width: 0;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 18px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 16px;
+            min-width: 0;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-family: var(--serif);
+            font-weight: 500;
+            font-size: 42px;
+            color: var(--cream);
+            letter-spacing: .01em;
+            line-height: 1.05;
+        }
+
+        .hero p {
+            margin: 6px 0 0;
+            color: rgba(239, 231, 214, .60);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .btn-action {
+            height: 40px;
+            padding: 0 16px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--sans);
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: .06em;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform .18s ease, filter .18s ease;
+            border: 1px solid rgba(239, 231, 214, .14);
+            background: rgba(0, 0, 0, .20);
+            color: rgba(239, 231, 214, .82);
+            white-space: nowrap;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.08);
+        }
+
+        .btn-action.primary {
+            background: linear-gradient(180deg, rgba(70, 98, 72, .9), rgba(40, 65, 40, .95));
+            border-color: rgba(239, 231, 214, .16);
+            color: var(--cream);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, .30);
+        }
+
+        .layout {
+            min-width: 0;
+            display: grid;
+            grid-template-columns: 1.9fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .col {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* --------------------------------------------------------------------------
+      CARDS (Misma estética panel-card)
+    -------------------------------------------------------------------------- */
+        .card {
+            background: rgba(0, 0, 0, .20);
+            border: 1px solid rgba(239, 231, 214, .10);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            pointer-events: none;
+            background:
+                radial-gradient(900px 520px at 20% 20%, rgba(190, 145, 85, .10), transparent 60%),
+                radial-gradient(900px 520px at 80% 10%, rgba(22, 250, 22, .06), transparent 55%);
+            opacity: .55;
+        }
+
+        .card>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-title {
+            margin: 0 0 16px;
+            font-family: var(--serif);
+            font-size: 20px;
+            color: var(--cream);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background:
+                radial-gradient(120% 140% at 30% 0%, rgba(190, 145, 85, .16), transparent 55%),
+                rgba(0, 0, 0, .18);
+            color: rgba(239, 231, 214, .86);
+        }
+
+        .badge svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            opacity: .95;
+        }
+
+        /* --------------------------------------------------------------------------
+      ACTIVITY CARD
+    -------------------------------------------------------------------------- */
+        .activity {
+            display: grid;
+            grid-template-columns: 210px 1fr;
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .cover {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(0, 0, 0, .18);
+            min-height: 150px;
+        }
+
+        .cover img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 18%;
+            filter: contrast(1.03) saturate(.95) brightness(.92);
+            transform: scale(1.02);
+        }
+
+        .cover::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, rgba(0, 0, 0, .0) 0%, rgba(0, 0, 0, .35) 55%, rgba(0, 0, 0, .62) 100%),
+                radial-gradient(900px 520px at 30% 40%, rgba(0, 0, 0, .18), transparent 60%);
+        }
+
+        .act-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .act-sub {
+            color: rgba(239, 231, 214, .56);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .10em;
+            margin-top: 2px;
+        }
+
+        .act-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .stat {
+            padding: 12px 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(239, 231, 214, .10);
+            background: rgba(0, 0, 0, .14);
+        }
+
+        .stat-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .stat-top .mini {
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(239, 231, 214, .10);
+            color: rgba(239, 231, 214, .84);
+        }
+
+        .stat-top .mini svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+            opacity: .95;
+        }
+
+        .stat-val {
+            font-family: var(--serif);
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--cream);
+            letter-spacing: .01em;
+            line-height: 1.0;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: rgba(239, 231, 214, .56);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            margin-top: 6px;
+        }
+
+        .stat-foot {
+            margin-top: 8px;
+            font-size: 11px;
+            color: rgba(239, 231, 214, .52);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(239, 231, 214, .10);
+            background: rgba(255, 255, 255, .04);
+            color: rgba(239, 231, 214, .70);
+            font-size: 11px;
+            letter-spacing: .04em;
+            white-space: nowrap;
+        }
+
+        .pill i {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(190, 145, 85, .75);
+            box-shadow: 0 0 10px rgba(190, 145, 85, .25);
+            display: inline-block;
+        }
+
+        /* --------------------------------------------------------------------------
+      CHART CARD
+    -------------------------------------------------------------------------- */
+        .chart-wrap {
+            margin-top: 10px;
+            border-radius: 14px;
+            border: 1px solid rgba(239, 231, 214, .10);
+            background: rgba(0, 0, 0, .12);
+            padding: 14px 14px 10px;
+            overflow: hidden;
+        }
+
+        .chart-grid {
+            position: relative;
+            height: 220px;
+            min-width: 0;
+        }
+
+        .y-axis {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 26px;
+            width: 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 10px;
+            color: rgba(239, 231, 214, .20);
+            pointer-events: none;
+        }
+
+        .grid-lines {
+            position: absolute;
+            left: 44px;
+            right: 0;
+            top: 0;
+            bottom: 26px;
+            pointer-events: none;
+        }
+
+        .grid-lines span {
+            position: absolute;
+            left: 0;
+            right: 0;
+            border-top: 1px dashed rgba(239, 231, 214, .07);
+        }
+
+        .grid-lines span:nth-child(1) {
+            top: 15%;
+        }
+
+        .grid-lines span:nth-child(2) {
+            top: 45%;
+        }
+
+        .grid-lines span:nth-child(3) {
+            top: 75%;
+        }
+
+        .chart-svg {
+            position: absolute;
+            left: 44px;
+            right: 0;
+            top: 0;
+            bottom: 26px;
+            width: calc(100% - 44px);
+            height: calc(100% - 26px);
+            pointer-events: none;
+        }
+
+        .x-axis {
+            position: absolute;
+            left: 44px;
+            right: 0;
+            bottom: 0;
+            height: 26px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            align-items: end;
+            gap: 0;
+            color: rgba(239, 231, 214, .45);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .10em;
+        }
+
+        .x-axis span {
+            display: flex;
+            justify-content: center;
+            padding-bottom: 2px;
+        }
+
+        /* --------------------------------------------------------------------------
+      RIGHT PANEL LISTS
+    -------------------------------------------------------------------------- */
+        .list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(239, 231, 214, .10);
+            background: rgba(255, 255, 255, .04);
+            transition: background .2s, border-color .2s, transform .2s;
+        }
+
+        .row:hover {
+            background: rgba(255, 255, 255, .06);
+            border-color: rgba(239, 231, 214, .16);
+            transform: translateY(-1px);
+        }
+
+        .row-left {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .row .label {
+            color: rgba(239, 231, 214, .92);
+            font-size: 13px;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .row .meta {
+            color: rgba(239, 231, 214, .42);
+            font-size: 11px;
+            margin-top: 2px;
+            letter-spacing: .02em;
+        }
+
+        .xp {
+            color: rgba(239, 231, 214, .80);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .subhead {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .subhead a {
+            font-size: 12px;
+            color: rgba(239, 231, 214, .52);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .subhead a:hover {
+            color: rgba(239, 231, 214, .72);
+        }
+
+        .btn-full {
+            width: 100%;
+            margin-top: 14px;
+            height: 40px;
+            border-radius: 12px;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(255, 255, 255, .05);
+            color: rgba(239, 231, 214, .74);
+            font-weight: 700;
+            letter-spacing: .06em;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background .2s, transform .18s ease, border-color .2s;
+        }
+
+        .btn-full:hover {
+            background: rgba(255, 255, 255, .08);
+            border-color: rgba(239, 231, 214, .18);
+            transform: translateY(-1px);
+        }
+
+        /* Sticky right column like "panel" */
+        .right-sticky {
+            position: sticky;
+            top: 28px;
+        }
+
+        @media (max-width: 1200px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .right-sticky {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .app {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+                height: auto;
+            }
+
+            .activity {
+                grid-template-columns: 1fr;
+            }
+
+            .act-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="stage">
+        <img class="bg" src="./login-bg.png" alt="" />
+        <div class="vignette"></div>
+        <div class="grade"></div>
+        <div class="haze"></div>
+        <div class="grain"></div>
+
+        <div class="app">
+            <!-- SIDEBAR -->
+            <aside class="sidebar">
+                <div>
+                    <div class="brand"><b>AUTOMAI</b>GYM</div>
+
+                    <nav class="nav">
+                        <a href="dashboard.html">
+                            <span class="ico">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M12 3 3 10v11h6v-7h6v7h6V10l-9-7Z" />
+                                </svg>
+                            </span>
+                            Inicio
+                        </a>
+
+                        <a href="rutinas.html">
+                            <span class="ico">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M7 4h10v2H7V4Zm-2 4h14v12H5V8Zm2 2v8h10v-8H7Z" />
+                                </svg>
+                            </span>
+                            Rutinas
+                        </a>
+
+                        <a href="reservas.html">
+                            <span class="ico">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M6 7h12v2H6V7Zm0 4h12v2H6v-2Zm0 4h8v2H6v-2Z" />
+                                </svg>
+                            </span>
+                            Reservas
+                        </a>
+
+                        <a href="calendario.html">
+                            <span class="ico">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M7 2h2v3H7V2Zm8 0h2v3h-2V2ZM5 6h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Zm0 4v10h14V10H5Z" />
+                                </svg>
+                            </span>
+                            Calendario
+                        </a>
+
+                        <!-- Icono de progreso (te gustaba) -->
+                        <a href="progreso.html" class="active">
+                            <span class="ico">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z" />
+                                </svg>
+                            </span>
+                            Progreso
+                        </a>
+
+                        <!-- Ajustes -> IA Coach -->
+                        <a href="iaCoach.html">
+                            <span class="ico">
+                                <!-- icono "spark / chat" premium -->
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M4 4h16v10H7l-3 3V4Zm4 14h12v2H8v-2Zm3-11h7v2h-7V7Zm-5 0h3v2H6V7Zm0 4h12v2H6v-2Z" />
+                                </svg>
+                            </span>
+                            IA Coach
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="user">
+                    <div class="avatar"><img src="./user.png" alt=""></div>
+                    <div>
+                        <div class="name">Marcelo</div>
+                        <div class="role">Usuario</div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- MAIN -->
+            <section class="main">
+                <div class="topbar">
+                    <div class="hero">
+                        <h1>Progreso</h1>
+                        <p>Controla tu rendimiento y evolución.</p>
+                    </div>
+
+                    <div class="actions">
+                        <a class="btn-action primary" href="#">Resumen mensual</a>
+                        <a class="btn-action" href="#">Resumen anual</a>
+                    </div>
+                </div>
+
+                <div class="layout">
+                    <!-- LEFT -->
+                    <div class="col">
+                        <!-- Activity -->
+                        <article class="card">
+                            <div class="subhead">
+                                <div>
+                                    <div class="card-title" style="margin:0;">
+                                        <span class="badge">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M13 2 3 14h7l-1 8 12-14h-7l1-6z" />
+                                            </svg>
+                                        </span>
+                                        Actividad de esta semana
+                                    </div>
+                                    <div class="act-sub">Entrenos, calorías y tiempo activo</div>
+                                </div>
+                            </div>
+
+                            <div class="activity">
+                                <div class="cover">
+                                    <img src="./img/rutina-1.png" alt="Actividad">
+                                </div>
+
+                                <div>
+                                    <div class="act-stats">
+                                        <div class="stat">
+                                            <div class="stat-top">
+                                                <div class="stat-val">3 / 4</div>
+                                                <div class="mini">
+                                                    <svg viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M12 8a1 1 0 0 1 1 1v3.6l2.1 1.26a1 1 0 1 1-1.02 1.72l-2.6-1.56A1 1 0 0 1 11 14V9a1 1 0 0 1 1-1Zm0-6a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div class="stat-label">Entrenamientos</div>
+                                            <div class="stat-foot">
+                                                <span class="pill"><i></i> 7 completados</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="stat">
+                                            <div class="stat-top">
+                                                <div class="stat-val">1,000 <span
+                                                        style="font-size:12px; opacity:.75;">kcal</span></div>
+                                                <div class="mini">
+                                                    <svg viewBox="0 0 24 24">
+                                                        <path d="M13 2 3 14h7l-1 8 12-14h-7l1-6z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div class="stat-label">Calorías quemadas</div>
+                                            <div class="stat-foot">
+                                                <span class="pill"><i></i> objetivo: 2,000</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="stat">
+                                            <div class="stat-top">
+                                                <div class="stat-val">160 <span
+                                                        style="font-size:12px; opacity:.75;">min</span></div>
+                                                <div class="mini">
+                                                    <svg viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M7 2h10v2H7V2Zm5 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm1 9V7h-2v8l6 3 1-1.7-5-2.3Z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div class="stat-label">Tiempo activo</div>
+                                            <div class="stat-foot">
+                                                <span class="pill"><i></i> hoy: 45 min</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Chart -->
+                        <article class="card">
+                            <div class="card-title">
+                                <span class="badge">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M4 19h16v2H2V3h2v16Zm4-2H6V10h2v7Zm5 0h-2V6h2v11Zm5 0h-2V12h2v5Z" />
+                                    </svg>
+                                </span>
+                                Progreso semanal
+                            </div>
+
+                            <div class="chart-wrap">
+                                <div class="chart-grid">
+                                    <div class="y-axis">
+                                        <span>1600</span>
+                                        <span>1000</span>
+                                        <span>500</span>
+                                        <span>300</span>
+                                    </div>
+
+                                    <div class="grid-lines">
+                                        <span></span><span></span><span></span>
+                                    </div>
+
+                                    <!-- SVG chart -->
+                                    <svg class="chart-svg" viewBox="0 0 700 260" preserveAspectRatio="none">
+                                        <defs>
+                                            <linearGradient id="fillBronze" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="rgba(190,145,85,0.55)" />
+                                                <stop offset="100%" stop-color="rgba(190,145,85,0)" />
+                                            </linearGradient>
+                                            <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                                <feGaussianBlur stdDeviation="3" result="blur" />
+                                                <feMerge>
+                                                    <feMergeNode in="blur" />
+                                                    <feMergeNode in="SourceGraphic" />
+                                                </feMerge>
+                                            </filter>
+                                        </defs>
+
+                                        <!-- Area -->
+                                        <path
+                                            d="M20,200 L120,190 L220,155 L320,168 L420,120 L520,150 L680,130 L680,260 L20,260 Z"
+                                            fill="url(#fillBronze)" opacity="0.35" />
+
+                                        <!-- Line -->
+                                        <path d="M20,200 L120,190 L220,155 L320,168 L420,120 L520,150 L680,130"
+                                            fill="none" stroke="rgba(239,231,214,0.55)" stroke-width="2"
+                                            opacity="0.75" />
+
+                                        <path d="M20,200 L120,190 L220,155 L320,168 L420,120 L520,150 L680,130"
+                                            fill="none" stroke="rgba(190,145,85,0.85)" stroke-width="2.5"
+                                            filter="url(#softGlow)" />
+
+                                        <!-- Dots -->
+                                        <g fill="rgba(239,231,214,0.95)" stroke="rgba(0,0,0,0.8)" stroke-width="2">
+                                            <circle cx="20" cy="200" r="6" />
+                                            <circle cx="120" cy="190" r="6" />
+                                            <circle cx="220" cy="155" r="6" />
+                                            <circle cx="320" cy="168" r="6" />
+                                            <circle cx="420" cy="120" r="6" />
+                                            <circle cx="520" cy="150" r="6" />
+                                            <circle cx="680" cy="130" r="6" />
+                                        </g>
+                                    </svg>
+
+                                    <div class="x-axis">
+                                        <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- RIGHT -->
+                    <div class="col right-sticky">
+                        <!-- Achievements -->
+                        <article class="card">
+                            <div class="card-title">
+                                <span class="badge">
+                                    <svg viewBox="0 0 24 24">
+                                        <path
+                                            d="M17 3H7v2H4v4a5 5 0 0 0 5 5h.1A5.98 5.98 0 0 0 11 15.9V19H8v2h8v-2h-3v-3.1A5.98 5.98 0 0 0 14.9 14H15a5 5 0 0 0 5-5V5h-3V3ZM6 9V7h1v4A3 3 0 0 1 6 9Zm12 0a3 3 0 0 1-1 2V7h1v2Z" />
+                                    </svg>
+                                </span>
+                                Últimos logros
+                            </div>
+
+                            <div class="list">
+                                <div class="row">
+                                    <div class="row-left">
+                                        <span class="badge">
+                                            <svg viewBox="0 0 24 24">
+                                                <path
+                                                    d="M12 2l2.2 6.8H21l-5.5 4 2.1 6.9L12 15.8 6.4 19.7 8.5 12.8 3 8.8h6.8L12 2Z" />
+                                            </svg>
+                                        </span>
+                                        <div style="min-width:0;">
+                                            <p class="label">Semana completa</p>
+                                            <div class="meta">21 Ene</div>
+                                        </div>
+                                    </div>
+                                    <div class="xp">250 XP</div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="row-left">
+                                        <span class="badge">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M7 7h10v2H7V7Zm-2 4h14v2H5v-2Zm2 4h10v2H7v-2Z" />
+                                            </svg>
+                                        </span>
+                                        <div style="min-width:0;">
+                                            <p class="label">Máximo en press banca</p>
+                                            <div class="meta">23 Ene</div>
+                                        </div>
+                                    </div>
+                                    <div class="xp">Nuevo PR</div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Stats -->
+                        <article class="card">
+                            <div class="card-title">
+                                <span class="badge">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M4 19h16v2H2V3h2v16Zm4-2H6V10h2v7Zm5 0h-2V6h2v11Zm5 0h-2V12h2v5Z" />
+                                    </svg>
+                                </span>
+                                Estadísticas
+                            </div>
+
+                            <div class="list">
+                                <div class="row">
+                                    <div class="row-left">
+                                        <span class="badge">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M5 6h14v2H5V6Zm2 4h10v8H7v-8Zm2 2v4h6v-4H9Z" />
+                                            </svg>
+                                        </span>
+                                        <div style="min-width:0;">
+                                            <p class="label">1RM Press banca</p>
+                                            <div class="meta">Último registro</div>
+                                        </div>
+                                    </div>
+                                    <div class="xp">90 kg</div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="row-left">
+                                        <span class="badge">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M7 4h10v2H7V4Zm-2 4h14v12H5V8Zm2 2v8h10v-8H7Z" />
+                                            </svg>
+                                        </span>
+                                        <div style="min-width:0;">
+                                            <p class="label">Máx. sentadilla</p>
+                                            <div class="meta">Último registro</div>
+                                        </div>
+                                    </div>
+                                    <div class="xp">110 kg</div>
+                                </div>
+                            </div>
+
+                            <button class="btn-full">Ver recordatorios</button>
+                        </article>
+
+                        <!-- Saved routines -->
+                        <article class="card">
+                            <div class="card-title">
+                                <span class="badge">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M7 4h10v2H7V4Zm-2 4h14v12H5V8Zm2 2v8h10v-8H7Z" />
+                                    </svg>
+                                </span>
+                                Rutinas guardadas
+                            </div>
+
+                            <div class="list">
+                                <div class="row">
+                                    <div class="row-left">
+                                        <span class="badge">
+                                            <svg viewBox="0 0 24 24">
+                                                <path
+                                                    d="M12 2a7 7 0 0 0-7 7c0 2.6 1.4 4.9 3.5 6.1V22l3-1.6 3 1.6v-6.9C17.6 13.9 19 11.6 19 9a7 7 0 0 0-7-7Zm0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z" />
+                                            </svg>
+                                        </span>
+                                        <div style="min-width:0;">
+                                            <p class="label">Estiramientos y movilidad</p>
+                                            <div class="meta">15–20 min</div>
+                                        </div>
+                                    </div>
+                                    <div class="xp">Abrir</div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="row-left">
+                                        <span class="badge">
+                                            <svg viewBox="0 0 24 24">
+                                                <path
+                                                    d="M7 2h10v2H7V2Zm5 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm1 9V7h-2v8l6 3 1-1.7-5-2.3Z" />
+                                            </svg>
+                                        </span>
+                                        <div style="min-width:0;">
+                                            <p class="label">HIIT Express</p>
+                                            <div class="meta">12–18 min</div>
+                                        </div>
+                                    </div>
+                                    <div class="xp">Abrir</div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+
+</html>
