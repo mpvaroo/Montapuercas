@@ -1,0 +1,486 @@
+/* -------------------------------------------------------------------------- */
+/*                                 RESET & BASE                                */
+/* -------------------------------------------------------------------------- */
+:root {
+    /* Palette: Editorial Light (Cream/Off-White + Muted Gold) */
+    --bg-body: #f9f8f4; /* Cream background */
+    --bg-card: #ffffff; /* White cards */
+    --bg-panel: #f2f0eb; /* Secondary panel background */
+
+    --text-main: #1a1a1a; /* Soft black */
+    --text-muted: #666666; /* Muted text */
+    --text-light: #999999; /* Lighter text */
+
+    --accent: #b08d55; /* Muted Gold */
+    --accent-light: rgba(176, 141, 85, 0.12);
+
+    --stroke: #e5e2dd; /* Borders */
+    --stroke-strong: #d1cdc7;
+
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.03);
+    --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.06);
+
+    /* Spacing & Radius */
+    --r-card: 24px;
+    --r-btn: 999px;
+    --pad-page: clamp(20px, 4vw, 40px);
+
+    /* Typography */
+    --font-sans:
+        "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        sans-serif;
+    --tracking-tight: -0.04em;
+    --tracking-wide: 0.08em;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+li {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+    outline: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   LAYOUT                                    */
+/* -------------------------------------------------------------------------- */
+.main-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--pad-page);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 Columns Desktop */
+    gap: 40px;
+    padding: 40px 0;
+    align-items: start;
+}
+
+@media (max-width: 960px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 60px;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 COMPONENTS                                  */
+/* -------------------------------------------------------------------------- */
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: var(--r-btn);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.btn-primary {
+    background-color: var(--text-main);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #000;
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    border-color: var(--stroke-strong);
+    color: var(--text-main);
+    background: transparent;
+}
+
+.btn-outline:hover {
+    border-color: var(--text-main);
+    background: var(--bg-card);
+}
+
+.btn-arrow {
+    font-size: 0.75em;
+    opacity: 0.6;
+}
+
+/* Cards */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--stroke);
+    border-radius: var(--r-card);
+    padding: 24px; /* Reduced from 32px for tightness */
+    box-shadow: var(--shadow-card);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                    HERO                                     */
+/* -------------------------------------------------------------------------- */
+.hero {
+    padding: 60px 0 40px;
+    border-bottom: 1px solid var(--stroke);
+    margin-bottom: 40px;
+}
+
+.hero h1 {
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    color: var(--text-main);
+    margin-bottom: 24px;
+}
+
+.hero h1 span.accent {
+    color: var(--accent);
+}
+
+.hero p.subtitle {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    font-weight: 400;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              DASHBOARD LEFT                                 */
+/* -------------------------------------------------------------------------- */
+/* Routine List */
+.routine-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.routine-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background: var(--bg-panel);
+    border-radius: 16px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.routine-item:hover {
+    border-color: var(--accent);
+    background: #fff;
+}
+
+.routine-info h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.routine-info span {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Muscle Map Bars */
+.muscle-map {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.muscle-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.muscle-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+}
+
+.progress-track {
+    height: 6px;
+    background: var(--bg-panel);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--text-main);
+    border-radius: 99px;
+}
+
+/* Logs */
+.log-item {
+    display: grid;
+    grid-template-columns: 80px 1fr 80px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--stroke);
+    font-size: 0.9rem;
+}
+
+.log-item:last-child {
+    border-bottom: none;
+}
+
+.log-date {
+    color: var(--text-muted);
+    font-family: monospace;
+}
+
+.log-session {
+    font-weight: 600;
+}
+
+.log-score {
+    text-align: right;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              CHAT INTERFACE                                 */
+/* -------------------------------------------------------------------------- */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    background: var(--bg-card);
+    border: 1px solid var(--stroke);
+    border-radius: var(--r-card);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.message {
+    max-width: 85%;
+    padding: 16px 20px;
+    border-radius: 18px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.message.ai {
+    background: var(--bg-panel);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+
+.message.user {
+    background: var(--text-main);
+    color: #fff;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.chat-input-area {
+    padding: 20px;
+    border-top: 1px solid var(--stroke);
+    background: #fff;
+}
+
+.chat-chips {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.chip {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 99px;
+    border: 1px solid var(--stroke);
+    background: #fff;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.chip:hover {
+    background: var(--bg-panel);
+    border-color: var(--accent);
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.chat-input {
+    width: 100%;
+    padding: 16px;
+    padding-right: 50px;
+    border: 1px solid var(--stroke-strong);
+    border-radius: 16px;
+    background: #fff;
+    resize: none;
+    height: 60px;
+    transition: all 0.2s;
+    font-family: var(--font-sans);
+}
+
+.chat-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.send-btn {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--text-main);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: transform 0.2s;
+}
+
+.send-btn:hover {
+    transform: scale(1.05);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   NAVBAR                                    */
+/* -------------------------------------------------------------------------- */
+/* Navbar specific reset for iframe/embedded use if needed */
+.navbar {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--stroke);
+    background: var(--bg-body);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    font-weight: 800;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: -0.04em;
+}
+
+.nav-links {
+    display: flex;
+    gap: 32px;
+}
+
+.nav-link {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--text-main);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   FOOTER                                    */
+/* -------------------------------------------------------------------------- */
+.footer {
+    margin-top: auto;
+    padding: 40px 0;
+    border-top: 1px solid var(--stroke);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.socials {
+    display: flex;
+    gap: 20px;
+}
