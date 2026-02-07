@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>AutomAI Gym — Ajustes</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Base (idéntica) */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            background: #070605;
+        }
+
+        :root {
+            --serif: 'Playfair Display', ui-serif, Georgia, "Times New Roman", Times, serif;
+            --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
+
+            --cream: rgba(239, 231, 214, .92);
+            --cream-2: rgba(239, 231, 214, .76);
+            --cream-3: rgba(239, 231, 214, .58);
+
+            --stroke: rgba(239, 231, 214, .18);
+            --stroke2: rgba(255, 195, 32, 0.10);
+
+            --glass: rgba(0, 0, 0, 0.10);
+            --glass-strong: rgba(0, 0, 0, 0.18);
+
+            --bronze1: rgba(190, 145, 85, .26);
+            --bronze2: rgba(190, 145, 85, .10);
+
+            --greenGlow: rgba(22, 250, 22, 0.18);
+            --greenBtn1: rgba(70, 98, 72, .92);
+            --greenBtn2: rgba(43, 70, 43, 0.98);
+
+            --shadow-xl: 0 34px 110px rgba(56, 52, 32, 0.72);
+            --shadow-lg: 0 18px 52px rgba(0, 0, 0, .55);
+
+            --r: 14px;
+            --r2: 14px;
+        }
+
+        .stage {
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            font-family: var(--sans);
+        }
+
+        .bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.02);
+            filter: saturate(.82) contrast(1.06) brightness(.62);
+            z-index: -4;
+        }
+
+        .vignette {
+            position: absolute;
+            inset: 0;
+            z-index: -3;
+            pointer-events: none;
+            background:
+                radial-gradient(1200px 800px at 55% 45%, rgba(0, 0, 0, .08), transparent 58%),
+                radial-gradient(1100px 900px at 20% 50%, rgba(0, 0, 0, .34), transparent 60%),
+                radial-gradient(1100px 900px at 85% 50%, rgba(0, 0, 0, .38), transparent 62%),
+                linear-gradient(180deg, rgba(0, 0, 0, .62), rgba(0, 0, 0, .28), rgba(0, 0, 0, .62));
+        }
+
+        .grade {
+            position: absolute;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            background:
+                linear-gradient(180deg, rgba(30, 18, 10, .62), rgba(18, 12, 8, .22), rgba(12, 10, 8, .65)),
+                radial-gradient(900px 650px at 70% 40%, rgba(210, 160, 95, .10), transparent 60%),
+                radial-gradient(900px 650px at 25% 42%, rgba(210, 160, 95, .08), transparent 62%);
+            mix-blend-mode: multiply;
+            opacity: .95;
+        }
+
+        .haze {
+            position: absolute;
+            inset: -8%;
+            z-index: -1;
+            pointer-events: none;
+            background:
+                radial-gradient(900px 520px at 55% 45%, rgba(255, 235, 205, .08), transparent 62%),
+                radial-gradient(900px 520px at 30% 40%, rgba(255, 235, 205, .05), transparent 64%),
+                radial-gradient(900px 520px at 80% 55%, rgba(255, 235, 205, .04), transparent 66%);
+            filter: blur(18px);
+            opacity: .38;
+        }
+
+        .grain {
+            position: absolute;
+            inset: -20%;
+            z-index: 0;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+            mix-blend-mode: soft-light;
+            opacity: .16;
+            transform: rotate(-6deg);
+        }
+
+        .app {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 22px;
+            padding: 28px 28px 28px 10px;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 28px;
+            height: calc(100vh - 56px);
+            padding: 18px 14px;
+            background: transparent;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .brand {
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: .30em;
+            font-weight: 700;
+            font-size: 11px;
+            color: var(--cream-3);
+            padding: 8px 10px 14px;
+        }
+
+        .brand b {
+            display: block;
+            font-size: 16px;
+            letter-spacing: .34em;
+            color: rgba(239, 231, 214, .90);
+            margin-bottom: 2px;
+        }
+
+        .nav {
+            display: grid;
+            gap: 6px;
+            padding: 8px 8px 14px;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 10px;
+            border-radius: 14px;
+            text-decoration: none;
+            color: rgba(239, 231, 214, .72);
+            border: 1px solid transparent;
+            transition: transform .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
+            user-select: none;
+        }
+
+        .nav a:hover {
+            transform: translateX(2px);
+            background: rgba(0, 0, 0, .12);
+            border-color: rgba(239, 231, 214, .14);
+            color: rgba(239, 231, 214, .92);
+        }
+
+        .nav a.active {
+            background: radial-gradient(120% 160% at 30% 0%, rgba(22, 250, 22, 0.12), transparent 35%),
+                linear-gradient(180deg, rgba(0, 0, 0, .20), rgba(0, 0, 0, .12));
+            border-color: rgba(239, 231, 214, .16);
+            color: rgba(239, 231, 214, .95);
+        }
+
+        .ico {
+            width: 18px;
+            height: 18px;
+            flex: 0 0 18px;
+            opacity: .9;
+        }
+
+        .ico svg {
+            width: 18px;
+            height: 18px;
+            display: block;
+            fill: currentColor;
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 10px;
+            border-radius: 16px;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(0, 0, 0, .10);
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            border: 1px solid rgba(239, 231, 214, .18);
+            overflow: hidden;
+            background: rgba(0, 0, 0, .20);
+            flex: 0 0 38px;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .user .name {
+            font-weight: 700;
+            letter-spacing: .02em;
+            color: rgba(239, 231, 214, .92);
+            font-size: 14px;
+            line-height: 1.15;
+        }
+
+        .user .role {
+            font-size: 12px;
+            color: rgba(239, 231, 214, .55);
+            margin-top: 2px;
+        }
+
+        .main {
+            min-width: 0;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 10px;
+            align-content: start;
+        }
+
+        .hero {
+            padding: 10px 6px 6px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-family: var(--serif);
+            font-weight: 500;
+            font-size: clamp(34px, 3vw, 54px);
+            line-height: 1.02;
+            color: rgba(239, 231, 214, .90);
+            text-shadow: 0 12px 40px rgba(0, 0, 0, .62);
+            letter-spacing: .01em;
+        }
+
+        .hero p {
+            margin: 10px 0 0;
+            color: rgba(239, 231, 214, .62);
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 18px 0 10px;
+            color: rgba(239, 231, 214, .78);
+            font-weight: 750;
+            letter-spacing: .02em;
+            user-select: none;
+            padding: 0 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(22, 250, 22, .28);
+            box-shadow: 0 0 0 4px rgba(22, 250, 22, .06);
+            border: 1px solid rgba(239, 231, 214, .14);
+        }
+
+        .panel {
+            border-radius: var(--r);
+            padding: 18px;
+            background:
+                radial-gradient(140% 120% at 18% 10%, rgba(190, 145, 85, .16), transparent 65%),
+                linear-gradient(180deg, rgba(0, 0, 0, .12), rgba(0, 0, 0, .08)),
+                rgba(0, 0, 0, .12);
+            border: 1px solid rgba(239, 231, 214, .12);
+            box-shadow: 0 18px 52px rgba(0, 0, 0, .40);
+            backdrop-filter: blur(16px) saturate(112%);
+            -webkit-backdrop-filter: blur(16px) saturate(112%);
+            overflow: hidden;
+            margin: 0 6px 14px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .field {
+            display: grid;
+            gap: 7px;
+        }
+
+        .label {
+            font-size: 12px;
+            color: rgba(239, 231, 214, .58);
+            letter-spacing: .10em;
+            text-transform: uppercase;
+        }
+
+        .select,
+        .input {
+            height: 44px;
+            border-radius: 14px;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(0, 0, 0, .12);
+            color: rgba(239, 231, 214, .90);
+            padding: 0 12px;
+            outline: none;
+            font-family: var(--sans);
+            font-size: 13px;
+            transition: border-color .18s ease, box-shadow .18s ease;
+        }
+
+        .select:focus,
+        .input:focus {
+            border-color: rgba(239, 231, 214, .20);
+            box-shadow: 0 0 0 4px rgba(190, 145, 85, .10);
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 14px 0;
+            border-top: 1px solid rgba(239, 231, 214, .10);
+        }
+
+        .row:first-child {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .row:last-child {
+            padding-bottom: 0;
+        }
+
+        .row .left {
+            min-width: 0;
+        }
+
+        .row .title {
+            color: rgba(239, 231, 214, .90);
+            font-weight: 850;
+            letter-spacing: .02em;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .row .desc {
+            margin-top: 4px;
+            color: rgba(239, 231, 214, .56);
+            font-size: 12.5px;
+            letter-spacing: .02em;
+        }
+
+        /* Switch premium */
+        .switch {
+            width: 52px;
+            height: 30px;
+            border-radius: 999px;
+            border: 1px solid rgba(239, 231, 214, .14);
+            background: rgba(0, 0, 0, .14);
+            position: relative;
+            cursor: pointer;
+            transition: border-color .18s ease, filter .18s ease;
+            flex: 0 0 52px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, .18);
+        }
+
+        .switch::after {
+            content: "";
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 22px;
+            height: 22px;
+            border-radius: 999px;
+            background:
+                radial-gradient(120% 160% at 30% 0%, rgba(239, 231, 214, .14), transparent 50%),
+                rgba(239, 231, 214, .22);
+            border: 1px solid rgba(239, 231, 214, .18);
+            transition: transform .18s ease, background .18s ease;
+        }
+
+        .switch[data-on="true"] {
+            border-color: rgba(239, 231, 214, .18);
+            background:
+                radial-gradient(120% 160% at 30% 0%, rgba(22, 250, 22, .12), transparent 50%),
+                rgba(0, 0, 0, .16);
+        }
+
+        .switch[data-on="true"]::after {
+            transform: translateX(22px);
+            background:
+                radial-gradient(120% 160% at 30% 0%, rgba(22, 250, 22, .12), transparent 50%),
+                rgba(239, 231, 214, .22);
+        }
+
+        .btn {
+            width: 100%;
+            height: 44px;
+            border-radius: 999px;
+            border: 1px solid rgba(239, 231, 214, .16);
+            cursor: pointer;
+            background:
+                radial-gradient(120% 160% at 30% 0%, var(--greenGlow), transparent 35%),
+                linear-gradient(180deg, var(--greenBtn1), var(--greenBtn2));
+            color: rgba(239, 231, 214, .95);
+            font-family: var(--sans);
+            font-weight: 800;
+            letter-spacing: .06em;
+            box-shadow: 0 18px 52px rgba(0, 0, 0, .50);
+            transition: transform .18s ease, filter .18s ease, border-color .18s ease;
+            margin-top: 12px;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.06);
+            border-color: rgba(239, 231, 214, .22);
+        }
+
+        .note {
+            margin-top: 10px;
+            color: rgba(239, 231, 214, .56);
+            font-size: 12.5px;
+            letter-spacing: .02em;
+            line-height: 1.4;
+        }
+
+        /* Chat (igual) */
+        .chat {
+            grid-column: 2 / 3;
+            align-self: start;
+            position: sticky;
+            top: 28px;
+            height: calc(100vh - 56px);
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            border-radius: var(--r2);
+            padding: 14px;
+            background:
+                radial-gradient(140% 120% at 18% 10%, rgba(190, 145, 85, .16), transparent 65%),
+                linear-gradient(180deg, rgba(0, 0, 0, .16), rgba(0, 0, 0, .10)),
+                rgba(0, 0, 0, .12);
+            border: 1px solid rgba(239, 231, 214, .14);
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(18px) saturate(115%);
+            -webkit-backdrop-filter: blur(18px) saturate(115%);
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        .chat-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 6px 6px 10px;
+            border-bottom: 1px solid rgba(239, 231, 214, .10);
+        }
+
+        .chat-head .left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .chip {
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            border: 1px solid rgba(239, 231, 214, .14);
+            background: radial-gradient(120% 160% at 30% 0%, rgba(22, 250, 22, 0.10), transparent 35%), rgba(0, 0, 0, .14);
+            display: grid;
+            place-items: center;
+            color: rgba(239, 231, 214, .86);
+            flex: 0 0 34px;
+        }
+
+        .chat-head h2 {
+            margin: 0;
+            font-weight: 900;
+            letter-spacing: .02em;
+            color: rgba(239, 231, 214, .92);
+            font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-head p {
+            margin: 2px 0 0;
+            color: rgba(239, 231, 214, .56);
+            font-size: 12px;
+            letter-spacing: .02em;
+        }
+
+        .kebab {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(0, 0, 0, .12);
+            color: rgba(239, 231, 214, .70);
+            cursor: pointer;
+            transition: transform .18s ease, border-color .18s ease;
+        }
+
+        .kebab:hover {
+            transform: translateY(-1px);
+            border-color: rgba(239, 231, 214, .18);
+        }
+
+        .chat-body {
+            padding: 14px 6px;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(239, 231, 214, .18) transparent;
+        }
+
+        .bubble {
+            max-width: 92%;
+            padding: 12px 12px;
+            border-radius: 16px;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(0, 0, 0, .14);
+            color: rgba(239, 231, 214, .82);
+            font-size: 13px;
+            line-height: 1.4;
+            letter-spacing: .01em;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, .24);
+        }
+
+        .bubble.ai {
+            border-top-left-radius: 10px;
+            background: radial-gradient(120% 140% at 20% 0%, rgba(190, 145, 85, .12), transparent 45%), rgba(0, 0, 0, .14);
+        }
+
+        .bubble.user {
+            align-self: flex-end;
+            border-top-right-radius: 10px;
+            background: radial-gradient(120% 140% at 20% 0%, rgba(22, 250, 22, .10), transparent 45%), rgba(0, 0, 0, .16);
+        }
+
+        .chat-foot {
+            padding: 10px 6px 6px;
+            border-top: 1px solid rgba(239, 231, 214, .10);
+            display: grid;
+            grid-template-columns: 44px 1fr 44px;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .iconbtn {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(0, 0, 0, .12);
+            color: rgba(239, 231, 214, .74);
+            cursor: pointer;
+            transition: transform .18s ease, border-color .18s ease;
+        }
+
+        .iconbtn:hover {
+            transform: translateY(-1px);
+            border-color: rgba(239, 231, 214, .18);
+        }
+
+        .chat-input {
+            height: 44px;
+            border-radius: 14px;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(0, 0, 0, .12);
+            color: rgba(239, 231, 214, .90);
+            padding: 0 12px;
+            outline: none;
+            font-family: var(--sans);
+            font-size: 13px;
+            transition: border-color .18s ease, box-shadow .18s ease;
+        }
+
+        .chat-input::placeholder {
+            color: rgba(239, 231, 214, .52);
+        }
+
+        .chat-input:focus {
+            border-color: rgba(239, 231, 214, .20);
+            box-shadow: 0 0 0 4px rgba(190, 145, 85, .10);
+        }
+
+        @media (max-width:1180px) {
+            .main {
+                grid-template-columns: 1fr;
+            }
+
+            .chat {
+                position: relative;
+                top: 0;
+                height: auto;
+                grid-column: 1 / -1;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width:900px) {
+            .app {
+                grid-template-columns: 1fr;
+                padding: 18px;
+            }
+
+            .sidebar {
+                position: relative;
+                top: 0;
+                height: auto;
+                display: grid;
+                gap: 10px;
+            }
+
+            .nav {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width:640px) {
+            .nav {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="stage">
+        <img class="bg" src="./login-bg.png" alt="" />
+        <div class="vignette"></div>
+        <div class="grade"></div>
+        <div class="haze"></div>
+        <div class="grain"></div>
+
+        <section class="app">
+            <aside class="sidebar">
+                <div>
+                    <div class="brand">
+                        <b>AUTOMAI</b>
+                        GYM
+                    </div>
+
+                    <nav class="nav" aria-label="Menú principal">
+                        <a href="dashboard.html"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
+                                    <path d="M12 3 3 10v11h6v-7h6v7h6V10l-9-7Z" />
+                                </svg></span>Inicio</a>
+                        <a href="rutinas.html"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
+                                    <path d="M7 4h10v2H7V4Zm-2 4h14v12H5V8Zm2 2v8h10v-8H7Z" />
+                                </svg></span>Rutinas</a>
+                        <a href="reservas.html"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
+                                    <path d="M6 7h12v2H6V7Zm0 4h12v2H6v-2Zm0 4h8v2H6v-2Z" />
+                                </svg></span>Reservas</a>
+                        <a href="calendario.html"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z" />
+                                </svg></span>Calendario</a>
+                        <a href="progreso.html"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
+                                    <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z" />
+                                </svg></span>Progreso</a>
+                        <a href="iaCoach.html"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M4 4h16v10H7l-3 3V4Zm4 14h12v2H8v-2Zm3-11h7v2h-7V7Zm-5 0h3v2H6V7Zm0 4h12v2H6v-2Z" />
+                                </svg></span>IA Coach</a>
+
+                        <a href="perfil.html">
+                            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2-8 4.5V21h16v-2.5C20 16 16.42 14 12 14Z" />
+                                </svg></span>
+                            Perfil
+                        </a>
+                        <a class="active" href="ajustes.html">
+                            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.2 7.2 0 0 0-1.63-.94l-.36-2.54A.5.5 0 0 0 12.9 1h-3.8a.5.5 0 0 0-.49.42l-.36 2.54c-.58.23-1.12.54-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L1.71 7.48a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L1.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.3.6.22l2.39-.96c.5.4 1.05.71 1.63.94l.36 2.54c.04.24.25.42.49.42h3.8c.24 0 .45-.18.49-.42l.36-2.54c.58-.23 1.12-.54 1.63-.94l2.39.96c.22.09.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM11 15a3 3 0 1 1 3-3 3 3 0 0 1-3 3Z" />
+                                </svg></span>
+                            Ajustes
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="user">
+                    <div class="avatar"><img src="./user.png" alt="Foto de perfil"></div>
+                    <div>
+                        <div class="name">Marcelo</div>
+                        <div class="role">Usuario</div>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="main">
+                <div>
+                    <header class="hero">
+                        <h1>Ajustes.</h1>
+                        <p>Preferencias, notificaciones y tono de IA.</p>
+                    </header>
+
+                    <div class="section-title">
+                        <span class="dot" aria-hidden="true"></span>
+                        <span>Preferencias</span>
+                    </div>
+
+                    <section class="panel" aria-label="Ajustes de usuario">
+                        <div class="row">
+                            <div class="left">
+                                <div class="title">Notificaciones de entrenamiento</div>
+                                <div class="desc">Equivale a <b>notificaciones_entrenamiento_activas</b>.</div>
+                            </div>
+                            <div class="switch" id="swTrain" data-on="true" role="switch" aria-checked="true"
+                                tabindex="0"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="left">
+                                <div class="title">Notificaciones de clases</div>
+                                <div class="desc">Equivale a <b>notificaciones_clases_activas</b>.</div>
+                            </div>
+                            <div class="switch" id="swClasses" data-on="true" role="switch" aria-checked="true"
+                                tabindex="0"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="left">
+                                <div class="title">Tono de IA Coach</div>
+                                <div class="desc">Equivale a <b>tono_ia_coach</b> (directo / motivador).</div>
+                            </div>
+                            <select class="select" id="tone" style="width: 170px;">
+                                <option value="directo" selected>directo</option>
+                                <option value="motivador">motivador</option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="left">
+                                <div class="title">Idioma preferido</div>
+                                <div class="desc">Equivale a <b>idioma_preferido</b> (es / en).</div>
+                            </div>
+                            <select class="select" id="lang" style="width: 170px;">
+                                <option value="es" selected>es</option>
+                                <option value="en">en</option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="left">
+                                <div class="title">Semana empieza en</div>
+                                <div class="desc">Equivale a <b>semana_empieza_en</b> (lunes / domingo).</div>
+                            </div>
+                            <select class="select" id="weekStart" style="width: 170px;">
+                                <option value="lunes" selected>lunes</option>
+                                <option value="domingo">domingo</option>
+                            </select>
+                        </div>
+
+                        <button class="btn" type="button" id="save">Guardar ajustes</button>
+                        <div id="saved" class="note" style="display:none;">
+                            Guardado (demo). Este panel corresponde a <b>ajustes_usuario</b>.
+                        </div>
+                    </section>
+
+                    <div class="section-title">
+                        <span class="dot" aria-hidden="true"></span>
+                        <span>Seguridad</span>
+                    </div>
+
+                    <section class="panel" aria-label="Seguridad de usuario">
+                        <div class="grid-2">
+                            <div class="field">
+                                <div class="label">Requiere cambio contraseña</div>
+                                <input class="input" type="text" value="0 (false)" readonly />
+                            </div>
+                            <div class="field">
+                                <div class="label">Último cambio</div>
+                                <input class="input" type="text" value="2026-01-20 12:31" readonly />
+                            </div>
+                        </div>
+
+                        <div style="height:12px;"></div>
+
+                        <div class="grid-2">
+                            <div class="field">
+                                <div class="label">Intentos fallidos login</div>
+                                <input class="input" type="text" value="1" readonly />
+                            </div>
+                            <div class="field">
+                                <div class="label">Último intento fallido</div>
+                                <input class="input" type="text" value="2026-02-06 22:10" readonly />
+                            </div>
+                        </div>
+
+                        <div class="note">
+                            Este bloque es UI y corresponde a <b>seguridad_usuario</b>.
+                        </div>
+                    </section>
+                </div>
+
+                <!-- IA COACH -->
+                <aside class="chat" aria-label="IA Coach">
+                    <div class="chat-head">
+                        <div class="left">
+                            <div class="chip" aria-hidden="true">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M12 2a6 6 0 0 0-6 6v3H5a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1h1a3 3 0 0 0 3-3v-2a3 3 0 0 0-3-3h-1V8a6 6 0 0 0-6-6Zm-4 6a4 4 0 1 1 8 0v3H8V8Zm10 5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-1v-4h1ZM6 17H5a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h1v4Zm2 3v-7h8v7H8Z" />
+                                </svg>
+                            </div>
+                            <div style="min-width:0;">
+                                <h2>IA Coach</h2>
+                                <p>Tu tono afecta mis respuestas.</p>
+                            </div>
+                        </div>
+                        <button class="kebab" type="button" aria-label="Opciones">···</button>
+                    </div>
+
+                    <div class="chat-body">
+                        <div class="bubble ai">Si activas “motivador”, usaré mensajes más energéticos y refuerzo
+                            positivo.</div>
+                        <div class="bubble user">Vale, lo pruebo.</div>
+                        <div class="bubble ai">Perfecto. Guardarlo no cambia tu rendimiento, solo tu experiencia.</div>
+                    </div>
+
+                    <div class="chat-foot">
+                        <button class="iconbtn" type="button" aria-label="Adjuntar">＋</button>
+                        <input class="chat-input" type="text" placeholder="Escribe un mensaje…" />
+                        <button class="iconbtn" type="button" aria-label="Enviar">➤</button>
+                    </div>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function toggleSwitch(el) {
+            const on = el.getAttribute('data-on') === 'true';
+            const next = !on;
+            el.setAttribute('data-on', String(next));
+            el.setAttribute('aria-checked', String(next));
+        }
+
+        ['swTrain', 'swClasses'].forEach(id => {
+            const el = document.getElementById(id);
+            el.addEventListener('click', () => toggleSwitch(el));
+            el.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSwitch(el); }
+            });
+        });
+
+        const save = document.getElementById('save');
+        const saved = document.getElementById('saved');
+        save.addEventListener('click', () => {
+            saved.style.display = 'block';
+            clearTimeout(window.__s);
+            window.__s = setTimeout(() => saved.style.display = 'none', 2200);
+        });
+    </script>
+</body>
+
+</html>
