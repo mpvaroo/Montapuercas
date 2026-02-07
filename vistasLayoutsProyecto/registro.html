@@ -1,5 +1,5 @@
 <!-- =========================
-     login.html
+     registro.html
 ========================= -->
 <!doctype html>
 <html lang="es">
@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>AutomAI Gym — Login</title>
+    <title>AutomAI Gym — Registro</title>
 
     <!-- Premium Serif Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +18,7 @@
 
     <style>
         /* --------------------------------------------------------------------------
-      RESET
+      RESET + TOKENS (MISMA ESTÉTICA)
     -------------------------------------------------------------------------- */
         *,
         *::before,
@@ -62,9 +62,6 @@
             --r: 22px;
         }
 
-        /* --------------------------------------------------------------------------
-      STAGE
-    -------------------------------------------------------------------------- */
         .stage {
             min-height: 100vh;
             position: relative;
@@ -137,27 +134,21 @@
             transform: rotate(-6deg);
         }
 
-        /* --------------------------------------------------------------------------
-      LAYOUT
-    -------------------------------------------------------------------------- */
         .wrap {
             width: min(1200px, calc(100% - 56px));
             display: grid;
-            grid-template-columns: 440px 1fr;
-            gap: clamp(60px, 10vw, 160px);
+            grid-template-columns: 520px 1fr;
+            gap: clamp(60px, 10vw, 140px);
             align-items: center;
             padding: 56px 0;
             position: relative;
             z-index: 2;
         }
 
-        /* --------------------------------------------------------------------------
-      CARD
-    -------------------------------------------------------------------------- */
         .card {
             position: relative;
             border-radius: var(--r);
-            min-height: 620px;
+            min-height: 660px;
             padding: 34px 28px 28px;
             background:
                 radial-gradient(140% 120% at 18% 10%, var(--bronze1), transparent 65%),
@@ -185,18 +176,6 @@
             opacity: .95;
         }
 
-        .card::after {
-            content: "";
-            position: absolute;
-            inset: -20%;
-            background-image:
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
-            mix-blend-mode: soft-light;
-            opacity: .22;
-            pointer-events: none;
-            transform: rotate(8deg);
-        }
-
         .brand {
             position: relative;
             z-index: 2;
@@ -219,36 +198,40 @@
         .headline {
             position: relative;
             z-index: 2;
-            margin: 22px 0 10px;
+            margin: 18px 0 10px;
             font-family: var(--serif);
             font-weight: 500;
-            font-size: 46px;
-            line-height: 1.00;
-            letter-spacing: .005em;
+            font-size: 44px;
+            line-height: 1.02;
+            letter-spacing: .006em;
             color: var(--cream);
         }
 
         .sub {
             position: relative;
             z-index: 2;
-            margin: 0 0 22px;
+            margin: 0 0 18px;
             font-size: 12px;
             letter-spacing: .10em;
             text-transform: uppercase;
             color: rgba(239, 231, 214, .60);
         }
 
-        .field {
+        .grid {
             position: relative;
             z-index: 2;
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-top: 4px;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
         }
 
-        .input {
+        .grid.one {
+            grid-template-columns: 1fr;
+        }
+
+        .input,
+        .select {
             width: 100%;
             height: 54px;
             border-radius: 14px;
@@ -267,35 +250,36 @@
             color: rgba(239, 231, 214, .52);
         }
 
-        .input:focus {
+        .input:focus,
+        .select:focus {
             border-color: rgba(239, 231, 214, .26);
             box-shadow: 0 0 0 4px rgba(190, 145, 85, .12), inset 0 1px 0 rgba(255, 255, 255, .06);
             transform: translateY(-1px);
         }
 
-        .row {
+        .select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 46px;
+            background-image:
+                linear-gradient(45deg, transparent 50%, rgba(239, 231, 214, .65) 50%),
+                linear-gradient(135deg, rgba(239, 231, 214, .65) 50%, transparent 50%);
+            background-position:
+                calc(100% - 22px) 50%,
+                calc(100% - 16px) 50%;
+            background-size: 6px 6px, 6px 6px;
+            background-repeat: no-repeat;
+        }
+
+        .line {
             position: relative;
             z-index: 2;
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 12px;
-            margin-bottom: 6px;
-        }
-
-        .check {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            color: rgba(239, 231, 214, .70);
-            font-size: 13px;
-            user-select: none;
-        }
-
-        .check input {
-            width: 16px;
-            height: 16px;
-            accent-color: rgba(70, 98, 72, .92);
+            margin: 4px 0 0;
         }
 
         .link {
@@ -306,11 +290,18 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
         }
 
         .link:hover {
             color: rgba(239, 231, 214, .95);
             transform: translateX(2px);
+        }
+
+        .note {
+            color: rgba(239, 231, 214, .55);
+            font-size: 12px;
+            line-height: 1.35;
         }
 
         .msg {
@@ -324,6 +315,7 @@
             font-size: 13px;
             line-height: 1.35;
             display: none;
+            margin-top: 10px;
         }
 
         .msg.show {
@@ -391,8 +383,7 @@
             text-shadow: 0 12px 40px rgba(0, 0, 0, .62);
         }
 
-        /* Responsive */
-        @media (max-width: 980px) {
+        @media (max-width: 1100px) {
             .wrap {
                 grid-template-columns: 1fr;
                 gap: 26px;
@@ -408,13 +399,17 @@
             }
         }
 
-        @media (max-width: 520px) {
+        @media (max-width: 560px) {
             .wrap {
                 width: calc(100% - 28px);
             }
 
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
             .headline {
-                font-size: 40px;
+                font-size: 38px;
             }
 
             .card {
@@ -434,58 +429,130 @@
 
         <section class="wrap">
             <!-- CARD -->
-            <form class="card" id="formLogin" autocomplete="on">
+            <form class="card" id="formRegistro" autocomplete="on">
                 <div class="brand">
                     <b>AUTOMAI</b>
                     GYM
                 </div>
 
-                <div class="header-group">
-                    <h1 class="headline">Entrena<br>con intención.</h1>
-                    <p class="sub">Ritmo, rutina y foco. Sin ruido.</p>
+                <div>
+                    <h1 class="headline">Crea tu cuenta.</h1>
+                    <p class="sub">usuario · perfil · ajustes</p>
+
+                    <!-- usuarios -->
+                    <div class="grid one">
+                        <input class="input" id="correo_usuario" type="email" placeholder="Correo (correo_usuario)"
+                            required />
+                    </div>
+
+                    <div class="grid">
+                        <input class="input" id="nombre_mostrado_usuario" type="text"
+                            placeholder="Nombre mostrado (nombre_mostrado_usuario)" required />
+                        <input class="input" id="nombre_real_usuario" type="text"
+                            placeholder="Nombre real (perfiles_usuario.nombre_real_usuario)" />
+                    </div>
+
+                    <div class="grid">
+                        <input class="input" id="contrasena_usuario" type="password"
+                            placeholder="Contraseña (hash_contrasena_usuario)" required />
+                        <input class="input" id="contrasena_repetir" type="password" placeholder="Repetir contraseña"
+                            required />
+                    </div>
+
+                    <!-- perfiles_usuario -->
+                    <div class="grid">
+                        <select class="select" id="objetivo_principal_usuario" required>
+                            <option value="salud">Objetivo (salud)</option>
+                            <option value="definir">Objetivo (definir)</option>
+                            <option value="volumen">Objetivo (volumen)</option>
+                            <option value="rendimiento">Objetivo (rendimiento)</option>
+                        </select>
+
+                        <select class="select" id="nivel_usuario" required>
+                            <option value="principiante">Nivel (principiante)</option>
+                            <option value="intermedio">Nivel (intermedio)</option>
+                            <option value="avanzado">Nivel (avanzado)</option>
+                        </select>
+                    </div>
+
+                    <div class="grid">
+                        <select class="select" id="dias_entrenamiento_semana_usuario" required>
+                            <option value="3">Días/semana (3)</option>
+                            <option value="4">Días/semana (4)</option>
+                            <option value="5">Días/semana (5)</option>
+                            <option value="6">Días/semana (6)</option>
+                        </select>
+
+                        <input class="input" id="telefono_usuario" type="tel"
+                            placeholder="Teléfono (telefono_usuario)" />
+                    </div>
+
+                    <div class="grid">
+                        <input class="input" id="peso_kg_usuario" type="number" step="0.01" min="0"
+                            placeholder="Peso kg (peso_kg_usuario)" />
+                        <input class="input" id="altura_cm_usuario" type="number" step="1" min="0"
+                            placeholder="Altura cm (altura_cm_usuario)" />
+                    </div>
+
+                    <!-- ajustes_usuario -->
+                    <div class="grid">
+                        <select class="select" id="tono_ia_coach" required>
+                            <option value="directo">Tono IA (directo)</option>
+                            <option value="motivador">Tono IA (motivador)</option>
+                        </select>
+
+                        <select class="select" id="idioma_preferido" required>
+                            <option value="es">Idioma (es)</option>
+                            <option value="en">Idioma (en)</option>
+                        </select>
+                    </div>
+
+                    <div class="grid">
+                        <select class="select" id="semana_empieza_en" required>
+                            <option value="lunes">Semana empieza (lunes)</option>
+                            <option value="domingo">Semana empieza (domingo)</option>
+                        </select>
+
+                        <select class="select" id="notificaciones_entrenamiento_activas" required>
+                            <option value="1">Notifs entreno (activas)</option>
+                            <option value="0">Notifs entreno (off)</option>
+                        </select>
+                    </div>
+
+                    <div class="grid one">
+                        <select class="select" id="notificaciones_clases_activas" required>
+                            <option value="1">Notifs clases (activas)</option>
+                            <option value="0">Notifs clases (off)</option>
+                        </select>
+                    </div>
+
+                    <div class="line">
+                        <a class="link" href="login.html">← Volver a Login</a>
+                        <span class="note">Se crea como rol: usuario (usuarios_roles)</span>
+                    </div>
+
+                    <div class="msg" id="uiMsg"></div>
                 </div>
 
-                <div class="field">
-                    <input class="input" id="correo_usuario" type="email" name="correo_usuario" placeholder="Correo"
-                        required />
-                    <input class="input" id="contrasena_usuario" type="password" name="contrasena_usuario"
-                        placeholder="Contraseña" required />
-                </div>
-
-                <div class="row">
-                    <label class="check">
-                        <input type="checkbox" id="rememberMe" />
-                        Recordarme
-                    </label>
-
-                    <a class="link" href="#" id="linkOlvido">¿Olvidaste la contraseña?</a>
-                </div>
-
-                <div class="msg" id="uiMsg"></div>
-
-                <div class="row" style="margin-top:10px">
-                    <a class="link" href="registro.html" id="linkRegistro">¿No tienes cuenta? Regístrate</a>
-                </div>
-
-                <button class="btn" type="submit">Entrar →</button>
+                <button class="btn" type="submit">Crear cuenta →</button>
             </form>
 
-            <!-- QUOTE -->
             <div class="right">
-                <p class="quote">La disciplina es el puente entre tus metas y tus logros.<span
-                        style="display:block;margin-top:40px;white-space:nowrap;">Créalo, créelo y constrúyelo.</span>
-                </p>
+                <p class="quote">No es motivación. Es sistema.<span style="display:block;margin-top:40px;">Paso a paso,
+                        cada semana.</span></p>
             </div>
         </section>
     </main>
 
     <script>
         /* =========================================================================
-          LOGIN (DEMO) — alineado con tu BD
-          Tablas:
-            - usuarios: correo_usuario, hash_contrasena_usuario, nombre_mostrado_usuario, estado_usuario
-            - seguridad_usuario: intentos_fallidos_login, fecha_ultimo_intento_fallido
-          NOTA: en producción, el hash se valida en servidor. Aquí es demo local.
+          REGISTRO (DEMO) — alineado con tu BD
+          Inserts "lógicos":
+            - usuarios
+            - usuarios_roles (rol = usuario)
+            - perfiles_usuario
+            - ajustes_usuario
+            - seguridad_usuario
         ========================================================================= */
 
         const KEY_DB = "automai_db_demo_v1";
@@ -501,64 +568,18 @@
             const raw = localStorage.getItem(KEY_DB);
             if (raw) return JSON.parse(raw);
 
-            // Inicializa con roles mínimos (como tus semillas) + un usuario demo
+            // Si entras a registro directo sin pasar por login
             const seed = {
                 roles: [
                     { id_rol: 1, nombre_rol: "usuario", descripcion_rol: "Acceso a zona usuario" },
                     { id_rol: 2, nombre_rol: "admin", descripcion_rol: "Acceso a panel admin" }
                 ],
-                usuarios: [
-                    {
-                        id_usuario: 1,
-                        correo_usuario: "demo@automai.com",
-                        hash_contrasena_usuario: "demo123", // DEMO (no hash real)
-                        nombre_mostrado_usuario: "Marcelo",
-                        estado_usuario: "activo",
-                        fecha_creacion_usuario: nowSQL(),
-                        fecha_ultimo_acceso_usuario: null
-                    }
-                ],
-                usuarios_roles: [
-                    { id_usuario_rol: 1, id_usuario: 1, id_rol: 1, fecha_asignacion_rol: nowSQL() }
-                ],
-                perfiles_usuario: [
-                    {
-                        id_perfil_usuario: 1,
-                        id_usuario: 1,
-                        nombre_real_usuario: "Marcelo",
-                        telefono_usuario: null,
-                        ruta_foto_perfil_usuario: "./user.png",
-                        objetivo_principal_usuario: "salud",
-                        dias_entrenamiento_semana_usuario: 3,
-                        nivel_usuario: "principiante",
-                        peso_kg_usuario: null,
-                        altura_cm_usuario: null,
-                        fecha_inicio_usuario: null
-                    }
-                ],
-                ajustes_usuario: [
-                    {
-                        id_ajustes_usuario: 1,
-                        id_usuario: 1,
-                        notificaciones_entrenamiento_activas: 1,
-                        notificaciones_clases_activas: 1,
-                        tono_ia_coach: "directo",
-                        idioma_preferido: "es",
-                        semana_empieza_en: "lunes"
-                    }
-                ],
-                seguridad_usuario: [
-                    {
-                        id_seguridad_usuario: 1,
-                        id_usuario: 1,
-                        requiere_cambio_contrasena: 0,
-                        fecha_ultimo_cambio_contrasena: null,
-                        intentos_fallidos_login: 0,
-                        fecha_ultimo_intento_fallido: null
-                    }
-                ]
+                usuarios: [],
+                usuarios_roles: [],
+                perfiles_usuario: [],
+                ajustes_usuario: [],
+                seguridad_usuario: []
             };
-
             localStorage.setItem(KEY_DB, JSON.stringify(seed));
             return seed;
         }
@@ -579,113 +600,154 @@
             el.textContent = "";
         }
 
-        function findUserByEmail(db, correo) {
-            return db.usuarios.find(u => u.correo_usuario.toLowerCase() === correo.toLowerCase()) || null;
+        function nextId(list, key) {
+            if (!list.length) return 1;
+            return Math.max(...list.map(x => Number(x[key]) || 0)) + 1;
         }
 
-        function getUserRole(db, id_usuario) {
-            const rel = db.usuarios_roles.find(ur => ur.id_usuario === id_usuario);
-            if (!rel) return "usuario";
-            const rol = db.roles.find(r => r.id_rol === rel.id_rol);
-            return rol ? rol.nombre_rol : "usuario";
+        function findRoleIdUsuario(db) {
+            const rol = db.roles.find(r => r.nombre_rol === "usuario");
+            return rol ? rol.id_rol : 1;
         }
 
-        function getAjustes(db, id_usuario) {
-            return db.ajustes_usuario.find(a => a.id_usuario === id_usuario) || null;
+        function correoExiste(db, correo) {
+            return db.usuarios.some(u => u.correo_usuario.toLowerCase() === correo.toLowerCase());
         }
 
-        function getPerfil(db, id_usuario) {
-            return db.perfiles_usuario.find(p => p.id_usuario === id_usuario) || null;
+        function parseTinyInt(v) {
+            return Number(v) === 1 ? 1 : 0;
         }
 
-        function getSeguridad(db, id_usuario) {
-            return db.seguridad_usuario.find(s => s.id_usuario === id_usuario) || null;
-        }
-
-        document.getElementById("linkOlvido").addEventListener("click", (e) => {
-            e.preventDefault();
-            setMsg("Demo: la recuperación de contraseña se haría en backend. Aquí puedes crear una cuenta nueva en Registro.", "err");
-        });
-
-        document.getElementById("formLogin").addEventListener("submit", (e) => {
+        document.getElementById("formRegistro").addEventListener("submit", (e) => {
             e.preventDefault();
             clearMsg();
 
             const correo_usuario = document.getElementById("correo_usuario").value.trim();
-            const contrasena_usuario = document.getElementById("contrasena_usuario").value;
+            const nombre_mostrado_usuario = document.getElementById("nombre_mostrado_usuario").value.trim();
+            const nombre_real_usuario = document.getElementById("nombre_real_usuario").value.trim() || null;
 
-            if (!correo_usuario || !contrasena_usuario) {
-                setMsg("Completa correo y contraseña.", "err");
+            const contrasena_usuario = document.getElementById("contrasena_usuario").value;
+            const contrasena_repetir = document.getElementById("contrasena_repetir").value;
+
+            const objetivo_principal_usuario = document.getElementById("objetivo_principal_usuario").value;
+            const nivel_usuario = document.getElementById("nivel_usuario").value;
+            const dias_entrenamiento_semana_usuario = Number(document.getElementById("dias_entrenamiento_semana_usuario").value);
+
+            const telefono_usuario = document.getElementById("telefono_usuario").value.trim() || null;
+            const peso_kg_usuario_raw = document.getElementById("peso_kg_usuario").value;
+            const altura_cm_usuario_raw = document.getElementById("altura_cm_usuario").value;
+
+            const tono_ia_coach = document.getElementById("tono_ia_coach").value;
+            const idioma_preferido = document.getElementById("idioma_preferido").value;
+            const semana_empieza_en = document.getElementById("semana_empieza_en").value;
+
+            const notificaciones_entrenamiento_activas = parseTinyInt(document.getElementById("notificaciones_entrenamiento_activas").value);
+            const notificaciones_clases_activas = parseTinyInt(document.getElementById("notificaciones_clases_activas").value);
+
+            // Validaciones básicas
+            if (!correo_usuario || !nombre_mostrado_usuario || !contrasena_usuario || !contrasena_repetir) {
+                setMsg("Completa los campos obligatorios.", "err");
+                return;
+            }
+
+            if (contrasena_usuario.length < 6) {
+                setMsg("La contraseña debe tener al menos 6 caracteres (demo).", "err");
+                return;
+            }
+
+            if (contrasena_usuario !== contrasena_repetir) {
+                setMsg("Las contraseñas no coinciden.", "err");
                 return;
             }
 
             const db = getDB();
-            const user = findUserByEmail(db, correo_usuario);
 
-            if (!user) {
-                setMsg("No existe una cuenta con ese correo.", "err");
+            if (correoExiste(db, correo_usuario)) {
+                setMsg("Ese correo ya está registrado.", "err");
                 return;
             }
 
-            // estado_usuario ENUM('activo','bloqueado','pendiente')
-            if (user.estado_usuario !== "activo") {
-                setMsg("Tu cuenta no está activa (" + user.estado_usuario + ").", "err");
-                return;
-            }
+            // INSERT usuarios
+            const id_usuario = nextId(db.usuarios, "id_usuario");
+            db.usuarios.push({
+                id_usuario,
+                correo_usuario,
+                hash_contrasena_usuario: contrasena_usuario, // DEMO: en servidor sería hash
+                nombre_mostrado_usuario,
+                estado_usuario: "activo",
+                fecha_creacion_usuario: nowSQL(),
+                fecha_ultimo_acceso_usuario: null
+            });
 
-            // seguridad_usuario intentos (demo simple)
-            const seg = getSeguridad(db, user.id_usuario);
-            if (seg && seg.intentos_fallidos_login >= 10) {
-                setMsg("Demasiados intentos fallidos. Tu cuenta está bloqueada temporalmente (demo).", "err");
-                return;
-            }
+            // INSERT usuarios_roles (rol usuario)
+            const id_rol = findRoleIdUsuario(db);
+            const id_usuario_rol = nextId(db.usuarios_roles, "id_usuario_rol");
+            db.usuarios_roles.push({
+                id_usuario_rol,
+                id_usuario,
+                id_rol,
+                fecha_asignacion_rol: nowSQL()
+            });
 
-            // DEMO: en backend sería verify hash
-            const ok = user.hash_contrasena_usuario === contrasena_usuario;
+            // INSERT perfiles_usuario (1:1)
+            const id_perfil_usuario = nextId(db.perfiles_usuario, "id_perfil_usuario");
+            db.perfiles_usuario.push({
+                id_perfil_usuario,
+                id_usuario,
+                nombre_real_usuario,
+                telefono_usuario,
+                ruta_foto_perfil_usuario: "./user.png",
+                objetivo_principal_usuario,
+                dias_entrenamiento_semana_usuario,
+                nivel_usuario,
+                peso_kg_usuario: peso_kg_usuario_raw ? Number(peso_kg_usuario_raw) : null,
+                altura_cm_usuario: altura_cm_usuario_raw ? Number(altura_cm_usuario_raw) : null,
+                fecha_inicio_usuario: null
+            });
 
-            if (!ok) {
-                if (seg) {
-                    seg.intentos_fallidos_login = (seg.intentos_fallidos_login || 0) + 1;
-                    seg.fecha_ultimo_intento_fallido = nowSQL();
-                    saveDB(db);
-                }
-                setMsg("Contraseña incorrecta.", "err");
-                return;
-            }
+            // INSERT ajustes_usuario (1:1)
+            const id_ajustes_usuario = nextId(db.ajustes_usuario, "id_ajustes_usuario");
+            db.ajustes_usuario.push({
+                id_ajustes_usuario,
+                id_usuario,
+                notificaciones_entrenamiento_activas,
+                notificaciones_clases_activas,
+                tono_ia_coach,
+                idioma_preferido,
+                semana_empieza_en
+            });
 
-            // reset intentos si ok
-            if (seg) {
-                seg.intentos_fallidos_login = 0;
-                seg.fecha_ultimo_intento_fallido = null;
-            }
+            // INSERT seguridad_usuario (1:1)
+            const id_seguridad_usuario = nextId(db.seguridad_usuario, "id_seguridad_usuario");
+            db.seguridad_usuario.push({
+                id_seguridad_usuario,
+                id_usuario,
+                requiere_cambio_contrasena: 0,
+                fecha_ultimo_cambio_contrasena: null,
+                intentos_fallidos_login: 0,
+                fecha_ultimo_intento_fallido: null
+            });
 
-            // usuarios.fecha_ultimo_acceso_usuario
-            user.fecha_ultimo_acceso_usuario = nowSQL();
             saveDB(db);
 
-            const rol = getUserRole(db, user.id_usuario);
-            const ajustes = getAjustes(db, user.id_usuario);
-            const perfil = getPerfil(db, user.id_usuario);
-
-            // sesión coherente para usar luego en dashboard/iaCoach (tu front puede leer esto)
+            // Sesión automática (opcional)
             const session = {
-                id_usuario: user.id_usuario,
-                correo_usuario: user.correo_usuario,
-                nombre_mostrado_usuario: user.nombre_mostrado_usuario,
-                estado_usuario: user.estado_usuario,
-                rol_usuario: rol,
-                ajustes_usuario: ajustes,
-                perfiles_usuario: perfil
+                id_usuario,
+                correo_usuario,
+                nombre_mostrado_usuario,
+                estado_usuario: "activo",
+                rol_usuario: "usuario",
+                ajustes_usuario: db.ajustes_usuario.find(a => a.id_usuario === id_usuario) || null,
+                perfiles_usuario: db.perfiles_usuario.find(p => p.id_usuario === id_usuario) || null
             };
 
             localStorage.setItem(KEY_SESSION, JSON.stringify(session));
 
-            setMsg("Acceso correcto. Entrando…", "ok");
+            setMsg("Cuenta creada. Entrando…", "ok");
 
-            // redirección
             setTimeout(() => {
                 window.location.href = "dashboard.html";
-            }, 500);
+            }, 600);
         });
     </script>
 </body>

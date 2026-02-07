@@ -397,6 +397,7 @@
             color: rgba(239, 231, 214, .56);
             font-size: 12.5px;
             letter-spacing: .02em;
+            line-height: 1.3;
         }
 
         /* Switch premium */
@@ -757,34 +758,34 @@
 
                     <div class="section-title">
                         <span class="dot" aria-hidden="true"></span>
-                        <span>Preferencias</span>
+                        <span>Preferencias (ajustes_usuario)</span>
                     </div>
 
                     <section class="panel" aria-label="Ajustes de usuario">
                         <div class="row">
                             <div class="left">
                                 <div class="title">Notificaciones de entrenamiento</div>
-                                <div class="desc">Equivale a <b>notificaciones_entrenamiento_activas</b>.</div>
+                                <div class="desc">Campo: <b>notificaciones_entrenamiento_activas</b>.</div>
                             </div>
                             <div class="switch" id="swTrain" data-on="true" role="switch" aria-checked="true"
-                                tabindex="0"></div>
+                                tabindex="0" data-name="notificaciones_entrenamiento_activas"></div>
                         </div>
 
                         <div class="row">
                             <div class="left">
                                 <div class="title">Notificaciones de clases</div>
-                                <div class="desc">Equivale a <b>notificaciones_clases_activas</b>.</div>
+                                <div class="desc">Campo: <b>notificaciones_clases_activas</b>.</div>
                             </div>
                             <div class="switch" id="swClasses" data-on="true" role="switch" aria-checked="true"
-                                tabindex="0"></div>
+                                tabindex="0" data-name="notificaciones_clases_activas"></div>
                         </div>
 
                         <div class="row">
                             <div class="left">
                                 <div class="title">Tono de IA Coach</div>
-                                <div class="desc">Equivale a <b>tono_ia_coach</b> (directo / motivador).</div>
+                                <div class="desc">Campo: <b>tono_ia_coach</b> (directo / motivador).</div>
                             </div>
-                            <select class="select" id="tone" style="width: 170px;">
+                            <select class="select" id="tone" name="tono_ia_coach" style="width: 170px;">
                                 <option value="directo" selected>directo</option>
                                 <option value="motivador">motivador</option>
                             </select>
@@ -793,9 +794,9 @@
                         <div class="row">
                             <div class="left">
                                 <div class="title">Idioma preferido</div>
-                                <div class="desc">Equivale a <b>idioma_preferido</b> (es / en).</div>
+                                <div class="desc">Campo: <b>idioma_preferido</b> (es / en).</div>
                             </div>
-                            <select class="select" id="lang" style="width: 170px;">
+                            <select class="select" id="lang" name="idioma_preferido" style="width: 170px;">
                                 <option value="es" selected>es</option>
                                 <option value="en">en</option>
                             </select>
@@ -804,9 +805,9 @@
                         <div class="row">
                             <div class="left">
                                 <div class="title">Semana empieza en</div>
-                                <div class="desc">Equivale a <b>semana_empieza_en</b> (lunes / domingo).</div>
+                                <div class="desc">Campo: <b>semana_empieza_en</b> (lunes / domingo).</div>
                             </div>
-                            <select class="select" id="weekStart" style="width: 170px;">
+                            <select class="select" id="weekStart" name="semana_empieza_en" style="width: 170px;">
                                 <option value="lunes" selected>lunes</option>
                                 <option value="domingo">domingo</option>
                             </select>
@@ -820,18 +821,20 @@
 
                     <div class="section-title">
                         <span class="dot" aria-hidden="true"></span>
-                        <span>Seguridad</span>
+                        <span>Seguridad (seguridad_usuario)</span>
                     </div>
 
                     <section class="panel" aria-label="Seguridad de usuario">
                         <div class="grid-2">
                             <div class="field">
                                 <div class="label">Requiere cambio contraseña</div>
-                                <input class="input" type="text" value="0 (false)" readonly />
+                                <input class="input" name="requiere_cambio_contrasena" type="text" value="No"
+                                    readonly />
                             </div>
                             <div class="field">
-                                <div class="label">Último cambio</div>
-                                <input class="input" type="text" value="2026-01-20 12:31" readonly />
+                                <div class="label">Último cambio contraseña</div>
+                                <input class="input" name="fecha_ultimo_cambio_contrasena" type="text"
+                                    value="2026-01-20 12:31" readonly />
                             </div>
                         </div>
 
@@ -840,16 +843,17 @@
                         <div class="grid-2">
                             <div class="field">
                                 <div class="label">Intentos fallidos login</div>
-                                <input class="input" type="text" value="1" readonly />
+                                <input class="input" name="intentos_fallidos_login" type="text" value="1" readonly />
                             </div>
                             <div class="field">
                                 <div class="label">Último intento fallido</div>
-                                <input class="input" type="text" value="2026-02-06 22:10" readonly />
+                                <input class="input" name="fecha_ultimo_intento_fallido" type="text"
+                                    value="2026-02-06 22:10" readonly />
                             </div>
                         </div>
 
                         <div class="note">
-                            Este bloque es UI y corresponde a <b>seguridad_usuario</b>.
+                            Este bloque es UI (solo lectura) y corresponde a <b>seguridad_usuario</b>.
                         </div>
                     </section>
                 </div>
@@ -895,10 +899,13 @@
             const next = !on;
             el.setAttribute('data-on', String(next));
             el.setAttribute('aria-checked', String(next));
+            // Guardado "de cara a BD": 1/0
+            el.dataset.value = next ? '1' : '0';
         }
 
         ['swTrain', 'swClasses'].forEach(id => {
             const el = document.getElementById(id);
+            el.dataset.value = el.getAttribute('data-on') === 'true' ? '1' : '0';
             el.addEventListener('click', () => toggleSwitch(el));
             el.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSwitch(el); }
@@ -907,7 +914,17 @@
 
         const save = document.getElementById('save');
         const saved = document.getElementById('saved');
+
         save.addEventListener('click', () => {
+            // Demo: podrías leer aquí todos los valores ya "mapeados"
+            // const payload = {
+            //   notificaciones_entrenamiento_activas: document.getElementById('swTrain').dataset.value,
+            //   notificaciones_clases_activas: document.getElementById('swClasses').dataset.value,
+            //   tono_ia_coach: document.getElementById('tone').value,
+            //   idioma_preferido: document.getElementById('lang').value,
+            //   semana_empieza_en: document.getElementById('weekStart').value,
+            // };
+
             saved.style.display = 'block';
             clearTimeout(window.__s);
             window.__s = setTimeout(() => saved.style.display = 'none', 2200);

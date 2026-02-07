@@ -15,7 +15,7 @@
 
     <style>
         /* --------------------------------------------------------------------------
-      INHERITED FROM DASHBOARD
+      RESET + TOKENS (base dashboard)
     -------------------------------------------------------------------------- */
         *,
         *::before,
@@ -339,7 +339,7 @@
         }
 
         /* --------------------------------------------------------------------------
-      ROUTINES GRID (IMAGENES PERFECTAMENTE ENCUADRADAS)
+      ROUTINES GRID (alineado con rutinas_usuario)
     -------------------------------------------------------------------------- */
         .routines-grid {
             display: grid;
@@ -414,7 +414,7 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            gap: 14px;
+            gap: 12px;
             background:
                 linear-gradient(0deg, rgba(0, 0, 0, .92) 0%, rgba(0, 0, 0, .48) 52%, rgba(0, 0, 0, 0.12) 100%),
                 linear-gradient(90deg, rgba(0, 0, 0, .62) 0%, rgba(0, 0, 0, .22) 52%, rgba(0, 0, 0, 0) 100%);
@@ -454,6 +454,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 12px;
             max-width: 360px;
+            margin-top: 6px;
         }
 
         .btn-card {
@@ -614,7 +615,6 @@
 
         <div class="app">
             <!-- SIDEBAR -->
-            <!-- SIDEBAR -->
             <aside class="sidebar">
                 <div>
                     <div class="brand">
@@ -631,6 +631,7 @@
                             </span>
                             Inicio
                         </a>
+
                         <a class="active" href="rutinas.html">
                             <span class="ico" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
@@ -639,6 +640,7 @@
                             </span>
                             Rutinas
                         </a>
+
                         <a href="reservas.html">
                             <span class="ico" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
@@ -647,6 +649,7 @@
                             </span>
                             Reservas
                         </a>
+
                         <a href="calendario.html">
                             <span class="ico" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
@@ -656,6 +659,7 @@
                             </span>
                             Calendario
                         </a>
+
                         <a href="progreso.html">
                             <span class="ico" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
@@ -664,16 +668,35 @@
                             </span>
                             Progreso
                         </a>
-                        <!-- Ajustes -> IA Coach -->
+
                         <a href="iaCoach.html">
                             <span class="ico">
-                                <!-- icono "spark / chat" premium -->
                                 <svg viewBox="0 0 24 24">
                                     <path
                                         d="M4 4h16v10H7l-3 3V4Zm4 14h12v2H8v-2Zm3-11h7v2h-7V7Zm-5 0h3v2H6V7Zm0 4h12v2H6v-2Z" />
                                 </svg>
                             </span>
                             IA Coach
+                        </a>
+
+                        <a href="perfil.html">
+                            <span class="ico" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2-8 4.5V21h16v-2.5C20 16 16.42 14 12 14Z" />
+                                </svg>
+                            </span>
+                            Perfil
+                        </a>
+
+                        <a href="ajustes.html">
+                            <span class="ico" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.2 7.2 0 0 0-1.63-.94l-.36-2.54A.5.5 0 0 0 12.9 1h-3.8a.5.5 0 0 0-.49.42l-.36 2.54c-.58.23-1.12.54-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L1.71 7.48a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L1.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.3.6.22l2.39-.96c.5.4 1.05.71 1.63.94l.36 2.54c.04.24.25.42.49.42h3.8c.24 0 .45-.18.49-.42l.36-2.54c.58-.23 1.12-.54 1.63-.94l2.39.96c.22.09.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM11 15a3 3 0 1 1 3-3 3 3 0 0 1-3 3Z" />
+                                </svg>
+                            </span>
+                            Ajustes
                         </a>
                     </nav>
                 </div>
@@ -694,15 +717,15 @@
                 <div class="content">
                     <header class="hero">
                         <h1>Mis Rutinas</h1>
-                        <p>Tus entrenamientos personalizados.</p>
+                        <p>rutinas_usuario · acceso a detalle_rutina</p>
                     </header>
 
                     <!-- Action Bar -->
                     <div class="actions">
-                        <a href="#" class="btn-action btn-primary">
+                        <a href="#" class="btn-action btn-primary" id="btnCrearRutina">
                             <span>+</span> Crear Nueva Rutina
                         </a>
-                        <a href="#" class="btn-action btn-secondary">
+                        <a href="calendario.html" class="btn-action btn-secondary">
                             <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z" />
@@ -712,69 +735,14 @@
                     </div>
 
                     <!-- Routine Cards Grid -->
-                    <div class="routines-grid">
-                        <!-- Card 1 -->
-                        <div class="routine-card focus-top">
-                            <img class="routine-img" src="./img/rutina-1.png" alt="Fuerza">
-                            <div class="routine-frame"></div>
-                            <div class="routine-overlay">
-                                <h3>Fuerza y Musculación</h3>
-                                <div class="routine-details">
-                                    <div class="detail"><span class="check-ico">✓</span> 4 Días a la semana</div>
-                                    <div class="detail"><span class="check-ico">✓</span> Duración: 60 min</div>
-                                    <div class="detail"><span class="check-ico">✓</span> Nivel: Intermedio</div>
-                                </div>
-                                <div class="card-actions">
-                                    <button class="btn-card">Ver Rutina</button>
-                                    <button class="btn-card highlight">Iniciar Rutina</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 2 -->
-                        <div class="routine-card">
-                            <img class="routine-img" src="./img/rutina-2.png" alt="Cardio">
-                            <div class="routine-frame"></div>
-                            <div class="routine-overlay">
-                                <h3>Cardio y Quema Grasa</h3>
-                                <div class="routine-details">
-                                    <div class="detail"><span class="check-ico">✓</span> 3 Días a la semana</div>
-                                    <div class="detail"><span class="check-ico">✓</span> Duración: 45 min</div>
-                                    <div class="detail"><span class="check-ico">✓</span> Nivel: Principiante</div>
-                                </div>
-                                <div class="card-actions">
-                                    <button class="btn-card">Ver Rutina</button>
-                                    <button class="btn-card highlight">Iniciar Rutina</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 3 -->
-                        <div class="routine-card full-width focus-low">
-                            <img class="routine-img" src="./img/rutina-3.png" alt="Full Body">
-                            <div class="routine-frame"></div>
-                            <div class="routine-overlay">
-                                <div style="max-width: 520px;">
-                                    <h3>Rutina Full Body</h3>
-                                    <div class="routine-details">
-                                        <div class="detail"><span class="check-ico">✓</span> 2 Días a la semana</div>
-                                        <div class="detail"><span class="check-ico">✓</span> Duración: 50 min</div>
-                                        <div class="detail"><span class="check-ico">✓</span> Nivel: Avanzado</div>
-                                    </div>
-                                    <div class="card-actions"
-                                        style="grid-template-columns: 140px 140px; justify-content: start;">
-                                        <button class="btn-card">Ver Rutina</button>
-                                        <button class="btn-card highlight">Iniciar Rutina</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="routines-grid" id="gridRutinas">
+                        <!-- Se rellena por JS (demo) con campos reales de rutinas_usuario -->
                     </div>
                 </div>
 
                 <!-- Right Panel -->
                 <div class="panel">
-                    <!-- Objectives -->
+                    <!-- Objectives (demo visual; esto vendría de lógica/estadísticas, no hay tabla objetivos en tu BD) -->
                     <div class="panel-card">
                         <h3 class="panel-head">Mis Objetivos Semanales</h3>
 
@@ -800,7 +768,7 @@
                         </div>
                     </div>
 
-                    <!-- Saved Routines -->
+                    <!-- Saved Routines (demo; podría salir de rutinas_usuario filtradas o favoritas si creas tabla) -->
                     <div class="panel-card">
                         <div style="display:flex; justify-content:space-between; align-items:baseline; gap:12px;">
                             <h3 class="panel-head" style="margin:0;">Rutinas Guardadas</h3>
@@ -810,21 +778,25 @@
                             </a>
                         </div>
 
-                        <div class="saved-list" style="margin-top:18px;">
-                            <div class="saved-item">
-                                <div class="saved-icon"><svg width="16" viewBox="0 0 24 24" fill="currentColor">
+                        <div class="saved-list" style="margin-top:18px;" id="savedList">
+                            <div class="saved-item" data-go="1">
+                                <div class="saved-icon">
+                                    <svg width="16" viewBox="0 0 24 24" fill="currentColor">
                                         <path
-                                            d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22 14.86 20.57 16.29 22 18.43 19.86 19.86 21.29 21.29 19.86l-1.43-1.43 1.43-1.43 1.43 1.43-1.43 1.43zM6 6h.01v.01H6V6zm12 12h.01v.01H18V18z" />
-                                    </svg></div>
-                                <span style="font-size:13px; color:var(--cream);">Estiramientos y Movilidad</span>
+                                            d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22 14.86 20.57 16.29 22 18.43 19.86 19.86 21.29 21.29 19.86l-1.43-1.43 1.43-1.43 1.43 1.43-1.43 1.43z" />
+                                    </svg>
+                                </div>
+                                <span style="font-size:13px; color:var(--cream);">Espalda y Bíceps — Baja fatiga</span>
                             </div>
 
-                            <div class="saved-item">
-                                <div class="saved-icon"><svg width="16" viewBox="0 0 24 24" fill="currentColor">
+                            <div class="saved-item" data-go="2">
+                                <div class="saved-icon">
+                                    <svg width="16" viewBox="0 0 24 24" fill="currentColor">
                                         <path
                                             d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42A8.962 8.962 0 0 0 12 4c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-1.52-.42-2.95-1.12-4.19C19.33 8.3 19.12 7.8 18.88 7.39zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z" />
-                                    </svg></div>
-                                <span style="font-size:13px; color:var(--cream);">HIIT Express</span>
+                                    </svg>
+                                </div>
+                                <span style="font-size:13px; color:var(--cream);">Full Body — Rendimiento</span>
                             </div>
                         </div>
                     </div>
@@ -832,6 +804,131 @@
             </div>
         </div>
     </main>
+
+    <script>
+        // -------------------------------------------------------------------------
+        // DEMO DATA (alineado a tu esquema)
+        // En real: esto vendrá de API / BD.
+        // -------------------------------------------------------------------------
+        const rutinas_usuario = [
+            {
+                id_rutina_usuario: 1,
+                id_usuario: 1,
+                nombre_rutina_usuario: "Espalda y Bíceps — Baja fatiga",
+                objetivo_rutina_usuario: "salud",
+                nivel_rutina_usuario: "principiante",
+                duracion_estimada_minutos: 45,
+                origen_rutina: "ia_coach",
+                instrucciones_rutina: "Técnica limpia, RPE 6–7, sin fallo. Descansos medidos.",
+                fecha_creacion_rutina: "2026-02-07 10:00:00",
+                rutina_activa: 1,
+                img: "./img/rutina-1.png",
+                focus: "focus-top",
+                frecuencia: "2–3 días/sem"
+            },
+            {
+                id_rutina_usuario: 2,
+                id_usuario: 1,
+                nombre_rutina_usuario: "Cardio y Quema Grasa",
+                objetivo_rutina_usuario: "definir",
+                nivel_rutina_usuario: "principiante",
+                duracion_estimada_minutos: 45,
+                origen_rutina: "usuario",
+                instrucciones_rutina: "Controla respiración. Mantén técnica estable. Hidratación.",
+                fecha_creacion_rutina: "2026-02-06 18:20:00",
+                rutina_activa: 1,
+                img: "./img/rutina-2.png",
+                focus: "",
+                frecuencia: "3 días/sem"
+            },
+            {
+                id_rutina_usuario: 3,
+                id_usuario: 1,
+                nombre_rutina_usuario: "Rutina Full Body",
+                objetivo_rutina_usuario: "rendimiento",
+                nivel_rutina_usuario: "avanzado",
+                duracion_estimada_minutos: 50,
+                origen_rutina: "plantilla",
+                instrucciones_rutina: "RPE 7–8 en básicos. Descanso 120s. Evita fallo en accesorios.",
+                fecha_creacion_rutina: "2026-02-01 09:00:00",
+                rutina_activa: 1,
+                img: "./img/rutina-3.png",
+                focus: "focus-low",
+                frecuencia: "2 días/sem",
+                fullWidth: true
+            }
+        ];
+
+        function cap(s) {
+            return String(s || "").charAt(0).toUpperCase() + String(s || "").slice(1);
+        }
+
+        function goDetalle(idRutina) {
+            window.location.href = `detalle-rutina.html?id_rutina_usuario=${encodeURIComponent(idRutina)}`;
+        }
+
+        function renderRutinas() {
+            const grid = document.getElementById('gridRutinas');
+            grid.innerHTML = '';
+
+            rutinas_usuario.forEach((r) => {
+                const card = document.createElement('div');
+                card.className = `routine-card ${r.focus || ""} ${r.fullWidth ? "full-width" : ""}`.trim();
+                card.setAttribute('data-id', r.id_rutina_usuario);
+
+                card.innerHTML = `
+          <img class="routine-img" src="${r.img}" alt="${r.nombre_rutina_usuario}">
+          <div class="routine-frame"></div>
+          <div class="routine-overlay">
+            <h3>${r.nombre_rutina_usuario}</h3>
+            <div class="routine-details">
+              <div class="detail"><span class="check-ico">✓</span> Objetivo: ${cap(r.objetivo_rutina_usuario)}</div>
+              <div class="detail"><span class="check-ico">✓</span> Nivel: ${cap(r.nivel_rutina_usuario)}</div>
+              <div class="detail"><span class="check-ico">✓</span> Duración: ${r.duracion_estimada_minutos ?? "—"} min · Origen: ${cap(r.origen_rutina)}</div>
+            </div>
+            <div class="card-actions" ${r.fullWidth ? 'style="grid-template-columns: 140px 140px; justify-content:start;"' : ""}>
+              <button class="btn-card" type="button" data-act="ver">Ver Rutina</button>
+              <button class="btn-card highlight" type="button" data-act="iniciar">Iniciar Rutina</button>
+            </div>
+          </div>
+        `;
+
+                card.addEventListener('click', (e) => {
+                    // si clicas en botones, respeta acción
+                    const btn = e.target.closest('button[data-act]');
+                    if (!btn) return;
+
+                    const act = btn.getAttribute('data-act');
+                    if (act === 'ver') {
+                        goDetalle(r.id_rutina_usuario);
+                    } else if (act === 'iniciar') {
+                        // En real: registrar inicio sesión / entrenamiento
+                        goDetalle(r.id_rutina_usuario);
+                    }
+                });
+
+                // Click en tarjeta (fuera botones) también navega a detalle
+                card.addEventListener('dblclick', () => goDetalle(r.id_rutina_usuario));
+
+                grid.appendChild(card);
+            });
+        }
+
+        renderRutinas();
+
+        // Panel "guardadas"
+        document.getElementById('savedList').addEventListener('click', (e) => {
+            const item = e.target.closest('.saved-item[data-go]');
+            if (!item) return;
+            goDetalle(item.getAttribute('data-go'));
+        });
+
+        // Crear rutina (demo)
+        document.getElementById('btnCrearRutina').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Demo: aquí crearías una fila en rutinas_usuario y luego navegarías al detalle para añadir ejercicios.');
+        });
+    </script>
 </body>
 
 </html>

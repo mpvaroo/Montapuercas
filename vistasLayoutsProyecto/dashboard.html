@@ -415,6 +415,9 @@
       letter-spacing: .06em;
       box-shadow: 0 18px 52px rgba(0, 0, 0, .50);
       transition: transform .18s ease, filter .18s ease, border-color .18s ease;
+      display: inline-grid;
+      place-items: center;
+      text-decoration: none;
     }
 
     .btn:hover {
@@ -1022,15 +1025,33 @@
               </span>
               Progreso
             </a>
-            <!-- Ajustes -> IA Coach -->
             <a href="iaCoach.html">
               <span class="ico">
-                <!-- icono "spark / chat" premium -->
                 <svg viewBox="0 0 24 24">
                   <path d="M4 4h16v10H7l-3 3V4Zm4 14h12v2H8v-2Zm3-11h7v2h-7V7Zm-5 0h3v2H6V7Zm0 4h12v2H6v-2Z" />
                 </svg>
               </span>
               IA Coach
+            </a>
+
+            <!-- AÑADIDOS POR BD: perfiles_usuario + ajustes_usuario/seguridad_usuario -->
+            <a href="perfil.html">
+              <span class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2-8 4.5V21h16v-2.5C20 16 16.42 14 12 14Z" />
+                </svg>
+              </span>
+              Perfil
+            </a>
+            <a href="ajustes.html">
+              <span class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M19.14 12.94a7.43 7.43 0 0 0 .05-.94 7.43 7.43 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.2 7.2 0 0 0-1.63-.94l-.36-2.54A.5.5 0 0 0 13.9 1h-3.8a.5.5 0 0 0-.49.41l-.36 2.54a7.2 7.2 0 0 0-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 7.47a.5.5 0 0 0 .12.64l2.03 1.58a7.43 7.43 0 0 0-.05.94 7.43 7.43 0 0 0 .05.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96a7.2 7.2 0 0 0 1.63.94l.36 2.54a.5.5 0 0 0 .49.41h3.8a.5.5 0 0 0 .49-.41l.36-2.54a7.2 7.2 0 0 0 1.63-.94l2.39.96a.5.5 0 0 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64ZM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5Z" />
+                </svg>
+              </span>
+              Ajustes
             </a>
           </nav>
         </div>
@@ -1060,37 +1081,42 @@
           </div>
 
           <div class="grid-cards">
+            <!-- Card 1: rutinas_usuario (rutina activa) -->
             <article class="card">
               <div>
-                <h3>Entrenamiento de hoy</h3>
-                <p class="bigline">Espalda y Bíceps</p>
-                <div class="meta">50 min · Intensidad moderada</div>
+                <h3>Rutina activa</h3>
+                <p class="bigline">Fuerza — Espalda & Bíceps</p>
+                <div class="meta">
+                  id_rutina_usuario: <b style="color:rgba(239,231,214,.85);font-weight:800;">123</b>
+                  · objetivo: salud · nivel: intermedio · 50 min
+                </div>
               </div>
-              <button class="btn" type="button">Empezar entrenamiento</button>
+              <a class="btn" href="detalle-rutina.html?id_rutina_usuario=123">Ver rutina</a>
             </article>
 
+            <!-- Card 2: rutinas_usuario (listado) -->
             <article class="card">
               <div>
                 <h3>Mis Rutinas</h3>
-                <p class="bigline">Fuerza y Enfoque</p>
-                <div class="meta">Semana 2 de 8 · 3/4 completados</div>
+                <p class="bigline">Rutinas creadas (usuario / IA / plantilla)</p>
+                <div class="meta">Gestiona rutinas activas y origen_rutina</div>
               </div>
-              <button class="btn" type="button">Ver rutina</button>
+              <a class="btn" href="rutinas.html">Abrir rutinas</a>
             </article>
 
+            <!-- Card 3: registros_progreso -->
             <article class="card">
               <div>
-                <h3>Progreso semanal</h3>
+                <h3>Último progreso</h3>
                 <div class="progress-row">
-                  <b>3 / 5</b>
-                  <span class="meta">entrenamientos</span>
+                  <b>78.40</b>
+                  <span class="meta">kg (registro)</span>
                 </div>
-                <div class="bar" aria-label="Progreso semanal">
-                  <span></span>
+                <div class="meta" style="margin-top:10px;">
+                  fecha_registro: 2026-01-29 · notas_progreso: —
                 </div>
-                <div class="meta" style="margin-top:10px;">Mantén el ritmo. Sin ruido.</div>
               </div>
-              <button class="btn" type="button">Ver progreso</button>
+              <a class="btn" href="progreso.html">Ver progreso</a>
             </article>
           </div>
 
@@ -1116,7 +1142,7 @@
 
                 <div class="cal-hint">
                   <span class="dot-mini" aria-hidden="true"></span>
-                  Días con reservas
+                  Días con clases / reservas
                 </div>
               </div>
 
@@ -1151,22 +1177,21 @@
           </div>
 
           <div class="chat-body">
-            <div class="bubble ai">Hola Marcelo, ¿qué quieres hacer hoy: generar rutina o reservar una
-              clase?</div>
-            <div class="bubble user">Hoy quiero entrenar espalda y bíceps, pero estoy cansado y con
-              agujetas.</div>
-            <div class="bubble ai">Perfecto. Te preparo una rutina de baja fatiga (RPE 6–7) con énfasis en
-              técnica.
-              ¿Dispones de polea, mancuernas o máquinas?</div>
-            <div class="bubble user">Polea y mancuernas.</div>
-            <div class="bubble ai">Genial. Empiezo: calentamiento 6 min + movilidad escapular. Luego te paso
-              5
-              ejercicios y lo dejamos guardado en “Mis Rutinas”.</div>
+            <div class="bubble ai">
+              Hola Marcelo. Puedo:
+              <b>crear_rutina</b> (rutinas_usuario) o <b>reservar_clase</b> (reservas_clase).
+              ¿Qué hacemos?
+            </div>
+            <div class="bubble user">Quiero reservar una clase de fuerza.</div>
+            <div class="bubble ai">
+              Perfecto. Te propongo una clase (clases_gimnasio) y creo la reserva (reservas_clase)
+              con origen_reserva = <b>ia_coach</b>.
+            </div>
           </div>
 
           <div class="chat-foot">
             <button class="iconbtn" type="button" aria-label="Adjuntar">＋</button>
-            <input class="chat-input" type="text" placeholder="Escribe un mensaje… (rutina / reserva)" />
+            <input class="chat-input" type="text" placeholder="Escribe un mensaje… (crear_rutina / reservar_clase)" />
             <button class="iconbtn" type="button" aria-label="Enviar">➤</button>
           </div>
         </aside>
@@ -1175,18 +1200,62 @@
   </main>
 
   <script>
-    // Datos demo: reservas/clases por fecha (YYYY-MM-DD)
+    /* Dashboard — demo data alineado con BD (front-only)
+       - clases_gimnasio + tipos_clase (eventos)
+       - reservas_clase (reservas del usuario)
+       - checkin_reserva NO se muestra aquí (solo en detalle-reserva.html)
+    */
+
+    // Datos demo por fecha (YYYY-MM-DD)
+    // Cada item intenta parecerse a tu modelo SQL.
     const demoEvents = {
       "2026-01-24": [
-        { title: "Clase: Espalda & Core", time: "11:00", place: "Sala 2" },
-        { title: "Reserva: Spinning (confirmada)", time: "18:30", place: "Sala Cycling" },
-        { title: "Recordatorio: Registrar sesión", time: "Después", place: "App" }
+        {
+          tipo: "clase",
+          id_clase_gimnasio: 55,
+          id_tipo_clase: 3,
+          nombre_tipo_clase: "Fuerza",
+          titulo_clase: "Fuerza guiada — Tren superior",
+          instructor_clase: "Nora",
+          fecha_inicio_clase: "2026-01-24 11:00",
+          fecha_fin_clase: "2026-01-24 11:50",
+          estado_clase: "publicada"
+        },
+        {
+          tipo: "reserva",
+          id_reserva_clase: 184,
+          id_clase_gimnasio: 88,
+          nombre_tipo_clase: "Spinning",
+          titulo_clase: "Spinning — Endurance",
+          estado_reserva: "reservada",
+          origen_reserva: "usuario",
+          fecha_reserva: "2026-01-20 12:10"
+        }
       ],
       "2026-01-26": [
-        { title: "Clase: Movilidad", time: "10:00", place: "Sala 1" }
+        {
+          tipo: "clase",
+          id_clase_gimnasio: 61,
+          id_tipo_clase: 1,
+          nombre_tipo_clase: "Yoga Flow",
+          titulo_clase: "Yoga Flow — Movilidad",
+          instructor_clase: "Leo",
+          fecha_inicio_clase: "2026-01-26 10:00",
+          fecha_fin_clase: "2026-01-26 10:45",
+          estado_clase: "publicada"
+        }
       ],
       "2026-01-29": [
-        { title: "Reserva: HIIT", time: "19:00", place: "Box" }
+        {
+          tipo: "reserva",
+          id_reserva_clase: 201,
+          id_clase_gimnasio: 72,
+          nombre_tipo_clase: "HIIT Express",
+          titulo_clase: "HIIT Express — 30 min",
+          estado_reserva: "cancelada",
+          origen_reserva: "ia_coach",
+          fecha_reserva: "2026-01-27 09:04"
+        }
       ]
     };
 
@@ -1215,6 +1284,10 @@
 
     function sameDay(a, b) {
       return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+    }
+
+    function hasAnyEvents(key) {
+      return Array.isArray(demoEvents[key]) && demoEvents[key].length > 0;
     }
 
     function render() {
@@ -1251,7 +1324,7 @@
         cell.textContent = date.getDate();
 
         const key = fmtDateKey(date);
-        if (demoEvents[key]?.length) cell.classList.add("has-event");
+        if (hasAnyEvents(key)) cell.classList.add("has-event");
 
         const today = new Date();
         if (sameDay(date, today)) cell.classList.add("today");
@@ -1285,22 +1358,42 @@
         empty.innerHTML = `
           <span class="badge" aria-hidden="true" style="opacity:.35"></span>
           <div class="text">
-            <div class="title">Sin reservas para este día</div>
-            <div class="time">Usa IA Coach para reservar una clase</div>
+            <div class="title">Sin clases / reservas</div>
+            <div class="time">Puedes reservar desde Reservas</div>
           </div>`;
         eventsListEl.appendChild(empty);
         return;
       }
 
       events.forEach(ev => {
-        const item = document.createElement("div");
+        const item = document.createElement("a");
         item.className = "event";
+        item.style.cursor = "pointer";
+
+        let title = "";
+        let meta = "";
+        let href = "";
+
+        if (ev.tipo === "reserva") {
+          // reservas_clase (id_reserva_clase) + clase (título) + tipo
+          title = `Reserva (${ev.estado_reserva}) — ${ev.nombre_tipo_clase}`;
+          meta = `${ev.titulo_clase} · id_reserva_clase: ${ev.id_reserva_clase}`;
+          href = `detalle-reserva.html?id_reserva_clase=${encodeURIComponent(ev.id_reserva_clase)}`;
+        } else {
+          // clases_gimnasio + tipos_clase (sin detalle-clase)
+          title = `Clase (${ev.estado_clase}) — ${ev.nombre_tipo_clase}`;
+          meta = `${ev.titulo_clase} · id_clase_gimnasio: ${ev.id_clase_gimnasio}`;
+          href = `reservas.html`;
+        }
+
+        item.href = href;
         item.innerHTML = `
           <span class="badge" aria-hidden="true"></span>
           <div class="text">
-            <div class="title">${ev.title}</div>
-            <div class="time">${ev.time} · ${ev.place}</div>
+            <div class="title">${title}</div>
+            <div class="time">${meta}</div>
           </div>`;
+
         eventsListEl.appendChild(item);
       });
     }

@@ -634,7 +634,7 @@
         .bar>span {
             display: block;
             height: 100%;
-            width: 60%;
+            width: 100%;
             background: linear-gradient(90deg, rgba(22, 250, 22, .18), rgba(239, 231, 214, .22));
             border-right: 1px solid rgba(239, 231, 214, .16);
         }
@@ -957,6 +957,10 @@
             .checkin-grid {
                 grid-template-columns: 1fr;
             }
+
+            .btn-row {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 900px) {
@@ -975,10 +979,6 @@
 
             .nav {
                 grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
-
-            .btn-row {
-                grid-template-columns: 1fr;
             }
         }
 
@@ -1106,8 +1106,15 @@
             <div class="main">
                 <div>
                     <header class="hero">
-                        <h1>Reserva.</h1>
-                        <p>Detalle de clase, cupo y check-in.</p>
+                        <div
+                            style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                            <div style="min-width:0;">
+                                <h1>Reserva.</h1>
+                                <p>Detalle de clase, estado y check-in.</p>
+                            </div>
+
+                            <a href="reservas.html" class="pill" style="text-decoration:none;">← Volver a Reservas</a>
+                        </div>
                     </header>
 
                     <div class="section-title">
@@ -1121,55 +1128,60 @@
                     <section class="panel" aria-label="Resumen de reserva">
                         <div class="head-grid">
                             <div class="title-block">
-                                <h2 id="reservaTitulo">Reserva #184 — Yoga Flow</h2>
+                                <h2 id="reservaTitulo">Reserva #— — Clase</h2>
                                 <div class="sub">
-                                    Estado: <b id="reservaEstado">reservada</b> · Origen: <b
-                                        id="reservaOrigen">ia_coach</b>
+                                    Estado: <b id="reservaEstado">—</b> · Origen: <b id="reservaOrigen">—</b>
                                     <br>
-                                    Creada: <b id="reservaFecha">07/02/2026 10:12</b> · Notas: <span
-                                        id="reservaNotas">“mañana a primera hora”</span>
+                                    Creada: <b id="reservaFecha">—</b> · Notas:
+                                    <span id="reservaNotas">—</span>
                                 </div>
                             </div>
 
                             <div class="tags" aria-label="Etiquetas de reserva">
-                                <div class="tag green" id="tagEstado">reservada</div>
-                                <div class="tag bronze" id="tagOrigen">ia_coach</div>
-                                <div class="tag" id="tagClase">clase publicada</div>
-                                <div class="tag" id="tagHora">08:30</div>
+                                <div class="tag green" id="tagEstado">—</div>
+                                <div class="tag bronze" id="tagOrigen">—</div>
+                                <div class="tag" id="tagClase">—</div>
+                                <div class="tag" id="tagHora">—</div>
                             </div>
                         </div>
 
                         <div class="metrics" aria-label="Métricas de reserva">
                             <div class="metric">
                                 <div class="k">Fecha inicio</div>
-                                <div class="v" id="mInicio">08 Feb · 2026</div>
+                                <div class="v" id="mInicio">—</div>
                             </div>
                             <div class="metric">
                                 <div class="k">Duración</div>
-                                <div class="v" id="mDuracion">45 min</div>
+                                <div class="v" id="mDuracion">—</div>
                             </div>
                             <div class="metric">
-                                <div class="k">Cupo</div>
-                                <div class="v" id="mCupo">20</div>
+                                <div class="k">Cupo máx.</div>
+                                <div class="v" id="mCupo">—</div>
                             </div>
                             <div class="metric">
-                                <div class="k">Ocupación</div>
-                                <div class="v" id="mOcupacion">12 / 20</div>
+                                <div class="k">ID Reserva</div>
+                                <div class="v" id="mIdReserva">#—</div>
                             </div>
                         </div>
 
                         <div class="btn-row" aria-label="Acciones de reserva">
-                            <button class="btn" type="button" id="btnConfirmar">Confirmar asistencia</button>
-                            <button class="btn-ghost" type="button" id="btnCambiarOrigen">Marcar como usuario</button>
+                            <button class="btn" type="button" id="btnAsistio">Marcar como asistió</button>
+                            <button class="btn-ghost" type="button" id="btnNoAsistio">Marcar como no asistió</button>
                             <button class="btn-danger" type="button" id="btnCancelar">Cancelar reserva</button>
+                        </div>
+
+                        <div class="btn-row" aria-label="Acciones secundarias"
+                            style="margin-top:12px; grid-template-columns: 1fr;">
+                            <button class="btn-ghost" type="button" id="btnCambiarOrigen">Cambiar origen (usuario /
+                                ia_coach)</button>
                         </div>
 
                         <div class="toast" id="toast"></div>
 
                         <div class="note">
                             Esta vista representa una fila de <b>reservas_clase</b> enlazada a <b>clases_gimnasio</b> y
-                            su
-                            relación 1:1 con <b>checkin_reserva</b>.
+                            su relación
+                            1:1 con <b>checkin_reserva</b>.
                         </div>
                     </section>
 
@@ -1185,35 +1197,30 @@
                         <div class="class-card">
                             <div class="class-main">
                                 <h3>Clase reservada</h3>
-                                <p class="class-title" id="claseTitulo">Yoga Flow — Movilidad y respiración</p>
-                                <div class="class-meta" id="claseMeta">
-                                    Instructor: <b>Paula G.</b><br>
-                                    Estado: <b>publicada</b><br>
-                                    Descripción: sesión suave de movilidad + respiración guiada. Ideal para descargar
-                                    tensión.
-                                </div>
+                                <p class="class-title" id="claseTitulo">—</p>
+                                <div class="class-meta" id="claseMeta">—</div>
                                 <div class="note" style="margin-top:12px;">
-                                    Inicio: <b id="claseInicio">08/02/2026 08:30</b> · Fin: <b id="claseFin">08/02/2026
-                                        09:15</b>
+                                    Inicio: <b id="claseInicio">—</b> · Fin: <b id="claseFin">—</b>
                                 </div>
                             </div>
 
                             <div class="class-right">
                                 <div class="mini-box">
-                                    <div class="k">Cupo disponible</div>
-                                    <div class="v" id="cupoDisponible">8 plazas</div>
-                                    <div class="bar" aria-label="Ocupación">
-                                        <span id="barFill" style="width:60%"></span>
+                                    <div class="k">Cupo máximo</div>
+                                    <div class="v" id="cupoDisponible">—</div>
+                                    <div class="bar" aria-label="Cupo máximo">
+                                        <span id="barFill" style="width:100%"></span>
                                     </div>
                                     <div class="note" style="margin-top:10px;">
-                                        Si se completa el cupo, la IA debe responder que no puede guardar la reserva.
+                                        Campo: <b>clases_gimnasio.cupo_maximo_clase</b>. El cálculo de ocupación lo hace
+                                        backend.
                                     </div>
                                 </div>
 
                                 <div class="mini-box">
-                                    <div class="k">Ubicación</div>
-                                    <div class="v">Sala 1</div>
-                                    <div class="note">Acceso por pasillo norte. Llega 5 min antes.</div>
+                                    <div class="k">Notas de la reserva</div>
+                                    <div class="v" id="notaReservaBox">—</div>
+                                    <div class="note">Campo: <b>reservas_clase.notas_reserva</b></div>
                                 </div>
                             </div>
                         </div>
@@ -1237,13 +1244,13 @@
                                     <div class="switch">
                                         <div class="toggle" id="toggleCheck" role="switch" aria-checked="false"
                                             tabindex="0"></div>
-                                        <div class="v" id="checkLabel">no</div>
+                                        <div class="v" id="checkLabel">—</div>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="k">Método</div>
-                                    <div class="v" id="checkMetodo">manual</div>
+                                    <div class="v" id="checkMetodo">—</div>
                                 </div>
 
                                 <div class="row">
@@ -1272,11 +1279,12 @@
 
                                 <div class="row">
                                     <div class="k">Estado reserva</div>
-                                    <div class="v" id="estadoMirror">reservada</div>
+                                    <div class="v" id="estadoMirror">—</div>
                                 </div>
 
                                 <div class="note">
-                                    Si se marca “asistio/no_asistio” se reflejaría en <b>estado_reserva</b> de
+                                    Si se marca <b>asistio</b>/<b>no_asistio</b> se reflejaría en <b>estado_reserva</b>
+                                    de
                                     <b>reservas_clase</b>.
                                 </div>
                             </div>
@@ -1303,10 +1311,9 @@
                     </div>
 
                     <div class="chat-body">
-                        <div class="bubble ai">Veo tu reserva de Yoga Flow. ¿Quieres cancelarla o confirmar asistencia?
-                        </div>
-                        <div class="bubble user">Confírmala y recuérdame llegar 5 min antes.</div>
-                        <div class="bubble ai">Hecho. Mantengo la reserva y te dejo la nota: “llegar 5 min antes”.</div>
+                        <div class="bubble ai">Veo tu reserva. ¿Quieres cancelarla o marcar asistencia?</div>
+                        <div class="bubble user">Márcala como asistí y recuérdame llegar 5 min antes.</div>
+                        <div class="bubble ai">Hecho. Marco <b>asistio</b> y dejo nota en la reserva.</div>
                     </div>
 
                     <div class="chat-foot">
@@ -1329,69 +1336,39 @@
             window.__t = setTimeout(() => toast.style.display = 'none', 2400);
         }
 
-        // Estado reserva (demo)
-        const reservaEstado = document.getElementById('reservaEstado');
-        const tagEstado = document.getElementById('tagEstado');
-        const estadoMirror = document.getElementById('estadoMirror');
+        // Querystring: id_reserva_clase
+        const params = new URLSearchParams(window.location.search);
+        const idReserva = Number(params.get('id_reserva_clase') || '184');
 
-        const reservaOrigen = document.getElementById('reservaOrigen');
-        const tagOrigen = document.getElementById('tagOrigen');
+        // DEMO (en backend vendrá de JOIN reservas_clase + clases_gimnasio + tipos_clase + checkin_reserva)
+        const demo = {
+            reservas_clase: {
+                id_reserva_clase: idReserva,
+                estado_reserva: 'reservada',     // reservada | cancelada | asistio | no_asistio
+                origen_reserva: 'ia_coach',      // usuario | ia_coach
+                fecha_creacion_reserva: '07/02/2026 10:12',
+                notas_reserva: 'mañana a primera hora',
+                id_usuario: 7,
+                id_clase_gimnasio: 31
+            },
+            clases_gimnasio: {
+                id_clase_gimnasio: 31,
+                titulo_clase: 'Yoga Flow — Movilidad y respiración',
+                estado_clase: 'publicada',
+                fecha_inicio_clase: '08/02/2026 08:30',
+                fecha_fin_clase: '08/02/2026 09:15',
+                cupo_maximo_clase: 20,
+                instructor: 'Paula G.',
+                descripcion: 'Sesión suave de movilidad + respiración guiada. Ideal para descargar tensión.'
+            },
+            checkin_reserva: {
+                realizado_checkin: 0,
+                metodo_checkin: 'manual',
+                fecha_checkin: null
+            }
+        };
 
-        // Ocupación (demo)
-        const mOcupacion = document.getElementById('mOcupacion');
-        const cupoDisponible = document.getElementById('cupoDisponible');
-        const barFill = document.getElementById('barFill');
-
-        let cupoMax = 20;
-        let ocupadas = 12;
-
-        function renderOcupacion() {
-            const disp = Math.max(0, cupoMax - ocupadas);
-            mOcupacion.textContent = `${ocupadas} / ${cupoMax}`;
-            cupoDisponible.textContent = `${disp} plazas`;
-            const pct = Math.max(0, Math.min(100, Math.round((ocupadas / cupoMax) * 100)));
-            barFill.style.width = `${pct}%`;
-        }
-        renderOcupacion();
-
-        // Acciones (demo)
-        document.getElementById('btnCancelar').addEventListener('click', () => {
-            reservaEstado.textContent = 'cancelada';
-            tagEstado.textContent = 'cancelada';
-            estadoMirror.textContent = 'cancelada';
-
-            tagEstado.classList.remove('green', 'bronze');
-            tagEstado.classList.add('red');
-
-            showToast('Reserva cancelada (demo). Se haría UPDATE estado_reserva=cancelada.');
-        });
-
-        document.getElementById('btnConfirmar').addEventListener('click', () => {
-            // “Confirmar asistencia” -> aquí lo dejamos como estado reservada pero “ok”
-            showToast('Reserva confirmada (demo). Mantengo estado_reserva=reservada.');
-        });
-
-        let origen = 'ia_coach';
-        document.getElementById('btnCambiarOrigen').addEventListener('click', () => {
-            origen = (origen === 'ia_coach') ? 'usuario' : 'ia_coach';
-            reservaOrigen.textContent = origen;
-            tagOrigen.textContent = origen;
-
-            const btn = document.getElementById('btnCambiarOrigen');
-            btn.textContent = (origen === 'ia_coach') ? 'Marcar como usuario' : 'Marcar como IA';
-
-            showToast(`Origen actualizado (demo). UPDATE origen_reserva=${origen}.`);
-        });
-
-        // Check-in (demo)
-        const toggle = document.getElementById('toggleCheck');
-        const checkLabel = document.getElementById('checkLabel');
-        const checkFecha = document.getElementById('checkFecha');
-        const checkMetodo = document.getElementById('checkMetodo');
-
-        let checkin = false;
-        let metodo = 'manual';
-
+        // Helpers
         function nowString() {
             const d = new Date();
             const dd = String(d.getDate()).padStart(2, '0');
@@ -1402,21 +1379,161 @@
             return `${dd}/${mm}/${yy} ${hh}:${mi}`;
         }
 
-        function renderCheckin() {
+        function parseESDateTime(str) {
+            // "08/02/2026 08:30"
+            const m = String(str || '').match(/^(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})$/);
+            if (!m) return null;
+            const dd = Number(m[1]);
+            const mm = Number(m[2]);
+            const yyyy = Number(m[3]);
+            const hh = Number(m[4]);
+            const mi = Number(m[5]);
+            return new Date(yyyy, mm - 1, dd, hh, mi, 0, 0);
+        }
+
+        function minutesBetween(a, b) {
+            if (!a || !b) return null;
+            return Math.max(0, Math.round((b.getTime() - a.getTime()) / 60000));
+        }
+
+        function hhmmFromDate(d) {
+            if (!d) return '—';
+            return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+        }
+
+        function ddMonYYYY(d) {
+            if (!d) return '—';
+            const dd = String(d.getDate()).padStart(2, '0');
+            const mon = d.toLocaleString('es-ES', { month: 'short' }).replace('.', '');
+            const yyyy = d.getFullYear();
+            return `${dd} ${mon} · ${yyyy}`;
+        }
+
+        function applyEstadoStyles(estado) {
+            const tagEstado = document.getElementById('tagEstado');
+            tagEstado.classList.remove('green', 'red', 'bronze');
+            if (estado === 'reservada' || estado === 'asistio') tagEstado.classList.add('green');
+            if (estado === 'cancelada' || estado === 'no_asistio') tagEstado.classList.add('red');
+        }
+
+        function safeBaseTitle(titulo) {
+            const t = String(titulo || '').trim();
+            if (!t) return 'Clase';
+            const parts = t.split('—');
+            return (parts[0] || t).trim();
+        }
+
+        function renderAll() {
+            // Fechas clase
+            const ini = parseESDateTime(demo.clases_gimnasio.fecha_inicio_clase);
+            const fin = parseESDateTime(demo.clases_gimnasio.fecha_fin_clase);
+
+            // Título e ID
+            document.getElementById('reservaTitulo').textContent =
+                `Reserva #${demo.reservas_clase.id_reserva_clase} — ${safeBaseTitle(demo.clases_gimnasio.titulo_clase)}`;
+            document.getElementById('mIdReserva').textContent = `#${demo.reservas_clase.id_reserva_clase}`;
+
+            // Estado
+            document.getElementById('reservaEstado').textContent = demo.reservas_clase.estado_reserva;
+            document.getElementById('tagEstado').textContent = demo.reservas_clase.estado_reserva;
+            document.getElementById('estadoMirror').textContent = demo.reservas_clase.estado_reserva;
+            applyEstadoStyles(demo.reservas_clase.estado_reserva);
+
+            // Origen
+            document.getElementById('reservaOrigen').textContent = demo.reservas_clase.origen_reserva;
+            document.getElementById('tagOrigen').textContent = demo.reservas_clase.origen_reserva;
+
+            // Fecha creación + notas
+            document.getElementById('reservaFecha').textContent = demo.reservas_clase.fecha_creacion_reserva || '—';
+            document.getElementById('reservaNotas').textContent = `“${demo.reservas_clase.notas_reserva || '—'}”`;
+            document.getElementById('notaReservaBox').textContent = demo.reservas_clase.notas_reserva || '—';
+
+            // Tags clase / hora desde BD
+            document.getElementById('tagClase').textContent = `clase ${demo.clases_gimnasio.estado_clase || '—'}`;
+            document.getElementById('tagHora').textContent = hhmmFromDate(ini);
+
+            // Métricas
+            document.getElementById('mInicio').textContent = ddMonYYYY(ini);
+            const dur = minutesBetween(ini, fin);
+            document.getElementById('mDuracion').textContent = (dur !== null) ? `${dur} min` : '—';
+
+            const cupoMax = Number(demo.clases_gimnasio.cupo_maximo_clase || 0);
+            document.getElementById('mCupo').textContent = cupoMax ? String(cupoMax) : '—';
+            document.getElementById('cupoDisponible').textContent = cupoMax ? `Cupo máximo: ${cupoMax}` : '—';
+            document.getElementById('barFill').style.width = '100%';
+
+            // Clase (todo desde demo)
+            document.getElementById('claseTitulo').textContent = demo.clases_gimnasio.titulo_clase || '—';
+            document.getElementById('claseInicio').textContent = demo.clases_gimnasio.fecha_inicio_clase || '—';
+            document.getElementById('claseFin').textContent = demo.clases_gimnasio.fecha_fin_clase || '—';
+
+            const instructor = demo.clases_gimnasio.instructor || '—';
+            const estadoClase = demo.clases_gimnasio.estado_clase || '—';
+            const descripcion = demo.clases_gimnasio.descripcion || '—';
+
+            document.getElementById('claseMeta').innerHTML =
+                `Instructor: <b>${instructor}</b><br>` +
+                `Estado: <b>${estadoClase}</b><br>` +
+                `Descripción: ${descripcion}`;
+
+            // Check-in
+            const toggle = document.getElementById('toggleCheck');
+            const checkin = !!demo.checkin_reserva.realizado_checkin;
+
             toggle.classList.toggle('on', checkin);
             toggle.setAttribute('aria-checked', checkin ? 'true' : 'false');
-            checkLabel.textContent = checkin ? 'sí' : 'no';
-            checkFecha.textContent = checkin ? nowString() : '—';
-            checkMetodo.textContent = metodo;
+
+            document.getElementById('checkLabel').textContent = checkin ? 'sí' : 'no';
+            document.getElementById('checkMetodo').textContent = demo.checkin_reserva.metodo_checkin || 'manual';
+            document.getElementById('checkFecha').textContent = checkin
+                ? (demo.checkin_reserva.fecha_checkin || '—')
+                : '—';
         }
-        renderCheckin();
+
+        renderAll();
+
+        // Acciones demo (BD)
+        document.getElementById('btnCancelar').addEventListener('click', () => {
+            demo.reservas_clase.estado_reserva = 'cancelada';
+            renderAll();
+            showToast("Reserva cancelada (demo). UPDATE reservas_clase.estado_reserva='cancelada'.");
+        });
+
+        document.getElementById('btnAsistio').addEventListener('click', () => {
+            demo.reservas_clase.estado_reserva = 'asistio';
+            renderAll();
+            showToast("Asistencia marcada (demo). UPDATE reservas_clase.estado_reserva='asistio'.");
+        });
+
+        document.getElementById('btnNoAsistio').addEventListener('click', () => {
+            demo.reservas_clase.estado_reserva = 'no_asistio';
+            renderAll();
+            showToast("No asistencia marcada (demo). UPDATE reservas_clase.estado_reserva='no_asistio'.");
+        });
+
+        document.getElementById('btnCambiarOrigen').addEventListener('click', () => {
+            demo.reservas_clase.origen_reserva = (demo.reservas_clase.origen_reserva === 'ia_coach') ? 'usuario' : 'ia_coach';
+            renderAll();
+            showToast(`Origen actualizado (demo). UPDATE reservas_clase.origen_reserva='${demo.reservas_clase.origen_reserva}'.`);
+        });
+
+        // Check-in (persistiendo fecha)
+        const toggle = document.getElementById('toggleCheck');
 
         function toggleCheckin() {
-            checkin = !checkin;
-            renderCheckin();
-            showToast(checkin
-                ? 'Check-in realizado (demo). UPDATE realizado_checkin=1 + fecha_checkin.'
-                : 'Check-in revertido (demo). UPDATE realizado_checkin=0 + fecha_checkin=NULL.');
+            const was = !!demo.checkin_reserva.realizado_checkin;
+            demo.checkin_reserva.realizado_checkin = was ? 0 : 1;
+
+            if (!was) {
+                demo.checkin_reserva.fecha_checkin = nowString();
+            } else {
+                demo.checkin_reserva.fecha_checkin = null;
+            }
+
+            renderAll();
+            showToast(!was
+                ? "Check-in realizado (demo). UPDATE checkin_reserva.realizado_checkin=1 + fecha_checkin=NOW()."
+                : "Check-in revertido (demo). UPDATE checkin_reserva.realizado_checkin=0 + fecha_checkin=NULL.");
         }
 
         toggle.addEventListener('click', toggleCheckin);
@@ -1427,6 +1544,7 @@
             }
         });
     </script>
+
 </body>
 
 </html>

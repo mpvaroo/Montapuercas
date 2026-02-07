@@ -15,7 +15,7 @@
 
     <style>
         /* --------------------------------------------------------------------------
-      RESET + TOKENS (mismo estilo que dashboard)
+      RESET + TOKENS
     -------------------------------------------------------------------------- */
         *,
         *::before,
@@ -534,7 +534,7 @@
         }
 
         /* ------------------------------
-      LISTA EJERCICIOS
+      LISTA EJERCICIOS (alineada a rutinas_ejercicios + ejercicios)
     ------------------------------ */
         .list {
             display: grid;
@@ -544,7 +544,7 @@
 
         .item {
             display: grid;
-            grid-template-columns: 46px 1fr 280px;
+            grid-template-columns: 46px 1fr 360px;
             gap: 12px;
             align-items: center;
             padding: 12px 12px;
@@ -589,11 +589,12 @@
             color: rgba(239, 231, 214, .56);
             font-size: 12.5px;
             letter-spacing: .02em;
+            line-height: 1.35;
         }
 
         .params {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 8px;
             min-width: 0;
         }
@@ -665,7 +666,7 @@
         }
 
         /* --------------------------------------------------------------------------
-      MODAL (añadir/editar ejercicio)
+      MODAL (rutinas_ejercicios)
     -------------------------------------------------------------------------- */
         .modal-backdrop {
             position: fixed;
@@ -679,7 +680,7 @@
         }
 
         .modal {
-            width: min(720px, 100%);
+            width: min(780px, 100%);
             border-radius: 16px;
             border: 1px solid rgba(239, 231, 214, .14);
             background:
@@ -817,7 +818,7 @@
         }
 
         /* --------------------------------------------------------------------------
-      IA COACH (igual dashboard)
+      IA COACH (panel derecho)
     -------------------------------------------------------------------------- */
         .chat {
             grid-column: 2 / 3;
@@ -992,7 +993,7 @@
         }
 
         /* --------------------------------------------------------------------------
-      RESPONSIVE (misma base)
+      RESPONSIVE
     -------------------------------------------------------------------------- */
         @media (max-width: 1180px) {
             .main {
@@ -1015,7 +1016,7 @@
             }
 
             .params {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
+                grid-template-columns: repeat(4, minmax(0, 1fr));
             }
         }
 
@@ -1175,7 +1176,7 @@
                 <div>
                     <header class="hero">
                         <h1>Rutina.</h1>
-                        <p>Detalle completo y parámetros por ejercicio.</p>
+                        <p>rutinas_usuario · rutinas_ejercicios · ejercicios</p>
                     </header>
 
                     <div class="section-title">
@@ -1183,53 +1184,52 @@
                             <span class="dot" aria-hidden="true"></span>
                             <span>Resumen</span>
                         </div>
-                        <div class="pill">RUTINAS_USUARIO · RUTINAS_EJERCICIOS</div>
+                        <div class="pill">RUTINAS_USUARIO</div>
                     </div>
 
                     <section class="panel" aria-label="Resumen de rutina">
                         <div class="rutina-head">
                             <div class="rutina-title">
-                                <h2 id="rutinaNombre">Espalda y Bíceps — Baja fatiga</h2>
-                                <div class="sub">
-                                    Origen: <b id="rutinaOrigen">ia_coach</b> · Objetivo: <b
-                                        id="rutinaObjetivo">salud</b> · Nivel:
-                                    <b id="rutinaNivel">principiante</b>
+                                <h2 id="rutinaNombre">—</h2>
+                                <div class="sub" id="rutinaSub">
+                                    Origen: <b id="rutinaOrigen">—</b> · Objetivo: <b id="rutinaObjetivo">—</b> · Nivel:
+                                    <b id="rutinaNivel">—</b>
                                     <br>
-                                    Instrucciones: técnica limpia, RPE 6–7, sin fallo. Descansos medidos.
+                                    <span id="rutinaInstr">—</span>
                                 </div>
                             </div>
 
                             <div class="chips" aria-label="Etiquetas de rutina">
-                                <div class="tag green" id="tagActiva">activa</div>
-                                <div class="tag bronze" id="tagDuracion">45 min</div>
-                                <div class="tag">RPE 6–7</div>
-                                <div class="tag">Polea · Mancuernas</div>
+                                <div class="tag green" id="tagActiva">—</div>
+                                <div class="tag bronze" id="tagDuracion">—</div>
+                                <div class="tag" id="tagObjetivo">—</div>
+                                <div class="tag" id="tagNivel">—</div>
                             </div>
                         </div>
 
                         <div class="metrics" aria-label="Métricas de rutina">
                             <div class="metric">
                                 <div class="k">Duración estimada</div>
-                                <div class="v">45 minutos</div>
+                                <div class="v" id="mDuracion">—</div>
                             </div>
                             <div class="metric">
                                 <div class="k">Ejercicios</div>
-                                <div class="v" id="countEjercicios">5</div>
+                                <div class="v" id="countEjercicios">0</div>
                             </div>
                             <div class="metric">
-                                <div class="k">Descanso</div>
-                                <div class="v">75–120 s</div>
+                                <div class="k">Origen</div>
+                                <div class="v" id="mOrigen">—</div>
                             </div>
                             <div class="metric">
                                 <div class="k">Fecha creación</div>
-                                <div class="v">07 Feb · 2026</div>
+                                <div class="v" id="mFecha">—</div>
                             </div>
                         </div>
 
                         <div class="btn-row" aria-label="Acciones de rutina">
                             <button class="btn" type="button" id="btnAdd">Añadir ejercicio</button>
                             <button class="btn-ghost" type="button" id="btnDup">Duplicar rutina</button>
-                            <button class="btn-danger" type="button" id="btnToggle">Desactivar</button>
+                            <button class="btn-danger" type="button" id="btnToggle">—</button>
                         </div>
 
                         <div class="note" id="toast" style="display:none;"></div>
@@ -1240,154 +1240,19 @@
                             <span class="dot" aria-hidden="true"></span>
                             <span>Ejercicios</span>
                         </div>
-                        <div class="pill">ORDEN · SERIES · REPS · RPE · DESCANSO</div>
+                        <div class="pill">RUTINAS_EJERCICIOS + EJERCICIOS</div>
                     </div>
 
                     <section class="panel" aria-label="Lista de ejercicios">
                         <div class="list" id="list">
-                            <!-- Item 1 -->
-                            <article class="item" data-id="1">
-                                <div class="num">1</div>
-                                <div class="info">
-                                    <div class="name">Jalón al pecho (polea)</div>
-                                    <div class="muscle">Grupo: espalda · notas: enfoque en depresión escapular</div>
-                                </div>
-                                <div class="params">
-                                    <div class="p">
-                                        <div class="k">Series</div>
-                                        <div class="v">3</div>
-                                    </div>
-                                    <div class="p">
-                                        <div class="k">Reps</div>
-                                        <div class="v">10–12</div>
-                                    </div>
-                                    <div class="p">
-                                        <div class="k">RPE</div>
-                                        <div class="v">6.5</div>
-                                    </div>
-                                </div>
-                                <div class="item-actions">
-                                    <button class="mini bronze" type="button" data-act="edit">Editar</button>
-                                    <button class="mini" type="button" data-act="notes">Notas</button>
-                                    <button class="mini" type="button" data-act="del">Eliminar</button>
-                                </div>
-                            </article>
-
-                            <!-- Item 2 -->
-                            <article class="item" data-id="2">
-                                <div class="num">2</div>
-                                <div class="info">
-                                    <div class="name">Remo con mancuerna (1 brazo)</div>
-                                    <div class="muscle">Grupo: espalda · descanso: 90 s · control de tempo</div>
-                                </div>
-                                <div class="params">
-                                    <div class="p">
-                                        <div class="k">Series</div>
-                                        <div class="v">3</div>
-                                    </div>
-                                    <div class="p">
-                                        <div class="k">Reps</div>
-                                        <div class="v">8–10</div>
-                                    </div>
-                                    <div class="p">
-                                        <div class="k">RPE</div>
-                                        <div class="v">7.0</div>
-                                    </div>
-                                </div>
-                                <div class="item-actions">
-                                    <button class="mini bronze" type="button" data-act="edit">Editar</button>
-                                    <button class="mini" type="button" data-act="notes">Notas</button>
-                                    <button class="mini" type="button" data-act="del">Eliminar</button>
-                                </div>
-                            </article>
-
-                            <!-- Item 3 -->
-                            <article class="item" data-id="3">
-                                <div class="num">3</div>
-                                <div class="info">
-                                    <div class="name">Face pull (polea)</div>
-                                    <div class="muscle">Grupo: hombro/espalda · énfasis posterior</div>
-                                </div>
-                                <div class="params">
-                                    <div class="p">
-                                        <div class="k">Series</div>
-                                        <div class="v">2</div>
-                                    </div>
-                                    <div class="p">
-                                        <div class="k">Reps</div>
-                                        <div class="v">12–15</div>
-                                    </div>
-                                    <div class="p">
-                                        <div class="k">RPE</div>
-                                        <div class="v">6.0</div>
-                                    </div>
-                                </div>
-                                <div class="item-actions">
-                                    <button class="mini bronze" type="button" data-act="edit">Editar</button>
-                                    <button class="mini" type="button" data-act="notes">Notas</button>
-                                    <button class="mini" type="button" data-act="del">Eliminar</button>
-                                </div>
-                            </article>
-
-                            <!-- Item 4 -->
-                            <article class="item" data-id="4">
-                                <div class="num">4</div>
-                                <div class="info">
-                                    <div class="name">Curl bíceps inclinado (mancuernas)</div>
-                                    <div class="muscle">Grupo: biceps · rango completo</div>
-                                </div>
-                                <div class="params">
-                                    <div class="p">
-                                        <div class="k">Series</div>
-                                        <div class="v">3</div>
-                                    </div>
-                                    <div class="p">
-                                        <div class="k">Reps</div>
-                                        <div class="v">10–12</div>
-                                    </div>
-                                    <div class="p">
-                                        <div class="k">RPE</div>
-                                        <div class="v">6.5</div>
-                                    </div>
-                                </div>
-                                <div class="item-actions">
-                                    <button class="mini bronze" type="button" data-act="edit">Editar</button>
-                                    <button class="mini" type="button" data-act="notes">Notas</button>
-                                    <button class="mini" type="button" data-act="del">Eliminar</button>
-                                </div>
-                            </article>
-
-                            <!-- Item 5 -->
-                            <article class="item" data-id="5">
-                                <div class="num">5</div>
-                                <div class="info">
-                                    <div class="name">Curl martillo (mancuernas)</div>
-                                    <div class="muscle">Grupo: biceps · control sin balanceo</div>
-                                </div>
-                                <div class="params">
-                                    <div class="p">
-                                        <div class="k">Series</div>
-                                        <div class="v">2</div>
-                                    </div>
-                                    <div class="p">
-                                        <div class="k">Reps</div>
-                                        <div class="v">12</div>
-                                    </div>
-                                    <div class="p">
-                                        <div class="k">RPE</div>
-                                        <div class="v">6.5</div>
-                                    </div>
-                                </div>
-                                <div class="item-actions">
-                                    <button class="mini bronze" type="button" data-act="edit">Editar</button>
-                                    <button class="mini" type="button" data-act="notes">Notas</button>
-                                    <button class="mini" type="button" data-act="del">Eliminar</button>
-                                </div>
-                            </article>
+                            <!-- Render JS -->
                         </div>
 
                         <div class="note">
                             Esta lista representa filas en <b>rutinas_ejercicios</b> enlazadas a <b>ejercicios</b>.
+                            Campos UI: orden_en_rutina, series_objetivo, repeticiones_objetivo, peso_objetivo_kg,
+                            rpe_objetivo,
+                            descanso_segundos, notas_ejercicio.
                         </div>
                     </section>
                 </div>
@@ -1410,18 +1275,18 @@
                         <button class="kebab" type="button" aria-label="Opciones">···</button>
                     </div>
 
-                    <div class="chat-body">
-                        <div class="bubble ai">Puedo ajustar repeticiones, RPE o descanso por ejercicio. Dime cuál.
+                    <div class="chat-body" id="chatBody">
+                        <div class="bubble ai">Puedo ajustar series, repeticiones, peso, RPE o descanso por ejercicio.
                         </div>
                         <div class="bubble user">Sube un poco bíceps pero sin fatigar.</div>
-                        <div class="bubble ai">Perfecto: mantengo RPE 6–7 y añado una serie extra en el último
-                            ejercicio.</div>
+                        <div class="bubble ai">Perfecto: mantengo RPE 6–7 y subo 1 serie en el último ejercicio.</div>
                     </div>
 
                     <div class="chat-foot">
                         <button class="iconbtn" type="button" aria-label="Adjuntar">＋</button>
-                        <input class="chat-input" type="text" placeholder="Escribe un mensaje… (editar rutina)" />
-                        <button class="iconbtn" type="button" aria-label="Enviar">➤</button>
+                        <input class="chat-input" id="chatInput" type="text"
+                            placeholder="Escribe un mensaje… (editar rutina)" />
+                        <button class="iconbtn" id="chatSend" type="button" aria-label="Enviar">➤</button>
                     </div>
                 </aside>
             </div>
@@ -1438,59 +1303,53 @@
                 <div class="modal-body">
                     <div class="grid2">
                         <div class="field">
-                            <div class="label">Ejercicio</div>
-                            <select class="select" id="mEjercicio">
-                                <option>Jalón al pecho</option>
-                                <option>Remo con mancuerna</option>
-                                <option>Face pull</option>
-                                <option>Curl inclinado</option>
-                                <option>Curl martillo</option>
-                                <option>Press banca</option>
-                                <option>Sentadilla</option>
-                            </select>
+                            <div class="label">Ejercicio (id_ejercicio)</div>
+                            <select class="select" id="mEjercicio"></select>
                         </div>
 
                         <div class="field">
-                            <div class="label">Orden en rutina</div>
+                            <div class="label">Orden en rutina (orden_en_rutina)</div>
                             <input class="input" id="mOrden" type="number" min="1" value="1" />
                         </div>
                     </div>
 
                     <div class="grid2">
                         <div class="field">
-                            <div class="label">Series objetivo</div>
+                            <div class="label">Series objetivo (series_objetivo)</div>
                             <input class="input" id="mSeries" type="number" min="1" value="3" />
                         </div>
                         <div class="field">
-                            <div class="label">Repeticiones objetivo</div>
+                            <div class="label">Repeticiones objetivo (repeticiones_objetivo)</div>
                             <input class="input" id="mReps" type="text" value="8-12" />
                         </div>
                     </div>
 
                     <div class="grid2">
                         <div class="field">
-                            <div class="label">Peso objetivo (kg)</div>
+                            <div class="label">Peso objetivo (peso_objetivo_kg)</div>
                             <input class="input" id="mPeso" type="number" step="0.5" placeholder="Opcional" />
                         </div>
                         <div class="field">
-                            <div class="label">RPE objetivo</div>
+                            <div class="label">RPE objetivo (rpe_objetivo)</div>
                             <input class="input" id="mRpe" type="number" step="0.1" placeholder="Ej: 6.5" />
                         </div>
                     </div>
 
                     <div class="grid2">
                         <div class="field">
-                            <div class="label">Descanso (seg)</div>
+                            <div class="label">Descanso (descanso_segundos)</div>
                             <input class="input" id="mDescanso" type="number" placeholder="Ej: 90" />
                         </div>
                         <div class="field">
-                            <div class="label">Notas</div>
+                            <div class="label">Notas (notas_ejercicio)</div>
                             <input class="input" id="mNotas" type="text" placeholder="técnica / tempo / cues" />
                         </div>
                     </div>
 
                     <div class="note">
-                        Campos del modal: <b>rutinas_ejercicios</b> (series/reps/peso/rpe/descanso/notas) + vínculo a
+                        Campos del modal: <b>rutinas_ejercicios</b> (orden_en_rutina, series_objetivo,
+                        repeticiones_objetivo,
+                        peso_objetivo_kg, rpe_objetivo, descanso_segundos, notas_ejercicio) + vínculo a
                         <b>ejercicios</b>.
                     </div>
                 </div>
@@ -1504,42 +1363,332 @@
     </main>
 
     <script>
-        // Utilidades
+        // -------------------------------------------------------------------------
+        // UTILIDADES
+        // -------------------------------------------------------------------------
         const toast = document.getElementById('toast');
         function showToast(msg) {
             toast.textContent = msg;
             toast.style.display = 'block';
             clearTimeout(window.__t);
-            window.__t = setTimeout(() => toast.style.display = 'none', 2200);
+            window.__t = setTimeout(() => toast.style.display = 'none', 2400);
         }
 
-        // Contador ejercicios (demo)
+        function cap(s) {
+            return String(s || "").charAt(0).toUpperCase() + String(s || "").slice(1);
+        }
+
+        function fmtFecha(isoLike) {
+            if (!isoLike) return "—";
+            const d = new Date(isoLike.replace(" ", "T"));
+            if (Number.isNaN(d.getTime())) return "—";
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = d.toLocaleString('es-ES', { month: 'short' }).replace('.', '');
+            const year = d.getFullYear();
+            return `${day} ${month} · ${year}`;
+        }
+
+        function numOrDash(v) {
+            return (v === null || v === undefined || v === "") ? "—" : String(v);
+        }
+
+        // -------------------------------------------------------------------------
+        // DEMO DATA (alineado a tu BD)
+        // -------------------------------------------------------------------------
+        const ejercicios = [
+            { id_ejercicio: 1, nombre_ejercicio: "Press banca", grupo_muscular_principal: "pecho", descripcion_ejercicio: "Press en banco con barra" },
+            { id_ejercicio: 2, nombre_ejercicio: "Dominadas", grupo_muscular_principal: "espalda", descripcion_ejercicio: "Tracción vertical con peso corporal" },
+            { id_ejercicio: 3, nombre_ejercicio: "Sentadilla", grupo_muscular_principal: "pierna", descripcion_ejercicio: "Sentadilla con barra" },
+            { id_ejercicio: 4, nombre_ejercicio: "Curl bíceps", grupo_muscular_principal: "biceps", descripcion_ejercicio: "Curl con mancuernas o barra" },
+            { id_ejercicio: 5, nombre_ejercicio: "Plancha", grupo_muscular_principal: "core", descripcion_ejercicio: "Isométrico de core" },
+            // extras demo:
+            { id_ejercicio: 6, nombre_ejercicio: "Jalón al pecho (polea)", grupo_muscular_principal: "espalda", descripcion_ejercicio: "Tracción vertical en polea" },
+            { id_ejercicio: 7, nombre_ejercicio: "Remo con mancuerna (1 brazo)", grupo_muscular_principal: "espalda", descripcion_ejercicio: "Remo unilateral controlado" },
+            { id_ejercicio: 8, nombre_ejercicio: "Face pull (polea)", grupo_muscular_principal: "hombro", descripcion_ejercicio: "Deltoide posterior y escápulas" },
+            { id_ejercicio: 9, nombre_ejercicio: "Curl bíceps inclinado (mancuernas)", grupo_muscular_principal: "biceps", descripcion_ejercicio: "Curl en banco inclinado" },
+            { id_ejercicio: 10, nombre_ejercicio: "Curl martillo (mancuernas)", grupo_muscular_principal: "biceps", descripcion_ejercicio: "Curl neutro" },
+        ];
+
+        const rutinas_usuario = [
+            {
+                id_rutina_usuario: 1,
+                id_usuario: 1,
+                nombre_rutina_usuario: "Espalda y Bíceps — Baja fatiga",
+                objetivo_rutina_usuario: "salud",
+                nivel_rutina_usuario: "principiante",
+                duracion_estimada_minutos: 45,
+                origen_rutina: "ia_coach",
+                instrucciones_rutina: "Técnica limpia, RPE 6–7, sin fallo. Descansos medidos.",
+                fecha_creacion_rutina: "2026-02-07 10:00:00",
+                rutina_activa: 1
+            },
+            {
+                id_rutina_usuario: 2,
+                id_usuario: 1,
+                nombre_rutina_usuario: "Rutina Full Body — Rendimiento",
+                objetivo_rutina_usuario: "rendimiento",
+                nivel_rutina_usuario: "intermedio",
+                duracion_estimada_minutos: 50,
+                origen_rutina: "plantilla",
+                instrucciones_rutina: "Básicos RPE 7–8. Accesorios RPE 6–7. Evita fallo. Descansos 90–150s.",
+                fecha_creacion_rutina: "2026-02-06 18:20:00",
+                rutina_activa: 1
+            }
+        ];
+
+        // rutinas_ejercicios (tabla detalle) + vínculo a ejercicios
+        const rutinas_ejercicios = [
+            // rutina 1
+            {
+                id_rutina_ejercicio: 101,
+                id_rutina_usuario: 1,
+                id_ejercicio: 6,
+                orden_en_rutina: 1,
+                series_objetivo: 3,
+                repeticiones_objetivo: "10–12",
+                peso_objetivo_kg: null,
+                rpe_objetivo: 6.5,
+                descanso_segundos: 90,
+                notas_ejercicio: "Enfoque en depresión escapular"
+            },
+            {
+                id_rutina_ejercicio: 102,
+                id_rutina_usuario: 1,
+                id_ejercicio: 7,
+                orden_en_rutina: 2,
+                series_objetivo: 3,
+                repeticiones_objetivo: "8–10",
+                peso_objetivo_kg: null,
+                rpe_objetivo: 7.0,
+                descanso_segundos: 90,
+                notas_ejercicio: "Control de tempo"
+            },
+            {
+                id_rutina_ejercicio: 103,
+                id_rutina_usuario: 1,
+                id_ejercicio: 8,
+                orden_en_rutina: 3,
+                series_objetivo: 2,
+                repeticiones_objetivo: "12–15",
+                peso_objetivo_kg: null,
+                rpe_objetivo: 6.0,
+                descanso_segundos: 75,
+                notas_ejercicio: "Énfasis posterior"
+            },
+            {
+                id_rutina_ejercicio: 104,
+                id_rutina_usuario: 1,
+                id_ejercicio: 9,
+                orden_en_rutina: 4,
+                series_objetivo: 3,
+                repeticiones_objetivo: "10–12",
+                peso_objetivo_kg: null,
+                rpe_objetivo: 6.5,
+                descanso_segundos: 75,
+                notas_ejercicio: "Rango completo"
+            },
+            {
+                id_rutina_ejercicio: 105,
+                id_rutina_usuario: 1,
+                id_ejercicio: 10,
+                orden_en_rutina: 5,
+                series_objetivo: 2,
+                repeticiones_objetivo: "12",
+                peso_objetivo_kg: null,
+                rpe_objetivo: 6.5,
+                descanso_segundos: 75,
+                notas_ejercicio: "Control sin balanceo"
+            },
+
+            // rutina 2 (demo)
+            {
+                id_rutina_ejercicio: 201,
+                id_rutina_usuario: 2,
+                id_ejercicio: 3,
+                orden_en_rutina: 1,
+                series_objetivo: 4,
+                repeticiones_objetivo: "6–8",
+                peso_objetivo_kg: 90.0,
+                rpe_objetivo: 7.5,
+                descanso_segundos: 150,
+                notas_ejercicio: "Profundidad consistente"
+            },
+            {
+                id_rutina_ejercicio: 202,
+                id_rutina_usuario: 2,
+                id_ejercicio: 1,
+                orden_en_rutina: 2,
+                series_objetivo: 4,
+                repeticiones_objetivo: "6–8",
+                peso_objetivo_kg: 70.0,
+                rpe_objetivo: 7.5,
+                descanso_segundos: 150,
+                notas_ejercicio: "Pausa 1s en pecho"
+            },
+            {
+                id_rutina_ejercicio: 203,
+                id_rutina_usuario: 2,
+                id_ejercicio: 2,
+                orden_en_rutina: 3,
+                series_objetivo: 3,
+                repeticiones_objetivo: "6–10",
+                peso_objetivo_kg: null,
+                rpe_objetivo: 7.0,
+                descanso_segundos: 120,
+                notas_ejercicio: "Sin kipping"
+            },
+        ];
+
+        // -------------------------------------------------------------------------
+        // PARAMS
+        // -------------------------------------------------------------------------
+        const urlParams = new URLSearchParams(window.location.search);
+        const idRutina = Number(urlParams.get('id_rutina_usuario') || 1);
+
+        const rutina = rutinas_usuario.find(r => r.id_rutina_usuario === idRutina) || rutinas_usuario[0];
+
+        // Filtramos detalle y lo ordenamos por orden_en_rutina
+        function getDetalleRutina(id) {
+            return rutinas_ejercicios
+                .filter(x => x.id_rutina_usuario === id)
+                .sort((a, b) => (a.orden_en_rutina || 0) - (b.orden_en_rutina || 0));
+        }
+
+        // -------------------------------------------------------------------------
+        // RENDER RESUMEN (rutinas_usuario)
+        // -------------------------------------------------------------------------
+        const rutinaNombre = document.getElementById('rutinaNombre');
+        const rutinaOrigen = document.getElementById('rutinaOrigen');
+        const rutinaObjetivo = document.getElementById('rutinaObjetivo');
+        const rutinaNivel = document.getElementById('rutinaNivel');
+        const rutinaInstr = document.getElementById('rutinaInstr');
+
+        const tagActiva = document.getElementById('tagActiva');
+        const tagDuracion = document.getElementById('tagDuracion');
+        const tagObjetivo = document.getElementById('tagObjetivo');
+        const tagNivel = document.getElementById('tagNivel');
+
+        const mDuracion = document.getElementById('mDuracion');
+        const mOrigen = document.getElementById('mOrigen');
+        const mFecha = document.getElementById('mFecha');
+
+        const btnToggle = document.getElementById('btnToggle');
+
+        function renderResumen() {
+            rutinaNombre.textContent = rutina.nombre_rutina_usuario || "Rutina sin nombre";
+            rutinaOrigen.textContent = rutina.origen_rutina || "—";
+            rutinaObjetivo.textContent = rutina.objetivo_rutina_usuario || "—";
+            rutinaNivel.textContent = rutina.nivel_rutina_usuario || "—";
+            rutinaInstr.textContent = rutina.instrucciones_rutina || "—";
+
+            const activa = Boolean(rutina.rutina_activa);
+            tagActiva.textContent = activa ? "activa" : "inactiva";
+            tagActiva.classList.toggle('green', activa);
+
+            tagDuracion.textContent = (rutina.duracion_estimada_minutos ? `${rutina.duracion_estimada_minutos} min` : "—");
+            tagObjetivo.textContent = (rutina.objetivo_rutina_usuario || "—");
+            tagNivel.textContent = (rutina.nivel_rutina_usuario || "—");
+
+            mDuracion.textContent = (rutina.duracion_estimada_minutos ? `${rutina.duracion_estimada_minutos} min` : "—");
+            mOrigen.textContent = cap(rutina.origen_rutina || "—");
+            mFecha.textContent = fmtFecha(rutina.fecha_creacion_rutina);
+
+            btnToggle.textContent = activa ? "Desactivar" : "Activar";
+        }
+
+        renderResumen();
+
+        // -------------------------------------------------------------------------
+        // LISTA EJERCICIOS (rutinas_ejercicios + ejercicios)
+        // -------------------------------------------------------------------------
         const list = document.getElementById('list');
         const countEl = document.getElementById('countEjercicios');
-        function refreshCount() {
-            countEl.textContent = list.querySelectorAll('.item').length;
+
+        function findEjercicioById(id) {
+            return ejercicios.find(e => e.id_ejercicio === id) || null;
         }
-        refreshCount();
 
-        // Rutina activa/inactiva (demo)
-        const btnToggle = document.getElementById('btnToggle');
-        const tagActiva = document.getElementById('tagActiva');
-        let rutinaActiva = true;
+        function renderList() {
+            const detalle = getDetalleRutina(rutina.id_rutina_usuario);
 
+            countEl.textContent = String(detalle.length);
+            list.innerHTML = '';
+
+            detalle.forEach((row, idx) => {
+                const ex = findEjercicioById(row.id_ejercicio);
+                const nombre = ex ? ex.nombre_ejercicio : `Ejercicio #${row.id_ejercicio}`;
+                const grupo = ex ? ex.grupo_muscular_principal : "—";
+
+                const pesoTxt = (row.peso_objetivo_kg === null || row.peso_objetivo_kg === undefined) ? "—" : `${row.peso_objetivo_kg} kg`;
+                const descTxt = (row.descanso_segundos === null || row.descanso_segundos === undefined) ? "—" : `${row.descanso_segundos}s`;
+                const rpeTxt = (row.rpe_objetivo === null || row.rpe_objetivo === undefined) ? "—" : row.rpe_objetivo;
+
+                const article = document.createElement('article');
+                article.className = 'item';
+                article.setAttribute('data-id', String(row.id_rutina_ejercicio));
+
+                article.innerHTML = `
+          <div class="num">${idx + 1}</div>
+          <div class="info">
+            <div class="name">${nombre}</div>
+            <div class="muscle">
+              Grupo: ${grupo}
+              · RPE: ${rpeTxt}
+              · Notas: ${row.notas_ejercicio ? row.notas_ejercicio : "—"}
+            </div>
+          </div>
+          <div class="params">
+            <div class="p">
+              <div class="k">Series</div>
+              <div class="v">${numOrDash(row.series_objetivo)}</div>
+            </div>
+            <div class="p">
+              <div class="k">Reps</div>
+              <div class="v">${numOrDash(row.repeticiones_objetivo)}</div>
+            </div>
+            <div class="p">
+              <div class="k">Peso</div>
+              <div class="v">${pesoTxt}</div>
+            </div>
+            <div class="p">
+              <div class="k">Descanso</div>
+              <div class="v">${descTxt}</div>
+            </div>
+          </div>
+          <div class="item-actions">
+            <button class="mini bronze" type="button" data-act="edit">Editar</button>
+            <button class="mini" type="button" data-act="notes">Notas</button>
+            <button class="mini" type="button" data-act="del">Eliminar</button>
+          </div>
+        `;
+
+                list.appendChild(article);
+            });
+        }
+
+        renderList();
+
+        // -------------------------------------------------------------------------
+        // TOGGLE RUTINA ACTIVA (demo)
+        // En real: UPDATE rutinas_usuario SET rutina_activa = ...
+        // -------------------------------------------------------------------------
         btnToggle.addEventListener('click', () => {
-            rutinaActiva = !rutinaActiva;
-            tagActiva.textContent = rutinaActiva ? 'activa' : 'inactiva';
-            tagActiva.classList.toggle('green', rutinaActiva);
-            btnToggle.textContent = rutinaActiva ? 'Desactivar' : 'Activar';
-            showToast(rutinaActiva ? 'Rutina marcada como activa (demo).' : 'Rutina desactivada (demo).');
+            rutina.rutina_activa = rutina.rutina_activa ? 0 : 1;
+            renderResumen();
+            showToast(rutina.rutina_activa ? 'Rutina marcada como activa (demo). UPDATE rutinas_usuario.' : 'Rutina desactivada (demo). UPDATE rutinas_usuario.');
         });
 
-        // Duplicar (demo)
+        // -------------------------------------------------------------------------
+        // DUPLICAR (demo)
+        // En real: INSERT en rutinas_usuario + copiar rutinas_ejercicios
+        // -------------------------------------------------------------------------
         document.getElementById('btnDup').addEventListener('click', () => {
-            showToast('Rutina duplicada (demo). Se crearía una nueva fila en rutinas_usuario.');
+            showToast('Rutina duplicada (demo). INSERT rutinas_usuario + INSERT rutinas_ejercicios.');
         });
 
-        // Modal
+        // -------------------------------------------------------------------------
+        // MODAL
+        // -------------------------------------------------------------------------
         const modalBackdrop = document.getElementById('modalBackdrop');
         const modalClose = document.getElementById('modalClose');
         const modalCancel = document.getElementById('modalCancel');
@@ -1555,36 +1704,41 @@
         const mDescanso = document.getElementById('mDescanso');
         const mNotas = document.getElementById('mNotas');
 
-        let editingItem = null;
+        // Rellenar select con ejercicios (id_ejercicio)
+        function fillEjerciciosSelect() {
+            mEjercicio.innerHTML = '';
+            ejercicios.forEach(ex => {
+                const opt = document.createElement('option');
+                opt.value = String(ex.id_ejercicio);
+                opt.textContent = `${ex.nombre_ejercicio} · ${ex.grupo_muscular_principal}`;
+                mEjercicio.appendChild(opt);
+            });
+        }
+        fillEjerciciosSelect();
 
-        function openModal(mode, item) {
+        let editingIdRutinaEjercicio = null;
+
+        function openModal(mode, row) {
             modalBackdrop.style.display = 'flex';
             modalBackdrop.setAttribute('aria-hidden', 'false');
 
-            editingItem = item || null;
+            editingIdRutinaEjercicio = row ? row.id_rutina_ejercicio : null;
             modalTitle.textContent = mode === 'add' ? 'Añadir ejercicio' : 'Editar ejercicio';
 
-            // Prefill demo
-            if (mode === 'edit' && item) {
-                const idx = item.querySelector('.num')?.textContent?.trim() || '1';
-                mOrden.value = idx;
+            const detalle = getDetalleRutina(rutina.id_rutina_usuario);
 
-                const name = item.querySelector('.info .name')?.textContent?.trim() || '';
-                // Muy simple: intenta matchear con options
-                [...mEjercicio.options].forEach((opt, i) => {
-                    if (name.toLowerCase().includes(opt.text.toLowerCase())) mEjercicio.selectedIndex = i;
-                });
-
-                const ps = item.querySelectorAll('.params .p .v');
-                mSeries.value = ps[0]?.textContent?.trim() || '3';
-                mReps.value = ps[1]?.textContent?.trim() || '8-12';
-                mRpe.value = ps[2]?.textContent?.trim() || '';
-                mPeso.value = '';
-                mDescanso.value = '';
-                mNotas.value = item.querySelector('.info .muscle')?.textContent?.trim() || '';
+            if (mode === 'edit' && row) {
+                mEjercicio.value = String(row.id_ejercicio);
+                mOrden.value = String(row.orden_en_rutina || 1);
+                mSeries.value = String(row.series_objetivo ?? 3);
+                mReps.value = String(row.repeticiones_objetivo ?? '8-12');
+                mPeso.value = (row.peso_objetivo_kg ?? '');
+                mRpe.value = (row.rpe_objetivo ?? '');
+                mDescanso.value = (row.descanso_segundos ?? '');
+                mNotas.value = (row.notas_ejercicio ?? '');
             } else {
                 mEjercicio.selectedIndex = 0;
-                mOrden.value = String(list.querySelectorAll('.item').length + 1);
+                mOrden.value = String(detalle.length + 1);
                 mSeries.value = '3';
                 mReps.value = '8-12';
                 mPeso.value = '';
@@ -1597,10 +1751,11 @@
         function closeModal() {
             modalBackdrop.style.display = 'none';
             modalBackdrop.setAttribute('aria-hidden', 'true');
-            editingItem = null;
+            editingIdRutinaEjercicio = null;
         }
 
         document.getElementById('btnAdd').addEventListener('click', () => openModal('add'));
+
         modalClose.addEventListener('click', closeModal);
         modalCancel.addEventListener('click', closeModal);
         modalBackdrop.addEventListener('click', (e) => {
@@ -1612,87 +1767,111 @@
             const btn = e.target.closest('button[data-act]');
             if (!btn) return;
 
-            const item = e.target.closest('.item');
             const act = btn.getAttribute('data-act');
+            const itemEl = e.target.closest('.item');
+            const idRutinaEj = Number(itemEl.getAttribute('data-id'));
+
+            const row = rutinas_ejercicios.find(x => x.id_rutina_ejercicio === idRutinaEj);
 
             if (act === 'edit') {
-                openModal('edit', item);
+                if (!row) return;
+                openModal('edit', row);
             } else if (act === 'del') {
-                item.remove();
-                // Reenumerar
-                [...list.querySelectorAll('.item')].forEach((it, i) => {
-                    it.querySelector('.num').textContent = String(i + 1);
-                });
-                refreshCount();
-                showToast('Ejercicio eliminado (demo). Se borraría una fila en rutinas_ejercicios.');
+                const idx = rutinas_ejercicios.findIndex(x => x.id_rutina_ejercicio === idRutinaEj);
+                if (idx >= 0) {
+                    rutinas_ejercicios.splice(idx, 1);
+                    // reordenar orden_en_rutina dentro de esa rutina
+                    const det = getDetalleRutina(rutina.id_rutina_usuario);
+                    det.forEach((r, i) => r.orden_en_rutina = i + 1);
+                }
+                renderList();
+                showToast('Ejercicio eliminado (demo). DELETE rutinas_ejercicios.');
             } else if (act === 'notes') {
-                showToast('Notas (demo): aquí abrirías un editor de notas_ejercicio.');
+                showToast('Notas (demo): editarías notas_ejercicio en rutinas_ejercicios.');
             }
         });
 
-        // Guardar modal (demo)
+        // Guardar modal (demo) => INSERT/UPDATE rutinas_ejercicios
         modalSave.addEventListener('click', () => {
-            const name = mEjercicio.value;
+            const id_ejercicio = Number(mEjercicio.value);
             const orden = Number(mOrden.value || 1);
-            const series = mSeries.value || '3';
-            const reps = mReps.value || '8-12';
-            const rpe = mRpe.value || '—';
-            const notes = mNotas.value || 'Grupo: —';
+            const series = Number(mSeries.value || 3);
+            const reps = String(mReps.value || '8-12').trim();
+            const peso = (mPeso.value === '' ? null : Number(mPeso.value));
+            const rpe = (mRpe.value === '' ? null : Number(mRpe.value));
+            const descanso = (mDescanso.value === '' ? null : Number(mDescanso.value));
+            const notas = String(mNotas.value || '').trim() || null;
 
-            if (editingItem) {
-                editingItem.querySelector('.info .name').textContent = name;
-                editingItem.querySelector('.info .muscle').textContent = notes;
+            if (editingIdRutinaEjercicio) {
+                const row = rutinas_ejercicios.find(x => x.id_rutina_ejercicio === editingIdRutinaEjercicio);
+                if (row) {
+                    row.id_ejercicio = id_ejercicio;
+                    row.orden_en_rutina = orden;
+                    row.series_objetivo = series;
+                    row.repeticiones_objetivo = reps;
+                    row.peso_objetivo_kg = peso;
+                    row.rpe_objetivo = rpe;
+                    row.descanso_segundos = descanso;
+                    row.notas_ejercicio = notas;
 
-                const ps = editingItem.querySelectorAll('.params .p .v');
-                ps[0].textContent = series;
-                ps[1].textContent = reps;
-                ps[2].textContent = rpe;
+                    // Reordenar por orden_en_rutina
+                    const det = getDetalleRutina(rutina.id_rutina_usuario);
+                    det.sort((a, b) => (a.orden_en_rutina || 0) - (b.orden_en_rutina || 0));
+                    det.forEach((r, i) => r.orden_en_rutina = i + 1);
 
-                showToast('Ejercicio actualizado (demo). UPDATE en rutinas_ejercicios.');
+                    showToast('Ejercicio actualizado (demo). UPDATE rutinas_ejercicios.');
+                }
             } else {
-                const item = document.createElement('article');
-                item.className = 'item';
-                item.setAttribute('data-id', String(Date.now()));
-                item.innerHTML = `
-          <div class="num">${orden}</div>
-          <div class="info">
-            <div class="name">${name}</div>
-            <div class="muscle">${notes}</div>
-          </div>
-          <div class="params">
-            <div class="p"><div class="k">Series</div><div class="v">${series}</div></div>
-            <div class="p"><div class="k">Reps</div><div class="v">${reps}</div></div>
-            <div class="p"><div class="k">RPE</div><div class="v">${rpe}</div></div>
-          </div>
-          <div class="item-actions">
-            <button class="mini bronze" type="button" data-act="edit">Editar</button>
-            <button class="mini" type="button" data-act="notes">Notas</button>
-            <button class="mini" type="button" data-act="del">Eliminar</button>
-          </div>
-        `;
+                const newRow = {
+                    id_rutina_ejercicio: Date.now(), // demo
+                    id_rutina_usuario: rutina.id_rutina_usuario,
+                    id_ejercicio,
+                    orden_en_rutina: orden,
+                    series_objetivo: series,
+                    repeticiones_objetivo: reps,
+                    peso_objetivo_kg: peso,
+                    rpe_objetivo: rpe,
+                    descanso_segundos: descanso,
+                    notas_ejercicio: notas
+                };
+                rutinas_ejercicios.push(newRow);
 
-                list.appendChild(item);
+                // Reordenar por orden
+                const det = getDetalleRutina(rutina.id_rutina_usuario);
+                det.sort((a, b) => (a.orden_en_rutina || 0) - (b.orden_en_rutina || 0));
+                det.forEach((r, i) => r.orden_en_rutina = i + 1);
 
-                // Reordenar visual por orden (simple)
-                const items = [...list.querySelectorAll('.item')];
-                items.sort((a, b) => Number(a.querySelector('.num').textContent) - Number(b.querySelector('.num').textContent));
-                list.innerHTML = '';
-                items.forEach((it, i) => {
-                    // renumeración limpia secuencial para UI
-                    it.querySelector('.num').textContent = String(i + 1);
-                    list.appendChild(it);
-                });
-
-                refreshCount();
-                showToast('Ejercicio añadido (demo). INSERT en rutinas_ejercicios.');
+                showToast('Ejercicio añadido (demo). INSERT rutinas_ejercicios.');
             }
 
+            renderList();
             closeModal();
         });
 
         // Escape para cerrar modal
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && modalBackdrop.style.display === 'flex') closeModal();
+        });
+
+        // Chat send (demo)
+        document.getElementById('chatSend').addEventListener('click', () => {
+            const input = document.getElementById('chatInput');
+            const msg = String(input.value || '').trim();
+            if (!msg) return;
+            const body = document.getElementById('chatBody');
+            const div = document.createElement('div');
+            div.className = 'bubble user';
+            div.textContent = msg;
+            body.appendChild(div);
+            input.value = '';
+            body.scrollTop = body.scrollHeight;
+
+            // demo reply
+            const reply = document.createElement('div');
+            reply.className = 'bubble ai';
+            reply.textContent = 'Demo: esto generaría una acción en mensajes_ia. Ej: {"accion":"editar_rutina","id_rutina_usuario":' + rutina.id_rutina_usuario + '}';
+            body.appendChild(reply);
+            body.scrollTop = body.scrollHeight;
         });
     </script>
 </body>

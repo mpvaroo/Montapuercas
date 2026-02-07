@@ -15,7 +15,7 @@
 
     <style>
         /* --------------------------------------------------------------------------
-      BASE (MISMA ESTÉTICA)
+      RESET + TOKENS (MISMA ESTÉTICA DEL DASHBOARD)
     -------------------------------------------------------------------------- */
         *,
         *::before,
@@ -42,9 +42,9 @@
             --cream-3: rgba(239, 231, 214, .58);
 
             --stroke: rgba(239, 231, 214, .18);
-            --stroke2: rgba(255, 195, 32, 0.10);
 
-            --glass: rgba(0, 0, 0, 0.12);
+            --glass: rgba(0, 0, 0, 0.10);
+            --glass-strong: rgba(0, 0, 0, 0.18);
 
             --bronze1: rgba(190, 145, 85, .26);
             --bronze2: rgba(190, 145, 85, .10);
@@ -61,7 +61,7 @@
         }
 
         /* --------------------------------------------------------------------------
-      STAGE & BACKGROUND
+      STAGE
     -------------------------------------------------------------------------- */
         .stage {
             min-height: 100vh;
@@ -90,6 +90,7 @@
             background:
                 radial-gradient(1200px 800px at 55% 45%, rgba(0, 0, 0, .08), transparent 58%),
                 radial-gradient(1100px 900px at 20% 50%, rgba(0, 0, 0, .34), transparent 60%),
+                radial-gradient(1100px 900px at 85% 50%, rgba(0, 0, 0, .38), transparent 62%),
                 linear-gradient(180deg, rgba(0, 0, 0, .62), rgba(0, 0, 0, .28), rgba(0, 0, 0, .62));
         }
 
@@ -100,7 +101,8 @@
             pointer-events: none;
             background:
                 linear-gradient(180deg, rgba(30, 18, 10, .62), rgba(18, 12, 8, .22), rgba(12, 10, 8, .65)),
-                radial-gradient(900px 650px at 70% 40%, rgba(210, 160, 95, .10), transparent 60%);
+                radial-gradient(900px 650px at 70% 40%, rgba(210, 160, 95, .10), transparent 60%),
+                radial-gradient(900px 650px at 25% 42%, rgba(210, 160, 95, .08), transparent 62%);
             mix-blend-mode: multiply;
             opacity: .95;
         }
@@ -110,7 +112,10 @@
             inset: -8%;
             z-index: -1;
             pointer-events: none;
-            background: radial-gradient(900px 520px at 55% 45%, rgba(255, 235, 205, .08), transparent 62%);
+            background:
+                radial-gradient(900px 520px at 55% 45%, rgba(255, 235, 205, .08), transparent 62%),
+                radial-gradient(900px 520px at 30% 40%, rgba(255, 235, 205, .05), transparent 64%),
+                radial-gradient(900px 520px at 80% 55%, rgba(255, 235, 205, .04), transparent 66%);
             filter: blur(18px);
             opacity: .38;
         }
@@ -120,14 +125,15 @@
             inset: -20%;
             z-index: 0;
             pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
             mix-blend-mode: soft-light;
             opacity: .16;
             transform: rotate(-6deg);
         }
 
         /* --------------------------------------------------------------------------
-      APP GRID
+      APP LAYOUT
     -------------------------------------------------------------------------- */
         .app {
             position: relative;
@@ -189,7 +195,7 @@
             text-decoration: none;
             color: rgba(239, 231, 214, .72);
             border: 1px solid transparent;
-            transition: all .18s ease;
+            transition: transform .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
             user-select: none;
         }
 
@@ -265,7 +271,7 @@
         }
 
         /* --------------------------------------------------------------------------
-      MAIN (SOLO CHAT)
+      MAIN
     -------------------------------------------------------------------------- */
         .main {
             min-width: 0;
@@ -281,24 +287,27 @@
             align-items: flex-start;
             gap: 16px;
             min-width: 0;
+            padding: 10px 6px 0;
         }
 
         .hero h1 {
             margin: 0;
             font-family: var(--serif);
             font-weight: 500;
-            font-size: 44px;
-            color: var(--cream);
+            font-size: clamp(34px, 3vw, 54px);
+            line-height: 1.02;
+            color: rgba(239, 231, 214, .90);
+            text-shadow: 0 12px 40px rgba(0, 0, 0, .62);
             letter-spacing: .01em;
-            line-height: 1.05;
         }
 
         .hero p {
-            margin: 6px 0 0;
-            color: rgba(239, 231, 214, .60);
-            font-size: 12px;
+            margin: 10px 0 0;
+            font-family: var(--sans);
+            color: rgba(239, 231, 214, .62);
+            letter-spacing: .08em;
             text-transform: uppercase;
-            letter-spacing: .12em;
+            font-size: 12px;
         }
 
         .top-actions {
@@ -306,6 +315,8 @@
             align-items: center;
             gap: 12px;
             padding-top: 6px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
         }
 
         .icon-btn {
@@ -313,31 +324,31 @@
             height: 40px;
             border-radius: 12px;
             border: 1px solid rgba(239, 231, 214, .12);
-            background: rgba(0, 0, 0, .18);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, .12);
+            color: rgba(239, 231, 214, .74);
+            cursor: pointer;
+            transition: transform .18s ease, border-color .18s ease, filter .18s ease;
+            position: relative;
             display: grid;
             place-items: center;
-            color: rgba(239, 231, 214, .80);
-            cursor: pointer;
-            transition: transform .18s ease, filter .18s ease, border-color .2s;
-            position: relative;
         }
 
         .icon-btn:hover {
             transform: translateY(-1px);
-            filter: brightness(1.08);
             border-color: rgba(239, 231, 214, .18);
+            filter: brightness(1.06);
         }
 
         .icon-btn svg {
             width: 18px;
             height: 18px;
             fill: currentColor;
+            display: block;
         }
 
         .notif-dot {
             position: absolute;
-            top: 9px;
+            top: 10px;
             right: 10px;
             width: 8px;
             height: 8px;
@@ -354,14 +365,14 @@
             padding: 8px 10px;
             border-radius: 999px;
             border: 1px solid rgba(239, 231, 214, .12);
-            background: rgba(0, 0, 0, .18);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, .12);
             color: rgba(239, 231, 214, .82);
-            font-weight: 700;
+            font-weight: 800;
             font-size: 12px;
             letter-spacing: .06em;
             text-transform: uppercase;
             white-space: nowrap;
+            user-select: none;
         }
 
         .user-pill .mini-avatar {
@@ -382,29 +393,36 @@
         }
 
         /* --------------------------------------------------------------------------
-      CHAT SURFACE
+      CHAT SURFACE (CONVERSACIONES_IA + MENSAJES_IA)
     -------------------------------------------------------------------------- */
         .chat-surface {
-            min-width: 0;
-            border-radius: 18px;
-            border: 1px solid rgba(239, 231, 214, .12);
-            background: rgba(0, 0, 0, .18);
-            backdrop-filter: blur(12px);
+            border-radius: var(--r2);
+            border: 1px solid rgba(239, 231, 214, .14);
+            box-shadow: var(--shadow-lg);
+            background:
+                radial-gradient(140% 120% at 18% 10%, rgba(190, 145, 85, .16), transparent 65%),
+                linear-gradient(180deg, rgba(0, 0, 0, .16), rgba(0, 0, 0, .10)),
+                rgba(0, 0, 0, .12);
+            backdrop-filter: blur(18px) saturate(115%);
+            -webkit-backdrop-filter: blur(18px) saturate(115%);
             overflow: hidden;
-            position: relative;
             display: grid;
             grid-template-rows: auto 1fr auto;
+            min-height: 520px;
+            position: relative;
+            isolation: isolate;
         }
 
         .chat-surface::before {
             content: "";
             position: absolute;
-            inset: -1px;
+            inset: 0;
             pointer-events: none;
             background:
-                radial-gradient(900px 520px at 20% 20%, rgba(190, 145, 85, .10), transparent 60%),
-                radial-gradient(900px 520px at 75% 10%, rgba(22, 250, 22, .06), transparent 55%);
-            opacity: .55;
+                linear-gradient(135deg, rgba(239, 231, 214, .06), transparent 40%, rgba(239, 231, 214, .04)),
+                radial-gradient(140% 120% at 50% 15%, rgba(0, 0, 0, 0), rgba(0, 0, 0, .18));
+            opacity: .95;
+            z-index: 0;
         }
 
         .chat-surface>* {
@@ -415,48 +433,56 @@
         .chat-header {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 12px;
-            padding: 14px 16px;
+            padding: 14px 14px;
             border-bottom: 1px solid rgba(239, 231, 214, .10);
-            background:
-                radial-gradient(120% 160% at 30% 0%, rgba(190, 145, 85, .14), transparent 55%),
-                rgba(0, 0, 0, .10);
+            background: rgba(0, 0, 0, .10);
+        }
+
+        .chat-head-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
         }
 
         .coach-badge {
             width: 40px;
             height: 40px;
             border-radius: 14px;
-            border: 1px solid rgba(239, 231, 214, .12);
+            border: 1px solid rgba(239, 231, 214, .14);
             background:
-                radial-gradient(120% 140% at 30% 0%, rgba(190, 145, 85, .18), transparent 55%),
-                rgba(0, 0, 0, .18);
+                radial-gradient(120% 160% at 30% 0%, rgba(22, 250, 22, 0.10), transparent 35%),
+                rgba(0, 0, 0, .14);
             display: grid;
             place-items: center;
             color: rgba(239, 231, 214, .86);
-            box-shadow: 0 10px 24px rgba(0, 0, 0, .30);
             flex: 0 0 40px;
+            box-shadow: 0 14px 38px rgba(0, 0, 0, .30);
         }
 
         .coach-badge svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             fill: currentColor;
         }
 
         .chat-title {
             min-width: 0;
-            display: flex;
-            flex-direction: column;
+            display: grid;
             gap: 2px;
         }
 
         .chat-title strong {
             font-family: var(--serif);
             font-weight: 500;
-            color: var(--cream);
+            color: rgba(239, 231, 214, .92);
             font-size: 18px;
             letter-spacing: .01em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             line-height: 1.1;
         }
 
@@ -470,23 +496,70 @@
             text-overflow: ellipsis;
         }
 
+        .chat-head-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .pill {
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(239, 231, 214, .14);
+            background: rgba(0, 0, 0, .14);
+            color: rgba(239, 231, 214, .70);
+            font-size: 12px;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        .pill b {
+            color: rgba(239, 231, 214, .90);
+            font-weight: 900;
+            letter-spacing: .04em;
+        }
+
+        .kebab {
+            width: 42px;
+            height: 40px;
+            border-radius: 12px;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(0, 0, 0, .12);
+            color: rgba(239, 231, 214, .70);
+            cursor: pointer;
+            transition: transform .18s ease, border-color .18s ease;
+            user-select: none;
+        }
+
+        .kebab:hover {
+            transform: translateY(-1px);
+            border-color: rgba(239, 231, 214, .18);
+        }
+
         .chat-body {
+            padding: 16px 14px 10px;
             overflow: auto;
-            padding: 18px 16px 10px;
-            min-height: 420px;
-            max-height: calc(100vh - 28px - 56px - 28px);
-            /* sensacion app */
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(239, 231, 214, .18) transparent;
         }
 
         .day-sep {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin: 8px 0 14px;
+            margin: 4px 0 6px;
             color: rgba(239, 231, 214, .42);
             font-size: 11px;
             letter-spacing: .12em;
             text-transform: uppercase;
+            user-select: none;
         }
 
         .day-sep::before,
@@ -498,27 +571,27 @@
         }
 
         .msg {
-            display: grid;
-            grid-template-columns: 44px 1fr;
+            display: flex;
             gap: 10px;
-            margin: 10px 0 14px;
             align-items: flex-start;
+            min-width: 0;
         }
 
-        .msg.user-msg {
-            grid-template-columns: 1fr 44px;
+        .msg.user {
+            justify-content: flex-end;
         }
 
         .who {
-            width: 44px;
-            height: 44px;
-            border-radius: 16px;
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
             overflow: hidden;
             border: 1px solid rgba(239, 231, 214, .14);
             background: rgba(0, 0, 0, .18);
             box-shadow: 0 10px 26px rgba(0, 0, 0, .30);
             display: grid;
             place-items: center;
+            flex: 0 0 40px;
         }
 
         .who img {
@@ -530,17 +603,21 @@
         }
 
         .bubble {
+            max-width: min(720px, 88%);
             border-radius: 16px;
-            border: 1px solid rgba(239, 231, 214, .10);
-            background: rgba(0, 0, 0, .18);
-            backdrop-filter: blur(10px);
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(0, 0, 0, .14);
             padding: 12px 12px;
-            color: rgba(239, 231, 214, .88);
-            line-height: 1.5;
+            color: rgba(239, 231, 214, .84);
             font-size: 13px;
-            box-shadow: 0 14px 34px rgba(0, 0, 0, .28);
+            line-height: 1.5;
+            letter-spacing: .01em;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, .24);
             position: relative;
             overflow: hidden;
+            min-width: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
 
         .bubble::before {
@@ -557,65 +634,50 @@
             z-index: 1;
         }
 
-        .assistant-msg .bubble {
-            border-color: rgba(239, 231, 214, .12);
+        .msg.assistant .bubble {
             background:
-                radial-gradient(120% 160% at 30% 0%, rgba(190, 145, 85, .14), transparent 55%),
-                rgba(0, 0, 0, .18);
+                radial-gradient(120% 140% at 20% 0%, rgba(190, 145, 85, .12), transparent 45%),
+                rgba(0, 0, 0, .14);
+            border-top-left-radius: 10px;
         }
 
-        .user-msg .bubble {
+        .msg.user .bubble {
+            background:
+                radial-gradient(120% 140% at 20% 0%, rgba(22, 250, 22, .10), transparent 45%),
+                rgba(0, 0, 0, .16);
+            border-top-right-radius: 10px;
             border-color: rgba(190, 145, 85, .22);
-            background:
-                radial-gradient(140% 160% at 70% 0%, rgba(190, 145, 85, .22), transparent 55%),
-                rgba(0, 0, 0, .22);
         }
 
-        .assistant-msg .bubble::after {
-            content: "";
-            position: absolute;
-            left: -6px;
-            top: 16px;
-            width: 12px;
-            height: 12px;
-            background: rgba(0, 0, 0, .18);
-            border-left: 1px solid rgba(239, 231, 214, .10);
-            border-bottom: 1px solid rgba(239, 231, 214, .10);
-            transform: rotate(45deg);
-            opacity: .75;
+        .bubble .meta {
+            margin-top: 8px;
+            color: rgba(239, 231, 214, .52);
+            font-size: 12px;
         }
 
-        .user-msg .bubble::after {
-            content: "";
-            position: absolute;
-            right: -6px;
-            top: 16px;
-            width: 12px;
-            height: 12px;
-            background: rgba(0, 0, 0, .22);
-            border-right: 1px solid rgba(190, 145, 85, .20);
-            border-bottom: 1px solid rgba(190, 145, 85, .20);
-            transform: rotate(-45deg);
-            opacity: .75;
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(239, 231, 214, .10);
+            background: rgba(255, 255, 255, .04);
+            color: rgba(239, 231, 214, .72);
+            font-size: 11px;
+            letter-spacing: .04em;
+            white-space: nowrap;
+            user-select: none;
         }
 
-        .bubble h4 {
-            margin: 0 0 8px;
-            font-family: var(--serif);
-            font-weight: 500;
-            color: var(--cream);
-            font-size: 16px;
-            letter-spacing: .01em;
-            line-height: 1.2;
-        }
-
-        .bubble ul {
-            margin: 10px 0 0;
-            padding-left: 16px;
-        }
-
-        .bubble li {
-            margin: 4px 0;
+        .tag i {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: rgba(22, 250, 22, .34);
+            border: 1px solid rgba(239, 231, 214, .14);
+            box-shadow: 0 0 0 4px rgba(22, 250, 22, .06);
+            display: inline-block;
         }
 
         /* Quick actions */
@@ -623,22 +685,23 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            padding: 12px 16px 0;
-            margin-top: 10px;
+            padding: 12px 14px 0;
+            border-top: 1px solid rgba(239, 231, 214, .08);
+            background: rgba(0, 0, 0, .06);
         }
 
         .chip {
-            height: 34px;
+            height: 36px;
             padding: 0 14px;
             border-radius: 999px;
             border: 1px solid rgba(239, 231, 214, .12);
             background: rgba(255, 255, 255, .05);
             color: rgba(239, 231, 214, .78);
-            font-weight: 700;
+            font-weight: 800;
             letter-spacing: .06em;
             font-size: 11px;
             cursor: pointer;
-            transition: transform .18s ease, filter .18s ease, border-color .2s, background .2s;
+            transition: transform .18s ease, filter .18s ease, border-color .18s ease, background .18s ease;
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -657,100 +720,111 @@
             width: 14px;
             height: 14px;
             fill: currentColor;
-            opacity: .9;
+            opacity: .92;
         }
 
         .chip.primary {
-            background: linear-gradient(180deg, rgba(70, 98, 72, .88), rgba(40, 65, 40, .95));
+            background:
+                radial-gradient(120% 160% at 30% 0%, var(--greenGlow), transparent 35%),
+                linear-gradient(180deg, var(--greenBtn1), var(--greenBtn2));
             border-color: rgba(239, 231, 214, .16);
-            color: var(--cream);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, .30);
+            color: rgba(239, 231, 214, .95);
+            box-shadow: 0 18px 52px rgba(0, 0, 0, .40);
         }
 
         /* Composer */
         .composer {
-            display: grid;
-            grid-template-columns: 1fr 56px;
-            gap: 12px;
-            padding: 14px 16px 16px;
+            padding: 12px 14px 14px;
             border-top: 1px solid rgba(239, 231, 214, .10);
-            background: rgba(0, 0, 0, .10);
-        }
-
-        .composer .field {
-            position: relative;
-            border-radius: 16px;
-            border: 1px solid rgba(239, 231, 214, .12);
-            background: rgba(0, 0, 0, .16);
-            backdrop-filter: blur(10px);
-            overflow: hidden;
-        }
-
-        .composer .field::before {
-            content: "";
-            position: absolute;
-            inset: -1px;
-            pointer-events: none;
-            background: radial-gradient(900px 520px at 20% 30%, rgba(190, 145, 85, .10), transparent 60%);
-            opacity: .35;
-        }
-
-        .composer textarea {
-            width: 100%;
-            height: 52px;
-            resize: none;
-            border: 0;
-            outline: none;
-            padding: 14px 14px;
-            background: transparent;
-            color: rgba(239, 231, 214, .90);
-            font-size: 13px;
-            line-height: 1.35;
-            font-family: var(--sans);
-        }
-
-        .composer textarea::placeholder {
-            color: rgba(239, 231, 214, .40);
-        }
-
-        .send {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            border: 1px solid rgba(239, 231, 214, .14);
-            background:
-                radial-gradient(120% 160% at 30% 0%, rgba(22, 250, 22, .10), transparent 45%),
-                linear-gradient(180deg, rgba(70, 98, 72, .9), rgba(40, 65, 40, .95));
-            color: rgba(239, 231, 214, .95);
-            cursor: pointer;
             display: grid;
-            place-items: center;
-            transition: transform .18s ease, filter .18s ease, border-color .2s;
-            box-shadow: 0 16px 34px rgba(0, 0, 0, .35);
+            grid-template-columns: 44px 1fr 44px;
+            gap: 10px;
+            align-items: center;
+            background: rgba(0, 0, 0, .08);
         }
 
-        .send:hover {
+        .iconbtn {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(0, 0, 0, .12);
+            color: rgba(239, 231, 214, .74);
+            cursor: pointer;
+            transition: transform .18s ease, border-color .18s ease;
+            user-select: none;
+        }
+
+        .iconbtn:hover {
             transform: translateY(-1px);
-            filter: brightness(1.08);
+            border-color: rgba(239, 231, 214, .18);
+        }
+
+        .chat-input {
+            height: 44px;
+            border-radius: 14px;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(0, 0, 0, .12);
+            color: rgba(239, 231, 214, .90);
+            padding: 0 12px;
+            outline: none;
+            font-family: var(--sans);
+            font-size: 13px;
+            transition: border-color .18s ease, box-shadow .18s ease;
+            min-width: 0;
+        }
+
+        .chat-input::placeholder {
+            color: rgba(239, 231, 214, .52);
+        }
+
+        .chat-input:focus {
             border-color: rgba(239, 231, 214, .20);
+            box-shadow: 0 0 0 4px rgba(190, 145, 85, .10);
         }
 
-        .send svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
+        /* Helpers */
+        .hintline {
+            color: rgba(239, 231, 214, .52);
+            font-size: 12px;
+            padding: 0 14px 12px;
         }
 
-        /* Responsive */
+        .hintline b {
+            color: rgba(239, 231, 214, .85);
+            font-weight: 900;
+        }
+
+        /* Responsive (como tus páginas) */
+        @media (max-width: 1180px) {
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
         @media (max-width: 900px) {
             .app {
                 grid-template-columns: 1fr;
+                padding: 18px;
             }
 
             .sidebar {
                 position: relative;
                 top: 0;
                 height: auto;
+                display: grid;
+                gap: 10px;
+            }
+
+            .nav {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -764,15 +838,18 @@
         <div class="haze"></div>
         <div class="grain"></div>
 
-        <div class="app">
+        <section class="app">
             <!-- SIDEBAR -->
             <aside class="sidebar">
                 <div>
-                    <div class="brand"><b>AUTOMAI</b>GYM</div>
+                    <div class="brand">
+                        <b>AUTOMAI</b>
+                        GYM
+                    </div>
 
-                    <nav class="nav">
+                    <nav class="nav" aria-label="Menú principal">
                         <a href="dashboard.html">
-                            <span class="ico">
+                            <span class="ico" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
                                     <path d="M12 3 3 10v11h6v-7h6v7h6V10l-9-7Z" />
                                 </svg>
@@ -781,7 +858,7 @@
                         </a>
 
                         <a href="rutinas.html">
-                            <span class="ico">
+                            <span class="ico" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
                                     <path d="M7 4h10v2H7V4Zm-2 4h14v12H5V8Zm2 2v8h10v-8H7Z" />
                                 </svg>
@@ -790,7 +867,7 @@
                         </a>
 
                         <a href="reservas.html">
-                            <span class="ico">
+                            <span class="ico" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
                                     <path d="M6 7h12v2H6V7Zm0 4h12v2H6v-2Zm0 4h8v2H6v-2Z" />
                                 </svg>
@@ -799,17 +876,17 @@
                         </a>
 
                         <a href="calendario.html">
-                            <span class="ico">
+                            <span class="ico" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
                                     <path
-                                        d="M7 2h2v3H7V2Zm8 0h2v3h-2V2ZM5 6h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Zm0 4v10h14V10H5Z" />
+                                        d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z" />
                                 </svg>
                             </span>
                             Calendario
                         </a>
 
                         <a href="progreso.html">
-                            <span class="ico">
+                            <span class="ico" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
                                     <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z" />
                                 </svg>
@@ -817,8 +894,8 @@
                             Progreso
                         </a>
 
-                        <a href="ia-coach.html" class="active">
-                            <span class="ico">
+                        <a class="active" href="iaCoach.html">
+                            <span class="ico" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
                                     <path
                                         d="M4 4h16v10H7l-3 3V4Zm4 14h12v2H8v-2Zm3-11h7v2h-7V7Zm-5 0h3v2H6V7Zm0 4h12v2H6v-2Z" />
@@ -826,144 +903,469 @@
                             </span>
                             IA Coach
                         </a>
+
+                        <a href="perfil.html">
+                            <span class="ico" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2-8 4.5V21h16v-2.5C20 16 16.42 14 12 14Z" />
+                                </svg>
+                            </span>
+                            Perfil
+                        </a>
+
+                        <a href="ajustes.html">
+                            <span class="ico" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M19.14 12.94a7.43 7.43 0 0 0 .05-.94 7.43 7.43 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.2 7.2 0 0 0-1.63-.94l-.36-2.54A.5.5 0 0 0 13.9 1h-3.8a.5.5 0 0 0-.49.41l-.36 2.54a7.2 7.2 0 0 0-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 7.47a.5.5 0 0 0 .12.64l2.03 1.58a7.43 7.43 0 0 0-.05.94 7.43 7.43 0 0 0 .05.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96a7.2 7.2 0 0 0 1.63.94l.36 2.54a.5.5 0 0 0 .49.41h3.8a.5.5 0 0 0 .49-.41l.36-2.54a7.2 7.2 0 0 0 1.63-.94l2.39.96a.5.5 0 0 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64ZM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5Z" />
+                                </svg>
+                            </span>
+                            Ajustes
+                        </a>
                     </nav>
                 </div>
 
                 <div class="user">
-                    <div class="avatar"><img src="./user.png" alt=""></div>
+                    <div class="avatar">
+                        <img src="./user.png" alt="Foto de perfil">
+                    </div>
                     <div>
-                        <div class="name">Marcelo</div>
-                        <div class="role">Usuario</div>
+                        <div class="name" id="uiNombreMostrado">—</div>
+                        <div class="role" id="uiRolMostrado">Usuario</div>
                     </div>
                 </div>
             </aside>
 
-            <!-- MAIN (SOLO CHAT) -->
+            <!-- MAIN -->
             <section class="main">
-                <!-- TOPBAR -->
                 <div class="topbar">
                     <div class="hero">
                         <h1>IA Coach</h1>
-                        <p>Rutinas inteligentes y asesoría personalizada.</p>
+                        <p>conversaciones_ia · mensajes_ia</p>
                     </div>
 
                     <div class="top-actions">
-                        <button class="icon-btn" aria-label="Notificaciones">
-                            <span class="notif-dot" aria-hidden="true"></span>
+                        <button class="icon-btn" id="btnNotificaciones" type="button" aria-label="Notificaciones">
+                            <span class="notif-dot" id="notifDot" aria-hidden="true"></span>
                             <svg viewBox="0 0 24 24">
                                 <path
                                     d="M12 22a2.2 2.2 0 0 0 2.2-2.2H9.8A2.2 2.2 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5-6.7V3a2 2 0 0 0-4 0v1.3A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z" />
                             </svg>
                         </button>
 
-                        <button class="icon-btn" aria-label="Mensajes">
+                        <button class="icon-btn" id="btnNuevaConversacion" type="button"
+                            aria-label="Nueva conversación">
                             <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5L4 8V6l8 5 8-5v2Z" />
+                                <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6v-2Z" />
                             </svg>
                         </button>
 
-                        <div class="user-pill">
-                            Marcelo
+                        <div class="user-pill" id="pillUsuario">
+                            <span id="pillUsuarioNombre">Usuario</span>
                             <span class="mini-avatar"><img src="./user.png" alt=""></span>
                         </div>
                     </div>
                 </div>
 
-                <!-- CHAT -->
-                <div class="chat-surface">
+                <div class="chat-surface" aria-label="Coach AutomAI">
                     <div class="chat-header">
-                        <div class="coach-badge" aria-hidden="true">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M12 2 9.8 8.8H3l5.5 4-2.1 6.9L12 15.8l5.6 3.9-2.1-6.9L21 8.8h-6.8L12 2Z" />
-                            </svg>
+                        <div class="chat-head-left">
+                            <div class="coach-badge" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 2a6 6 0 0 0-6 6v3H5a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1h1a3 3 0 0 0 3-3v-2a3 3 0 0 0-3-3h-1V8a6 6 0 0 0-6-6Zm-4 6a4 4 0 1 1 8 0v3H8V8Zm10 5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-1v-4h1ZM6 17H5a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h1v4Zm2 3v-7h8v7H8Z" />
+                                </svg>
+                            </div>
+                            <div class="chat-title">
+                                <strong id="uiTituloConversacion">—</strong>
+                                <span id="uiMetaConversacion">id_conversacion_ia: — · id_usuario: —</span>
+                            </div>
                         </div>
-                        <div class="chat-title">
-                            <strong>Coach AutomAI</strong>
-                            <span>Rutinas · reservas · progreso · dieta</span>
+
+                        <div class="chat-head-right">
+                            <div class="pill" id="pillTono">tono: <b>—</b></div>
+                            <div class="pill" id="pillIdioma">idioma: <b>—</b></div>
+                            <button class="kebab" type="button" id="btnOpciones" aria-label="Opciones">···</button>
                         </div>
                     </div>
 
-                    <div class="chat-body">
-                        <div class="day-sep">Hoy</div>
-
-                        <!-- Assistant -->
-                        <div class="msg assistant-msg">
-                            <div class="who"><img src="./img/coach.png" alt="IA Coach"></div>
-                            <div class="bubble">
-                                <h4>Hola Marcelo, ¿qué deseas hacer hoy?</h4>
-                                Puedo ayudarte a crear rutinas, reservar sesiones, revisar tu progreso o ajustar tu
-                                dieta.
-                            </div>
-                        </div>
-
-                        <!-- User -->
-                        <div class="msg user-msg">
-                            <div class="bubble">
-                                Hola, necesito una rutina de fuerza 4 días a la semana. ¿Me puedes ayudar?
-                            </div>
-                            <div class="who"><img src="./user.png" alt="Marcelo"></div>
-                        </div>
-
-                        <!-- Assistant -->
-                        <div class="msg assistant-msg">
-                            <div class="who"><img src="./img/coach.png" alt="IA Coach"></div>
-                            <div class="bubble">
-                                Por supuesto. Te propongo dividirlo así:
-                                <ul>
-                                    <li><b>Día 1:</b> Pecho y Tríceps</li>
-                                    <li><b>Día 2:</b> Espalda y Bíceps</li>
-                                    <li><b>Día 3:</b> Piernas</li>
-                                    <li><b>Día 4:</b> Hombros y Abdomen</li>
-                                </ul>
-                                ¿Te encaja este reparto o prefieres Upper/Lower?
-                            </div>
-                        </div>
-
-                        <!-- Quick actions -->
-                        <div class="quick-actions">
-                            <button class="chip primary" type="button">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M7 4h10v2H7V4Zm-2 4h14v12H5V8Zm2 2v8h10v-8H7Z" />
-                                </svg>
-                                Crear rutina
-                            </button>
-                            <button class="chip" type="button">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M6 7h12v2H6V7Zm0 4h12v2H6v-2Zm0 4h8v2H6v-2Z" />
-                                </svg>
-                                Reservas
-                            </button>
-                            <button class="chip" type="button">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z" />
-                                </svg>
-                                Progreso
-                            </button>
-                            <button class="chip" type="button">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 5v6l5 3-.9 1.5L11 14V7h2Z" />
-                                </svg>
-                                Dieta
-                            </button>
-                        </div>
+                    <div class="chat-body" id="chatBody">
+                        <!-- render JS -->
                     </div>
 
-                    <!-- Composer -->
-                    <div class="composer">
-                        <div class="field">
-                            <textarea placeholder="Escribe un mensaje..."></textarea>
-                        </div>
-                        <button class="send" aria-label="Enviar">
+                    <div class="quick-actions" aria-label="Acciones rápidas">
+                        <button class="chip primary" type="button" id="qaCrearRutina">
                             <svg viewBox="0 0 24 24">
-                                <path d="M2 21 23 12 2 3v7l15 2-15 2v7Z" />
+                                <path d="M7 4h10v2H7V4Zm-2 4h14v12H5V8Zm2 2v8h10v-8H7Z" />
                             </svg>
+                            crear_rutina
                         </button>
+
+                        <button class="chip" type="button" id="qaReservarClase">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M6 7h12v2H6V7Zm0 4h12v2H6v-2Zm0 4h8v2H6v-2Z" />
+                            </svg>
+                            reservar_clase
+                        </button>
+
+                        <button class="chip" type="button" id="qaVerProgreso">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z" />
+                            </svg>
+                            ver_progreso
+                        </button>
+
+                        <button class="chip" type="button" id="qaAyuda">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-2h2v2Zm2.2-7.5c-.4.7-1 1.1-1.5 1.5-.5.3-.7.6-.7 1.2V13h-2v-.8c0-1.3.6-2 1.4-2.5.6-.4 1.2-.8 1.4-1.4.3-.8-.2-1.6-1.3-1.8-1.2-.2-2 .4-2.3 1.6l-1.9-.6c.5-2.1 2.3-3.2 4.5-2.8 2 .3 3.4 1.9 2.4 3.8Z" />
+                            </svg>
+                            ayuda
+                        </button>
+                    </div>
+
+                    <div class="hintline" id="hintLine">
+                        Acciones se guardan como <b>mensajes_ia.acciones_mensaje</b> (JSON).
+                    </div>
+
+                    <div class="composer" aria-label="Escribir mensaje">
+                        <button class="iconbtn" type="button" id="btnAdjuntar" aria-label="Adjuntar">＋</button>
+                        <input class="chat-input" id="inputMsg" type="text"
+                            placeholder="Escribe un mensaje… (crear_rutina / reservar_clase / ver_progreso)" />
+                        <button class="iconbtn" type="button" id="btnEnviar" aria-label="Enviar">➤</button>
                     </div>
                 </div>
             </section>
-        </div>
+        </section>
     </main>
+
+    <script>
+        /* =========================================================================
+          IA COACH — DEMO FRONT-ONLY ALINEADO CON TU BD
+          Tablas usadas:
+            - usuarios (nombre_mostrado_usuario)
+            - ajustes_usuario (tono_ia_coach, idioma_preferido)
+            - conversaciones_ia (id_conversacion_ia, id_usuario, titulo_conversacion, conversacion_activa)
+            - mensajes_ia (id_mensaje_ia, id_conversacion_ia, rol_mensaje, contenido_mensaje, acciones_mensaje, fecha_mensaje)
+          NOTA: Sin inventar campos fuera del esquema.
+        ========================================================================= */
+
+        // ---------- "Sesión" demo (coherente con tu esquema) ----------
+        const session = {
+            id_usuario: 1,
+            nombre_mostrado_usuario: "Marcelo",
+            // ajustes_usuario
+            ajustes_usuario: {
+                tono_ia_coach: "directo", // ENUM('directo','motivador')
+                idioma_preferido: "es"     // ENUM('es','en')
+            }
+        };
+
+        // ---------- conversaciones_ia demo ----------
+        let conversaciones = [
+            {
+                id_conversacion_ia: 12,
+                id_usuario: 1,
+                titulo_conversacion: "Coach AutomAI",
+                fecha_creacion_conversacion: "2026-02-07 10:18:00",
+                conversacion_activa: 1
+            }
+        ];
+
+        // ---------- mensajes_ia demo ----------
+        // acciones_mensaje: JSON (o null)
+        let mensajes = [
+            {
+                id_mensaje_ia: 301,
+                id_conversacion_ia: 12,
+                rol_mensaje: "asistente",
+                contenido_mensaje:
+                    "Hola " + session.nombre_mostrado_usuario + ".\n" +
+                    "Puedo ayudarte con:\n" +
+                    "• crear_rutina (rutinas_usuario + rutinas_ejercicios)\n" +
+                    "• reservar_clase (reservas_clase)\n" +
+                    "• ver_progreso (registros_progreso)\n\n" +
+                    "Dime qué quieres hacer y con qué objetivo (definir/volumen/rendimiento/salud).",
+                acciones_mensaje: null,
+                fecha_mensaje: "2026-02-07 10:18:05"
+            },
+            {
+                id_mensaje_ia: 302,
+                id_conversacion_ia: 12,
+                rol_mensaje: "usuario",
+                contenido_mensaje: "Quiero una rutina de fuerza 4 días. Objetivo: salud. Nivel: intermedio.",
+                acciones_mensaje: null,
+                fecha_mensaje: "2026-02-07 10:19:10"
+            },
+            {
+                id_mensaje_ia: 303,
+                id_conversacion_ia: 12,
+                rol_mensaje: "asistente",
+                contenido_mensaje:
+                    "Perfecto.\n" +
+                    "Te propongo una estructura 4 días (salud / intermedio):\n" +
+                    "1) Torso A\n" +
+                    "2) Pierna A\n" +
+                    "3) Torso B\n" +
+                    "4) Pierna B\n\n" +
+                    "Si confirmas, creo la rutina en rutinas_usuario (origen_rutina = ia_coach) y su detalle en rutinas_ejercicios.",
+                acciones_mensaje: {
+                    accion: "crear_rutina",
+                    id_rutina_usuario: 123
+                },
+                fecha_mensaje: "2026-02-07 10:19:25"
+            }
+        ];
+
+        // ---------- helpers ----------
+        const $ = (id) => document.getElementById(id);
+
+        function nowSQL() {
+            const d = new Date();
+            const pad = (n) => String(n).padStart(2, "0");
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+        }
+
+        function todayLabelES() {
+            // solo estética para separador; NO es dato BD
+            return "Hoy";
+        }
+
+        function nextIdMensaje() {
+            const max = mensajes.reduce((acc, m) => Math.max(acc, m.id_mensaje_ia), 0);
+            return max + 1;
+        }
+
+        function safeString(v) {
+            return String(v == null ? "" : v);
+        }
+
+        function renderHeader() {
+            $("uiNombreMostrado").textContent = session.nombre_mostrado_usuario;
+            $("pillUsuarioNombre").textContent = session.nombre_mostrado_usuario;
+            $("uiRolMostrado").textContent = "Usuario";
+
+            $("pillTono").innerHTML = `tono: <b>${session.ajustes_usuario.tono_ia_coach}</b>`;
+            $("pillIdioma").innerHTML = `idioma: <b>${session.ajustes_usuario.idioma_preferido}</b>`;
+
+            const conv = conversaciones.find(c => c.conversacion_activa === 1 && c.id_usuario === session.id_usuario) || conversaciones[0];
+            $("uiTituloConversacion").textContent = conv.titulo_conversacion || "Conversación";
+            $("uiMetaConversacion").textContent = `id_conversacion_ia: ${conv.id_conversacion_ia} · id_usuario: ${conv.id_usuario}`;
+        }
+
+        function renderMessages() {
+            const conv = conversaciones.find(c => c.conversacion_activa === 1 && c.id_usuario === session.id_usuario) || conversaciones[0];
+            const list = mensajes
+                .filter(m => m.id_conversacion_ia === conv.id_conversacion_ia)
+                .sort((a, b) => new Date(a.fecha_mensaje) - new Date(b.fecha_mensaje));
+
+            const wrap = $("chatBody");
+            wrap.innerHTML = "";
+
+            const sep = document.createElement("div");
+            sep.className = "day-sep";
+            sep.textContent = todayLabelES();
+            wrap.appendChild(sep);
+
+            list.forEach(m => {
+                const isUser = m.rol_mensaje === "usuario";
+                const row = document.createElement("div");
+                row.className = "msg " + (isUser ? "user" : "assistant");
+
+                if (!isUser) {
+                    const who = document.createElement("div");
+                    who.className = "who";
+                    const img = document.createElement("img");
+                    img.src = "./img/coach.png";
+                    img.alt = "IA Coach";
+                    who.appendChild(img);
+
+                    const bubble = document.createElement("div");
+                    bubble.className = "bubble";
+                    bubble.textContent = safeString(m.contenido_mensaje);
+
+                    if (m.acciones_mensaje) {
+                        const meta = document.createElement("div");
+                        meta.className = "meta";
+                        const tag = document.createElement("span");
+                        tag.className = "tag";
+                        tag.innerHTML = `<i aria-hidden="true"></i> acciones_mensaje: ${JSON.stringify(m.acciones_mensaje)}`;
+                        meta.appendChild(tag);
+                        bubble.appendChild(meta);
+                    }
+
+                    row.appendChild(who);
+                    row.appendChild(bubble);
+                } else {
+                    const bubble = document.createElement("div");
+                    bubble.className = "bubble";
+                    bubble.textContent = safeString(m.contenido_mensaje);
+
+                    const who = document.createElement("div");
+                    who.className = "who";
+                    const img = document.createElement("img");
+                    img.src = "./user.png";
+                    img.alt = session.nombre_mostrado_usuario;
+                    who.appendChild(img);
+
+                    row.appendChild(bubble);
+                    row.appendChild(who);
+                }
+
+                wrap.appendChild(row);
+            });
+
+            // scroll al final
+            wrap.scrollTop = wrap.scrollHeight;
+        }
+
+        function pushMensaje(rol, contenido, accionesJsonOrNull) {
+            const conv = conversaciones.find(c => c.conversacion_activa === 1 && c.id_usuario === session.id_usuario) || conversaciones[0];
+            mensajes.push({
+                id_mensaje_ia: nextIdMensaje(),
+                id_conversacion_ia: conv.id_conversacion_ia,
+                rol_mensaje: rol, // ENUM('usuario','asistente','sistema')
+                contenido_mensaje: contenido,
+                acciones_mensaje: accionesJsonOrNull || null,
+                fecha_mensaje: nowSQL()
+            });
+            renderMessages();
+        }
+
+        function assistantReplyFromUserText(userText) {
+            const t = userText.toLowerCase();
+
+            // Respuestas demo, pero acciones_mensaje SOLO con claves coherentes (json libre)
+            if (t.includes("crear_rutina") || t.includes("rutina")) {
+                const contenido =
+                    "Entendido.\n" +
+                    "Para crear la rutina necesito:\n" +
+                    "• dias_entrenamiento_semana_usuario (3/4/5)\n" +
+                    "• objetivo_rutina_usuario (definir/volumen/rendimiento/salud)\n" +
+                    "• nivel_rutina_usuario (principiante/intermedio/avanzado)\n\n" +
+                    "Si me dices objetivo + nivel + duración estimada, genero rutinas_usuario (origen_rutina = ia_coach) y el detalle en rutinas_ejercicios.";
+                pushMensaje("asistente", contenido, { accion: "crear_rutina" });
+                return;
+            }
+
+            if (t.includes("reservar_clase") || t.includes("reserva") || t.includes("clase")) {
+                const contenido =
+                    "Perfecto.\n" +
+                    "Para reservar necesito:\n" +
+                    "• id_clase_gimnasio (clases_gimnasio)\n" +
+                    "o al menos: nombre_tipo_clase + fecha_inicio_clase.\n\n" +
+                    "Si confirmas, creo la fila en reservas_clase con origen_reserva = ia_coach.";
+                pushMensaje("asistente", contenido, { accion: "reservar_clase" });
+                return;
+            }
+
+            if (t.includes("ver_progreso") || t.includes("progreso") || t.includes("peso")) {
+                const contenido =
+                    "Te muestro progreso usando registros_progreso.\n" +
+                    "¿Quieres ver el último registro (fecha_registro) o un rango de fechas?\n" +
+                    "Campos posibles: peso_kg_registro, cintura_cm_registro, pecho_cm_registro, cadera_cm_registro, notas_progreso.";
+                pushMensaje("asistente", contenido, { accion: "ver_progreso" });
+                return;
+            }
+
+            // default
+            const contenido =
+                "Recibido.\n" +
+                "Puedo actuar sobre:\n" +
+                "• rutinas_usuario / rutinas_ejercicios\n" +
+                "• reservas_clase\n" +
+                "• registros_progreso\n" +
+                "Dime: crear_rutina / reservar_clase / ver_progreso.";
+            pushMensaje("asistente", contenido, null);
+        }
+
+        // ---------- events ----------
+        function sendFromInput() {
+            const input = $("inputMsg");
+            const text = (input.value || "").trim();
+            if (!text) return;
+            pushMensaje("usuario", text, null);
+            input.value = "";
+            assistantReplyFromUserText(text);
+        }
+
+        $("btnEnviar").addEventListener("click", sendFromInput);
+        $("inputMsg").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") sendFromInput();
+        });
+
+        $("qaCrearRutina").addEventListener("click", () => {
+            pushMensaje("usuario", "crear_rutina", null);
+            assistantReplyFromUserText("crear_rutina");
+        });
+
+        $("qaReservarClase").addEventListener("click", () => {
+            pushMensaje("usuario", "reservar_clase", null);
+            assistantReplyFromUserText("reservar_clase");
+        });
+
+        $("qaVerProgreso").addEventListener("click", () => {
+            pushMensaje("usuario", "ver_progreso", null);
+            assistantReplyFromUserText("ver_progreso");
+        });
+
+        $("qaAyuda").addEventListener("click", () => {
+            pushMensaje("usuario", "ayuda", null);
+            assistantReplyFromUserText("ayuda");
+        });
+
+        $("btnNuevaConversacion").addEventListener("click", () => {
+            // desactiva la actual
+            conversaciones = conversaciones.map(c => ({
+                ...c,
+                conversacion_activa: 0
+            }));
+
+            const newId = conversaciones.reduce((acc, c) => Math.max(acc, c.id_conversacion_ia), 0) + 1;
+
+            conversaciones.push({
+                id_conversacion_ia: newId,
+                id_usuario: session.id_usuario,
+                titulo_conversacion: "Coach AutomAI",
+                fecha_creacion_conversacion: nowSQL(),
+                conversacion_activa: 1
+            });
+
+            pushMensaje("asistente",
+                "Nueva conversación creada (conversaciones_ia).\n" +
+                "¿Qué hacemos ahora: crear_rutina / reservar_clase / ver_progreso?",
+                null
+            );
+
+            renderHeader();
+            renderMessages();
+        });
+
+        $("btnNotificaciones").addEventListener("click", () => {
+            const dot = $("notifDot");
+            dot.style.display = "none";
+            pushMensaje("asistente",
+                "Notificaciones revisadas.\n" +
+                "Si quieres, puedo avisarte de clases (ajustes_usuario.notificaciones_clases_activas) o entrenos (ajustes_usuario.notificaciones_entrenamiento_activas).",
+                null
+            );
+        });
+
+        $("btnOpciones").addEventListener("click", () => {
+            pushMensaje("asistente",
+                "Opciones:\n" +
+                "• Cambiar tono: ajustes_usuario.tono_ia_coach (directo/motivador)\n" +
+                "• Cambiar idioma: ajustes_usuario.idioma_preferido (es/en)\n" +
+                "Esto se gestiona desde Ajustes.",
+                null
+            );
+        });
+
+        // ---------- init ----------
+        renderHeader();
+        renderMessages();
+    </script>
 </body>
 
 </html>

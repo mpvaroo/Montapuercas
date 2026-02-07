@@ -348,6 +348,8 @@
             display: flex;
             gap: 8px;
             align-items: center;
+            flex-wrap: wrap;
+            justify-content: flex-end;
         }
 
         .icon-btn {
@@ -440,6 +442,7 @@
         .month-actions {
             display: flex;
             gap: 8px;
+            flex: 0 0 auto;
         }
 
         .dow {
@@ -541,6 +544,7 @@
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+            cursor: pointer;
         }
 
         .event:hover {
@@ -731,6 +735,21 @@
             white-space: nowrap;
         }
 
+        /* Panel inline helpers */
+        .muted-small {
+            color: rgba(239, 231, 214, .58);
+            font-size: 11px;
+            letter-spacing: .10em;
+            text-transform: uppercase;
+        }
+
+        .panel-date {
+            margin-top: 6px;
+            font-family: var(--serif);
+            color: var(--cream);
+            font-size: 22px;
+        }
+
         @media (max-width: 1200px) {
             .main {
                 grid-template-columns: 1fr;
@@ -778,50 +797,72 @@
             <aside class="sidebar">
                 <div>
                     <div class="brand"><b>AUTOMAI</b>GYM</div>
-                    <nav class="nav">
+                    <nav class="nav" aria-label="Menú principal">
                         <a href="dashboard.html">
-                            <span class="ico"><svg viewBox="0 0 24 24">
+                            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
                                     <path d="M12 3 3 10v11h6v-7h6v7h6V10l-9-7Z" />
                                 </svg></span>
                             Inicio
                         </a>
+
                         <a href="rutinas.html">
-                            <span class="ico"><svg viewBox="0 0 24 24">
+                            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
                                     <path d="M7 4h10v2H7V4Zm-2 4h14v12H5V8Zm2 2v8h10v-8H7Z" />
                                 </svg></span>
                             Rutinas
                         </a>
+
                         <a href="reservas.html">
-                            <span class="ico"><svg viewBox="0 0 24 24">
+                            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
                                     <path d="M6 7h12v2H6V7Zm0 4h12v2H6v-2Zm0 4h8v2H6v-2Z" />
                                 </svg></span>
                             Reservas
                         </a>
+
                         <a href="calendario.html" class="active">
-                            <span class="ico"><svg viewBox="0 0 24 24">
+                            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
                                     <path
                                         d="M7 2h2v3H7V2Zm8 0h2v3h-2V2ZM5 6h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Zm0 4v10h14V10H5Z" />
                                 </svg></span>
                             Calendario
                         </a>
+
                         <a href="progreso.html">
-                            <span class="ico"><svg viewBox="0 0 24 24">
+                            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
                                     <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z" />
                                 </svg></span>
                             Progreso
                         </a>
-                        <a href="ia-coach.html">
-                            <span class="ico"><svg viewBox="0 0 24 24">
+
+                        <a href="iaCoach.html">
+                            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
                                     <path
                                         d="M4 4h16v10H7l-3 3V4Zm4 14h12v2H8v-2Zm3-11h7v2h-7V7Zm-5 0h3v2H6V7Zm0 4h12v2H6v-2Z" />
                                 </svg></span>
                             IA Coach
                         </a>
+
+                        <!-- Igual que otras vistas -->
+                        <a href="perfil.html">
+                            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2-8 4.5V21h16v-2.5C20 16 16.42 14 12 14Z" />
+                                </svg></span>
+                            Perfil
+                        </a>
+
+                        <a href="ajustes.html">
+                            <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M19.14 12.94a7.43 7.43 0 0 0 .05-.94 7.43 7.43 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.2 7.2 0 0 0-1.63-.94l-.36-2.54A.5.5 0 0 0 13.9 1h-3.8a.5.5 0 0 0-.49.41l-.36 2.54a7.2 7.2 0 0 0-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 7.47a.5.5 0 0 0 .12.64l2.03 1.58a7.43 7.43 0 0 0-.05.94 7.43 7.43 0 0 0 .05.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .6.22l2.39-.96a7.2 7.2 0 0 0 1.63.94l.36 2.54a.5.5 0 0 0 .49.41h3.8a.5.5 0 0 0 .49-.41l.36-2.54a7.2 7.2 0 0 0 1.63-.94l2.39.96a.5.5 0 0 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64ZM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5Z" />
+                                </svg></span>
+                            Ajustes
+                        </a>
                     </nav>
                 </div>
 
                 <div class="user">
-                    <div class="avatar"><img src="./user.png" alt=""></div>
+                    <div class="avatar"><img src="./user.png" alt="Foto de perfil"></div>
                     <div>
                         <div class="name">Marcelo</div>
                         <div class="role">Usuario</div>
@@ -838,19 +879,19 @@
                         <p>Clases programadas por el gimnasio.</p>
                     </div>
 
-                    <div class="surface">
+                    <div class="surface" aria-label="Calendario mensual">
                         <div class="surface-head">
                             <strong>Vista mensual</strong>
                             <div class="head-actions">
-                                <button class="pill" type="button">
+                                <button class="pill" type="button" id="btnPrev">
                                     <svg viewBox="0 0 24 24" width="16" height="16"
                                         style="fill:currentColor; opacity:.9;">
                                         <path d="M15 6l-6 6 6 6 1.4-1.4L11.8 12l4.6-4.6L15 6Z"></path>
                                     </svg>
                                     Anterior
                                 </button>
-                                <button class="pill" type="button">Hoy</button>
-                                <button class="pill" type="button">
+                                <button class="pill" type="button" id="btnToday">Hoy</button>
+                                <button class="pill" type="button" id="btnNext">
                                     Siguiente
                                     <svg viewBox="0 0 24 24" width="16" height="16"
                                         style="fill:currentColor; opacity:.9;">
@@ -880,7 +921,7 @@
                                 </div>
                             </div>
 
-                            <div class="dow">
+                            <div class="dow" aria-hidden="true">
                                 <div>Lun</div>
                                 <div>Mar</div>
                                 <div>Mié</div>
@@ -890,218 +931,225 @@
                                 <div>Dom</div>
                             </div>
 
-                            <!-- GRID (ejemplo estático) -->
-                            <div class="grid">
+                            <!-- GRID (ejemplo estático + navegación demo a Reservas) -->
+                            <div class="grid" id="gridMes">
                                 <!-- Semana 1 (algunos días “muted” del mes anterior) -->
-                                <div class="day muted">
+                                <div class="day muted" data-fecha="2026-01-27">
                                     <div class="num"><span>27</span></div>
                                     <div class="events"></div>
                                 </div>
-                                <div class="day muted">
+                                <div class="day muted" data-fecha="2026-01-28">
                                     <div class="num"><span>28</span></div>
                                     <div class="events"></div>
                                 </div>
-                                <div class="day muted">
+                                <div class="day muted" data-fecha="2026-01-29">
                                     <div class="num"><span>29</span></div>
                                     <div class="events"></div>
                                 </div>
-                                <div class="day muted">
+                                <div class="day muted" data-fecha="2026-01-30">
                                     <div class="num"><span>30</span></div>
                                     <div class="events"></div>
                                 </div>
-                                <div class="day muted">
+                                <div class="day muted" data-fecha="2026-01-31">
                                     <div class="num"><span>31</span></div>
                                     <div class="events"></div>
                                 </div>
 
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-01">
                                     <div class="num"><span>1</span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag"></span><span class="time">09:00</span> Yoga
-                                            Flow</div>
-                                        <div class="event"><span class="tag green"></span><span
-                                                class="time">18:30</span> HIIT Express</div>
+                                        <div class="event" data-clase="Yoga Flow" data-hora="09:00"><span
+                                                class="tag"></span><span class="time">09:00</span> Yoga Flow</div>
+                                        <div class="event" data-clase="HIIT Express" data-hora="18:30"><span
+                                                class="tag green"></span><span class="time">18:30</span> HIIT Express
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-02">
                                     <div class="num"><span>2</span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag"></span><span class="time">19:00</span>
-                                            Fuerza — Full Body</div>
+                                        <div class="event" data-clase="Fuerza — Full Body" data-hora="19:00"><span
+                                                class="tag"></span><span class="time">19:00</span> Fuerza — Full Body
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Semana 2 -->
-                                <div class="day today">
+                                <div class="day today" data-fecha="2026-02-03">
                                     <div class="num"><span>3</span><span class="badge" title="Hoy"></span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag dark"></span><span class="time">08:30</span>
-                                            Movilidad</div>
-                                        <div class="event"><span class="tag"></span><span class="time">17:30</span>
-                                            Spinning</div>
+                                        <div class="event" data-clase="Movilidad" data-hora="08:30"><span
+                                                class="tag dark"></span><span class="time">08:30</span> Movilidad</div>
+                                        <div class="event" data-clase="Spinning" data-hora="17:30"><span
+                                                class="tag"></span><span class="time">17:30</span> Spinning</div>
                                     </div>
                                 </div>
 
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-04">
                                     <div class="num"><span>4</span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag green"></span><span
-                                                class="time">18:00</span> Boxing</div>
+                                        <div class="event" data-clase="Boxing" data-hora="18:00"><span
+                                                class="tag green"></span><span class="time">18:00</span> Boxing</div>
                                     </div>
                                 </div>
 
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-05">
                                     <div class="num"><span>5</span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag"></span><span class="time">19:30</span> Core
-                                            &amp; Cardio</div>
+                                        <div class="event" data-clase="Core &amp; Cardio" data-hora="19:30"><span
+                                                class="tag"></span><span class="time">19:30</span> Core &amp; Cardio
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-06">
                                     <div class="num"><span>6</span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag"></span><span class="time">07:30</span>
-                                            Pilates</div>
-                                        <div class="event"><span class="tag green"></span><span
-                                                class="time">18:30</span> HIIT Express</div>
+                                        <div class="event" data-clase="Pilates" data-hora="07:30"><span
+                                                class="tag"></span><span class="time">07:30</span> Pilates</div>
+                                        <div class="event" data-clase="HIIT Express" data-hora="18:30"><span
+                                                class="tag green"></span><span class="time">18:30</span> HIIT Express
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-07">
                                     <div class="num"><span>7</span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag dark"></span><span class="time">10:00</span>
-                                            Stretching</div>
+                                        <div class="event" data-clase="Stretching" data-hora="10:00"><span
+                                                class="tag dark"></span><span class="time">10:00</span> Stretching</div>
                                     </div>
                                 </div>
 
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-08">
                                     <div class="num"><span>8</span></div>
                                     <div class="events"></div>
                                 </div>
 
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-09">
                                     <div class="num"><span>9</span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag"></span><span class="time">19:00</span>
-                                            Fuerza — Tren Superior</div>
+                                        <div class="event" data-clase="Fuerza — Tren Superior" data-hora="19:00"><span
+                                                class="tag"></span><span class="time">19:00</span> Fuerza — Tren
+                                            Superior</div>
                                     </div>
                                 </div>
 
                                 <!-- Semana 3 (relleno ejemplo) -->
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-10">
                                     <div class="num"><span>10</span></div>
                                     <div class="events"></div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-11">
                                     <div class="num"><span>11</span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag green"></span><span
-                                                class="time">18:00</span> Boxing</div>
+                                        <div class="event" data-clase="Boxing" data-hora="18:00"><span
+                                                class="tag green"></span><span class="time">18:00</span> Boxing</div>
                                     </div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-12">
                                     <div class="num"><span>12</span></div>
                                     <div class="events"></div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-13">
                                     <div class="num"><span>13</span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag"></span><span class="time">07:30</span>
-                                            Pilates</div>
+                                        <div class="event" data-clase="Pilates" data-hora="07:30"><span
+                                                class="tag"></span><span class="time">07:30</span> Pilates</div>
                                     </div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-14">
                                     <div class="num"><span>14</span></div>
                                     <div class="events"></div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-15">
                                     <div class="num"><span>15</span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag dark"></span><span class="time">10:00</span>
-                                            Stretching</div>
+                                        <div class="event" data-clase="Stretching" data-hora="10:00"><span
+                                                class="tag dark"></span><span class="time">10:00</span> Stretching</div>
                                     </div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-16">
                                     <div class="num"><span>16</span></div>
                                     <div class="events"></div>
                                 </div>
 
                                 <!-- Semana 4 (relleno ejemplo) -->
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-17">
                                     <div class="num"><span>17</span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag"></span><span class="time">19:30</span> Core
-                                            &amp; Cardio</div>
+                                        <div class="event" data-clase="Core &amp; Cardio" data-hora="19:30"><span
+                                                class="tag"></span><span class="time">19:30</span> Core &amp; Cardio
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-18">
                                     <div class="num"><span>18</span></div>
                                     <div class="events"></div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-19">
                                     <div class="num"><span>19</span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag green"></span><span
-                                                class="time">18:30</span> HIIT Express</div>
+                                        <div class="event" data-clase="HIIT Express" data-hora="18:30"><span
+                                                class="tag green"></span><span class="time">18:30</span> HIIT Express
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-20">
                                     <div class="num"><span>20</span></div>
                                     <div class="events"></div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-21">
                                     <div class="num"><span>21</span></div>
                                     <div class="events"></div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-22">
                                     <div class="num"><span>22</span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag"></span><span class="time">09:00</span> Yoga
-                                            Flow</div>
+                                        <div class="event" data-clase="Yoga Flow" data-hora="09:00"><span
+                                                class="tag"></span><span class="time">09:00</span> Yoga Flow</div>
                                     </div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-23">
                                     <div class="num"><span>23</span></div>
                                     <div class="events"></div>
                                 </div>
 
                                 <!-- Semana 5 (relleno ejemplo) -->
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-24">
                                     <div class="num"><span>24</span></div>
                                     <div class="events"></div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-25">
                                     <div class="num"><span>25</span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag green"></span><span
-                                                class="time">18:00</span> Boxing</div>
+                                        <div class="event" data-clase="Boxing" data-hora="18:00"><span
+                                                class="tag green"></span><span class="time">18:00</span> Boxing</div>
                                     </div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-26">
                                     <div class="num"><span>26</span></div>
                                     <div class="events"></div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-27">
                                     <div class="num"><span>27</span></div>
                                     <div class="events">
-                                        <div class="event"><span class="tag"></span><span class="time">19:00</span>
-                                            Fuerza — Pierna</div>
+                                        <div class="event" data-clase="Fuerza — Pierna" data-hora="19:00"><span
+                                                class="tag"></span><span class="time">19:00</span> Fuerza — Pierna</div>
                                     </div>
                                 </div>
-                                <div class="day">
+                                <div class="day" data-fecha="2026-02-28">
                                     <div class="num"><span>28</span></div>
                                     <div class="events"></div>
                                 </div>
 
                                 <!-- siguiente mes (muted) -->
-                                <div class="day muted">
+                                <div class="day muted" data-fecha="2026-03-01">
                                     <div class="num"><span>1</span></div>
                                     <div class="events"></div>
                                 </div>
-                                <div class="day muted">
+                                <div class="day muted" data-fecha="2026-03-02">
                                     <div class="num"><span>2</span></div>
                                     <div class="events"></div>
                                 </div>
@@ -1111,25 +1159,19 @@
                 </div>
 
                 <!-- RIGHT: PANEL DETALLE DÍA -->
-                <aside class="panel">
+                <aside class="panel" aria-label="Panel de clases del día">
                     <div class="panel-card" style="flex: 1;">
                         <div class="panel-head">
                             <strong>Clases del día</strong>
-                            <button class="pill" type="button">Reservar</button>
+                            <button class="pill" type="button" id="btnReservar">Reservar</button>
                         </div>
 
                         <div class="panel-body">
-                            <div
-                                style="color: rgba(239,231,214,.58); font-size:11px; letter-spacing:.10em; text-transform:uppercase;">
-                                Seleccionado
-                            </div>
-                            <div
-                                style="margin-top:6px; font-family: var(--serif); color: var(--cream); font-size: 22px;">
-                                Lunes, 3 Feb
-                            </div>
+                            <div class="muted-small">Seleccionado</div>
+                            <div class="panel-date" id="panelFechaTexto">Lunes, 3 Feb</div>
 
-                            <div class="schedule">
-                                <div class="slot">
+                            <div class="schedule" id="panelSlots">
+                                <div class="slot" data-fecha="2026-02-03" data-clase="Movilidad" data-hora="08:30">
                                     <div class="left">
                                         <span class="tag dark" style="margin-top:4px;"></span>
                                         <div style="min-width:0;">
@@ -1141,7 +1183,7 @@
                                             style="color:rgba(239,231,214,.45); font-size:11px;">45 min</span></div>
                                 </div>
 
-                                <div class="slot">
+                                <div class="slot" data-fecha="2026-02-03" data-clase="Spinning" data-hora="17:30">
                                     <div class="left">
                                         <span class="tag" style="margin-top:4px;"></span>
                                         <div style="min-width:0;">
@@ -1195,6 +1237,71 @@
             </section>
         </div>
     </main>
+
+    <script>
+        // DEMO de flujo:
+        // - Click en un evento/slot => ir a Reservas con query (para mantener unión entre pantallas).
+        // - Click en un día vacío => cambia panel derecho (demo visual).
+        const panelFechaTexto = document.getElementById('panelFechaTexto');
+        const btnReservar = document.getElementById('btnReservar');
+
+        function goReservas(fechaISO, clase, hora) {
+            const qs = new URLSearchParams();
+            qs.set('from', 'calendario');
+            if (fechaISO) qs.set('fecha', fechaISO);
+            if (clase) qs.set('clase', clase);
+            if (hora) qs.set('hora', hora);
+            window.location.href = `reservas.html?${qs.toString()}`;
+        }
+
+        // Eventos en grid mensual
+        document.querySelectorAll('.event').forEach(ev => {
+            ev.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const day = ev.closest('.day');
+                const fecha = day ? day.dataset.fecha : '';
+                goReservas(fecha, ev.dataset.clase || ev.textContent.trim(), ev.dataset.hora || '');
+            });
+        });
+
+        // Click en slots del panel derecho
+        document.querySelectorAll('.slot').forEach(slot => {
+            slot.addEventListener('click', () => {
+                goReservas(slot.dataset.fecha || '', slot.dataset.clase || '', slot.dataset.hora || '');
+            });
+        });
+
+        // Click en día -> cambia "Seleccionado" (demo)
+        document.querySelectorAll('.day').forEach(day => {
+            day.addEventListener('click', () => {
+                const fecha = day.dataset.fecha || '';
+                if (!fecha) return;
+
+                // demo: solo cambia el texto del panel. (en real, harías fetch de clases del día)
+                const d = fecha.split('-');
+                if (d.length === 3) {
+                    const yyyy = Number(d[0]);
+                    const mm = Number(d[1]) - 1;
+                    const dd = Number(d[2]);
+                    const date = new Date(yyyy, mm, dd);
+                    const label = date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' });
+                    panelFechaTexto.textContent = label.charAt(0).toUpperCase() + label.slice(1);
+                }
+            });
+        });
+
+        // Botón Reservar (demo): reserva sobre lo seleccionado
+        btnReservar.addEventListener('click', () => {
+            // si el panel tiene un día “seleccionado” visible, lo convertimos a ISO aproximado demo
+            // (como no hay estado real aquí, uso 2026-02-03 por defecto)
+            goReservas('2026-02-03', 'Spinning', '17:30');
+        });
+
+        // Botones navegación (demo)
+        document.getElementById('btnPrev')?.addEventListener('click', () => alert('Demo: mes anterior'));
+        document.getElementById('btnToday')?.addEventListener('click', () => alert('Demo: ir a hoy'));
+        document.getElementById('btnNext')?.addEventListener('click', () => alert('Demo: mes siguiente'));
+    </script>
 </body>
 
 </html>

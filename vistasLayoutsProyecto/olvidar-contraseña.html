@@ -1,5 +1,5 @@
 <!-- =========================
-     login.html
+     olvidar-contrasena.html
 ========================= -->
 <!doctype html>
 <html lang="es">
@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>AutomAI Gym — Login</title>
+    <title>AutomAI Gym — Olvidé mi contraseña</title>
 
     <!-- Premium Serif Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +18,7 @@
 
     <style>
         /* --------------------------------------------------------------------------
-      RESET
+      RESET + TOKENS (MISMA ESTÉTICA)
     -------------------------------------------------------------------------- */
         *,
         *::before,
@@ -52,7 +52,6 @@
             --bronze1: rgba(190, 145, 85, .28);
             --bronze2: rgba(190, 145, 85, .12);
 
-            --greenGlow: rgba(22, 250, 22, 0.18);
             --greenBtn1: rgba(70, 98, 72, .92);
             --greenBtn2: rgba(43, 70, 43, 0.98);
 
@@ -96,7 +95,6 @@
                 radial-gradient(1100px 900px at 20% 50%, rgba(0, 0, 0, .34), transparent 60%),
                 radial-gradient(1100px 900px at 85% 50%, rgba(0, 0, 0, .38), transparent 62%),
                 linear-gradient(180deg, rgba(0, 0, 0, .62), rgba(0, 0, 0, .28), rgba(0, 0, 0, .62));
-            opacity: 1;
         }
 
         .grade {
@@ -143,8 +141,8 @@
         .wrap {
             width: min(1200px, calc(100% - 56px));
             display: grid;
-            grid-template-columns: 440px 1fr;
-            gap: clamp(60px, 10vw, 160px);
+            grid-template-columns: 520px 1fr;
+            gap: clamp(60px, 10vw, 150px);
             align-items: center;
             padding: 56px 0;
             position: relative;
@@ -185,18 +183,6 @@
             opacity: .95;
         }
 
-        .card::after {
-            content: "";
-            position: absolute;
-            inset: -20%;
-            background-image:
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
-            mix-blend-mode: soft-light;
-            opacity: .22;
-            pointer-events: none;
-            transform: rotate(8deg);
-        }
-
         .brand {
             position: relative;
             z-index: 2;
@@ -222,20 +208,29 @@
             margin: 22px 0 10px;
             font-family: var(--serif);
             font-weight: 500;
-            font-size: 46px;
-            line-height: 1.00;
-            letter-spacing: .005em;
+            font-size: 42px;
+            line-height: 1.03;
+            letter-spacing: .006em;
             color: var(--cream);
         }
 
         .sub {
             position: relative;
             z-index: 2;
-            margin: 0 0 22px;
+            margin: 0 0 18px;
             font-size: 12px;
             letter-spacing: .10em;
             text-transform: uppercase;
             color: rgba(239, 231, 214, .60);
+        }
+
+        .hint {
+            position: relative;
+            z-index: 2;
+            margin: 0 0 18px;
+            color: rgba(239, 231, 214, .66);
+            font-size: 13px;
+            line-height: 1.45;
         }
 
         .field {
@@ -244,8 +239,8 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-top: 4px;
-            margin-bottom: 20px;
+            margin-top: 6px;
+            margin-bottom: 14px;
         }
 
         .input {
@@ -280,22 +275,7 @@
             justify-content: space-between;
             align-items: center;
             gap: 12px;
-            margin-bottom: 6px;
-        }
-
-        .check {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            color: rgba(239, 231, 214, .70);
-            font-size: 13px;
-            user-select: none;
-        }
-
-        .check input {
-            width: 16px;
-            height: 16px;
-            accent-color: rgba(70, 98, 72, .92);
+            margin-top: 8px;
         }
 
         .link {
@@ -306,6 +286,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
         }
 
         .link:hover {
@@ -324,6 +305,7 @@
             font-size: 13px;
             line-height: 1.35;
             display: none;
+            margin-top: 12px;
         }
 
         .msg.show {
@@ -391,7 +373,6 @@
             text-shadow: 0 12px 40px rgba(0, 0, 0, .62);
         }
 
-        /* Responsive */
         @media (max-width: 980px) {
             .wrap {
                 grid-template-columns: 1fr;
@@ -414,7 +395,7 @@
             }
 
             .headline {
-                font-size: 40px;
+                font-size: 38px;
             }
 
             .card {
@@ -434,46 +415,51 @@
 
         <section class="wrap">
             <!-- CARD -->
-            <form class="card" id="formLogin" autocomplete="on">
+            <form class="card" id="formReset" autocomplete="on">
                 <div class="brand">
                     <b>AUTOMAI</b>
                     GYM
                 </div>
 
-                <div class="header-group">
-                    <h1 class="headline">Entrena<br>con intención.</h1>
-                    <p class="sub">Ritmo, rutina y foco. Sin ruido.</p>
+                <div>
+                    <h1 class="headline">Recuperar acceso.</h1>
+                    <p class="sub">restablecer contraseña</p>
+
+                    <p class="hint">
+                        Demo front-only: verifico que exista el correo y genero un “código” local.
+                        Luego te dejo cambiar la contraseña (simulando el flujo backend).
+                    </p>
+
+                    <!-- STEP 1: correo -->
+                    <div class="field" id="stepEmail">
+                        <input class="input" id="correo_usuario" type="email" placeholder="Correo (correo_usuario)"
+                            required />
+                    </div>
+
+                    <!-- STEP 2: código + nueva contraseña -->
+                    <div class="field" id="stepCode" style="display:none">
+                        <input class="input" id="codigo_reset" type="text" placeholder="Código de verificación (demo)"
+                            required />
+                        <input class="input" id="nueva_contrasena" type="password" placeholder="Nueva contraseña"
+                            required />
+                        <input class="input" id="nueva_contrasena_2" type="password"
+                            placeholder="Repetir nueva contraseña" required />
+                    </div>
+
+                    <div class="row">
+                        <a class="link" href="login.html">← Volver a Login</a>
+                        <a class="link" href="registro.html">Crear cuenta →</a>
+                    </div>
+
+                    <div class="msg" id="uiMsg"></div>
                 </div>
 
-                <div class="field">
-                    <input class="input" id="correo_usuario" type="email" name="correo_usuario" placeholder="Correo"
-                        required />
-                    <input class="input" id="contrasena_usuario" type="password" name="contrasena_usuario"
-                        placeholder="Contraseña" required />
-                </div>
-
-                <div class="row">
-                    <label class="check">
-                        <input type="checkbox" id="rememberMe" />
-                        Recordarme
-                    </label>
-
-                    <a class="link" href="#" id="linkOlvido">¿Olvidaste la contraseña?</a>
-                </div>
-
-                <div class="msg" id="uiMsg"></div>
-
-                <div class="row" style="margin-top:10px">
-                    <a class="link" href="registro.html" id="linkRegistro">¿No tienes cuenta? Regístrate</a>
-                </div>
-
-                <button class="btn" type="submit">Entrar →</button>
+                <button class="btn" type="submit" id="btnMain">Enviar código →</button>
             </form>
 
-            <!-- QUOTE -->
             <div class="right">
-                <p class="quote">La disciplina es el puente entre tus metas y tus logros.<span
-                        style="display:block;margin-top:40px;white-space:nowrap;">Créalo, créelo y constrúyelo.</span>
+                <p class="quote">Volver no es retroceder.<span style="display:block;margin-top:40px;">Es retomar el
+                        control.</span>
                 </p>
             </div>
         </section>
@@ -481,15 +467,27 @@
 
     <script>
         /* =========================================================================
-          LOGIN (DEMO) — alineado con tu BD
-          Tablas:
-            - usuarios: correo_usuario, hash_contrasena_usuario, nombre_mostrado_usuario, estado_usuario
-            - seguridad_usuario: intentos_fallidos_login, fecha_ultimo_intento_fallido
-          NOTA: en producción, el hash se valida en servidor. Aquí es demo local.
+          OLVIDAR CONTRASEÑA (DEMO) — alineado con tu BD
+    
+          En producción:
+            1) usuario pide reset -> backend genera token + email
+            2) usuario introduce token -> backend valida y cambia hash
+          Aquí:
+            - Genero un código local (sessionStorage) y permito cambiar contraseña
+            - Actualizo:
+                usuarios.hash_contrasena_usuario
+                seguridad_usuario.requiere_cambio_contrasena (0)
+                seguridad_usuario.fecha_ultimo_cambio_contrasena
+                seguridad_usuario.intentos_fallidos_login (0)
         ========================================================================= */
 
         const KEY_DB = "automai_db_demo_v1";
-        const KEY_SESSION = "automai_session_v1";
+        const RESET_KEY = "automai_reset_demo_v1";
+
+        const form = document.getElementById("formReset");
+        const stepEmail = document.getElementById("stepEmail");
+        const stepCode = document.getElementById("stepCode");
+        const btnMain = document.getElementById("btnMain");
 
         function nowSQL() {
             const d = new Date();
@@ -500,65 +498,7 @@
         function getDB() {
             const raw = localStorage.getItem(KEY_DB);
             if (raw) return JSON.parse(raw);
-
-            // Inicializa con roles mínimos (como tus semillas) + un usuario demo
-            const seed = {
-                roles: [
-                    { id_rol: 1, nombre_rol: "usuario", descripcion_rol: "Acceso a zona usuario" },
-                    { id_rol: 2, nombre_rol: "admin", descripcion_rol: "Acceso a panel admin" }
-                ],
-                usuarios: [
-                    {
-                        id_usuario: 1,
-                        correo_usuario: "demo@automai.com",
-                        hash_contrasena_usuario: "demo123", // DEMO (no hash real)
-                        nombre_mostrado_usuario: "Marcelo",
-                        estado_usuario: "activo",
-                        fecha_creacion_usuario: nowSQL(),
-                        fecha_ultimo_acceso_usuario: null
-                    }
-                ],
-                usuarios_roles: [
-                    { id_usuario_rol: 1, id_usuario: 1, id_rol: 1, fecha_asignacion_rol: nowSQL() }
-                ],
-                perfiles_usuario: [
-                    {
-                        id_perfil_usuario: 1,
-                        id_usuario: 1,
-                        nombre_real_usuario: "Marcelo",
-                        telefono_usuario: null,
-                        ruta_foto_perfil_usuario: "./user.png",
-                        objetivo_principal_usuario: "salud",
-                        dias_entrenamiento_semana_usuario: 3,
-                        nivel_usuario: "principiante",
-                        peso_kg_usuario: null,
-                        altura_cm_usuario: null,
-                        fecha_inicio_usuario: null
-                    }
-                ],
-                ajustes_usuario: [
-                    {
-                        id_ajustes_usuario: 1,
-                        id_usuario: 1,
-                        notificaciones_entrenamiento_activas: 1,
-                        notificaciones_clases_activas: 1,
-                        tono_ia_coach: "directo",
-                        idioma_preferido: "es",
-                        semana_empieza_en: "lunes"
-                    }
-                ],
-                seguridad_usuario: [
-                    {
-                        id_seguridad_usuario: 1,
-                        id_usuario: 1,
-                        requiere_cambio_contrasena: 0,
-                        fecha_ultimo_cambio_contrasena: null,
-                        intentos_fallidos_login: 0,
-                        fecha_ultimo_intento_fallido: null
-                    }
-                ]
-            };
-
+            const seed = { roles: [], usuarios: [], usuarios_roles: [], perfiles_usuario: [], ajustes_usuario: [], seguridad_usuario: [] };
             localStorage.setItem(KEY_DB, JSON.stringify(seed));
             return seed;
         }
@@ -583,39 +523,118 @@
             return db.usuarios.find(u => u.correo_usuario.toLowerCase() === correo.toLowerCase()) || null;
         }
 
-        function getUserRole(db, id_usuario) {
-            const rel = db.usuarios_roles.find(ur => ur.id_usuario === id_usuario);
-            if (!rel) return "usuario";
-            const rol = db.roles.find(r => r.id_rol === rel.id_rol);
-            return rol ? rol.nombre_rol : "usuario";
-        }
-
-        function getAjustes(db, id_usuario) {
-            return db.ajustes_usuario.find(a => a.id_usuario === id_usuario) || null;
-        }
-
-        function getPerfil(db, id_usuario) {
-            return db.perfiles_usuario.find(p => p.id_usuario === id_usuario) || null;
-        }
-
         function getSeguridad(db, id_usuario) {
             return db.seguridad_usuario.find(s => s.id_usuario === id_usuario) || null;
         }
 
-        document.getElementById("linkOlvido").addEventListener("click", (e) => {
-            e.preventDefault();
-            setMsg("Demo: la recuperación de contraseña se haría en backend. Aquí puedes crear una cuenta nueva en Registro.", "err");
-        });
+        function makeCode() {
+            // 6 dígitos
+            return String(Math.floor(100000 + Math.random() * 900000));
+        }
 
-        document.getElementById("formLogin").addEventListener("submit", (e) => {
+        function setStep2Mode() {
+            stepEmail.style.display = "none";
+            stepCode.style.display = "flex";
+            btnMain.textContent = "Cambiar contraseña →";
+        }
+
+        // Si ya hay un reset pendiente (recargaste la página)
+        (function hydrate() {
+            const pending = sessionStorage.getItem(RESET_KEY);
+            if (!pending) return;
+            try {
+                const p = JSON.parse(pending);
+                if (p && p.correo_usuario && p.codigo_reset) {
+                    document.getElementById("correo_usuario").value = p.correo_usuario;
+                    setStep2Mode();
+                    setMsg("Código enviado (demo). Revisa el mensaje y cambia la contraseña.", "ok");
+                }
+            } catch { }
+        })();
+
+        form.addEventListener("submit", (e) => {
             e.preventDefault();
             clearMsg();
 
-            const correo_usuario = document.getElementById("correo_usuario").value.trim();
-            const contrasena_usuario = document.getElementById("contrasena_usuario").value;
+            const pendingRaw = sessionStorage.getItem(RESET_KEY);
 
-            if (!correo_usuario || !contrasena_usuario) {
-                setMsg("Completa correo y contraseña.", "err");
+            // STEP 1: enviar "código"
+            if (!pendingRaw) {
+                const correo_usuario = document.getElementById("correo_usuario").value.trim();
+                if (!correo_usuario) {
+                    setMsg("Introduce tu correo.", "err");
+                    return;
+                }
+
+                const db = getDB();
+                const user = findUserByEmail(db, correo_usuario);
+
+                if (!user) {
+                    setMsg("No existe una cuenta con ese correo.", "err");
+                    return;
+                }
+
+                if (user.estado_usuario !== "activo") {
+                    setMsg("Tu cuenta no está activa (" + user.estado_usuario + ").", "err");
+                    return;
+                }
+
+                const codigo = makeCode();
+
+                // Guardamos “reset” en sessionStorage (simula token temporal)
+                sessionStorage.setItem(RESET_KEY, JSON.stringify({
+                    correo_usuario,
+                    codigo_reset: codigo,
+                    creado_en: nowSQL()
+                }));
+
+                setStep2Mode();
+
+                // Demo: mostramos el código (en real: se envía por email)
+                setMsg("Código generado (demo): " + codigo + ". Ahora introdúcelo y cambia tu contraseña.", "ok");
+                return;
+            }
+
+            // STEP 2: validar código y cambiar password
+            let pending;
+            try {
+                pending = JSON.parse(pendingRaw);
+            } catch {
+                sessionStorage.removeItem(RESET_KEY);
+                setMsg("Sesión de recuperación inválida. Vuelve a intentarlo.", "err");
+                stepCode.style.display = "none";
+                stepEmail.style.display = "flex";
+                btnMain.textContent = "Enviar código →";
+                return;
+            }
+
+            const correo_usuario = document.getElementById("correo_usuario").value.trim();
+            const codigo_reset = document.getElementById("codigo_reset").value.trim();
+            const nueva_contrasena = document.getElementById("nueva_contrasena").value;
+            const nueva_contrasena_2 = document.getElementById("nueva_contrasena_2").value;
+
+            if (!codigo_reset || !nueva_contrasena || !nueva_contrasena_2) {
+                setMsg("Completa código y nueva contraseña.", "err");
+                return;
+            }
+
+            if (correo_usuario.toLowerCase() !== String(pending.correo_usuario).toLowerCase()) {
+                setMsg("El correo no coincide con la solicitud de recuperación.", "err");
+                return;
+            }
+
+            if (codigo_reset !== String(pending.codigo_reset)) {
+                setMsg("Código incorrecto.", "err");
+                return;
+            }
+
+            if (nueva_contrasena.length < 6) {
+                setMsg("La nueva contraseña debe tener al menos 6 caracteres (demo).", "err");
+                return;
+            }
+
+            if (nueva_contrasena !== nueva_contrasena_2) {
+                setMsg("Las contraseñas no coinciden.", "err");
                 return;
             }
 
@@ -623,69 +642,33 @@
             const user = findUserByEmail(db, correo_usuario);
 
             if (!user) {
-                setMsg("No existe una cuenta con ese correo.", "err");
+                setMsg("La cuenta ya no existe.", "err");
+                sessionStorage.removeItem(RESET_KEY);
                 return;
             }
 
-            // estado_usuario ENUM('activo','bloqueado','pendiente')
-            if (user.estado_usuario !== "activo") {
-                setMsg("Tu cuenta no está activa (" + user.estado_usuario + ").", "err");
-                return;
-            }
+            // UPDATE usuarios.hash_contrasena_usuario
+            user.hash_contrasena_usuario = nueva_contrasena;
 
-            // seguridad_usuario intentos (demo simple)
+            // UPDATE seguridad_usuario
             const seg = getSeguridad(db, user.id_usuario);
-            if (seg && seg.intentos_fallidos_login >= 10) {
-                setMsg("Demasiados intentos fallidos. Tu cuenta está bloqueada temporalmente (demo).", "err");
-                return;
-            }
-
-            // DEMO: en backend sería verify hash
-            const ok = user.hash_contrasena_usuario === contrasena_usuario;
-
-            if (!ok) {
-                if (seg) {
-                    seg.intentos_fallidos_login = (seg.intentos_fallidos_login || 0) + 1;
-                    seg.fecha_ultimo_intento_fallido = nowSQL();
-                    saveDB(db);
-                }
-                setMsg("Contraseña incorrecta.", "err");
-                return;
-            }
-
-            // reset intentos si ok
             if (seg) {
+                seg.requiere_cambio_contrasena = 0;
+                seg.fecha_ultimo_cambio_contrasena = nowSQL();
                 seg.intentos_fallidos_login = 0;
                 seg.fecha_ultimo_intento_fallido = null;
             }
 
-            // usuarios.fecha_ultimo_acceso_usuario
-            user.fecha_ultimo_acceso_usuario = nowSQL();
             saveDB(db);
 
-            const rol = getUserRole(db, user.id_usuario);
-            const ajustes = getAjustes(db, user.id_usuario);
-            const perfil = getPerfil(db, user.id_usuario);
+            // fin flujo demo
+            sessionStorage.removeItem(RESET_KEY);
 
-            // sesión coherente para usar luego en dashboard/iaCoach (tu front puede leer esto)
-            const session = {
-                id_usuario: user.id_usuario,
-                correo_usuario: user.correo_usuario,
-                nombre_mostrado_usuario: user.nombre_mostrado_usuario,
-                estado_usuario: user.estado_usuario,
-                rol_usuario: rol,
-                ajustes_usuario: ajustes,
-                perfiles_usuario: perfil
-            };
+            setMsg("Contraseña actualizada. Volviendo a Login…", "ok");
 
-            localStorage.setItem(KEY_SESSION, JSON.stringify(session));
-
-            setMsg("Acceso correcto. Entrando…", "ok");
-
-            // redirección
             setTimeout(() => {
-                window.location.href = "dashboard.html";
-            }, 500);
+                window.location.href = "login.html";
+            }, 900);
         });
     </script>
 </body>

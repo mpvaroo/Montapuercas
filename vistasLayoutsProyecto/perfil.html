@@ -377,23 +377,9 @@
             box-shadow: 0 0 0 4px rgba(190, 145, 85, .10);
         }
 
-        .textarea {
-            min-height: 92px;
-            padding: 10px 12px;
-            border-radius: 14px;
-            border: 1px solid rgba(239, 231, 214, .12);
-            background: rgba(0, 0, 0, .12);
-            color: rgba(239, 231, 214, .90);
-            outline: none;
-            font-family: var(--sans);
-            font-size: 13px;
-            resize: vertical;
-            transition: border-color .18s ease, box-shadow .18s ease;
-        }
-
-        .textarea:focus {
-            border-color: rgba(239, 231, 214, .20);
-            box-shadow: 0 0 0 4px rgba(190, 145, 85, .10);
+        .input[readonly] {
+            opacity: .75;
+            cursor: not-allowed;
         }
 
         .profile-row {
@@ -428,6 +414,7 @@
             font-size: 12.5px;
             letter-spacing: .02em;
             margin-top: 4px;
+            line-height: 1.35;
         }
 
         .btn {
@@ -483,6 +470,14 @@
             grid-template-columns: 1fr 1fr;
             gap: 12px;
             margin-top: 12px;
+        }
+
+        .toast {
+            display: none;
+            margin-top: 12px;
+            color: rgba(239, 231, 214, .70);
+            font-size: 12.5px;
+            line-height: 1.45;
         }
 
         /* --------------------------------------------------------------------------
@@ -763,7 +758,6 @@
                             IA Coach
                         </a>
 
-                        <!-- NUEVAS -->
                         <a class="active" href="perfil.html">
                             <span class="ico" aria-hidden="true">
                                 <svg viewBox="0 0 24 24">
@@ -806,31 +800,54 @@
 
                     <div class="section-title">
                         <span class="dot" aria-hidden="true"></span>
-                        <span>Datos del usuario</span>
+                        <span>Cuenta (usuarios)</span>
                     </div>
 
-                    <section class="panel" aria-label="Perfil de usuario">
+                    <section class="panel" aria-label="Cuenta de usuario">
                         <div class="profile-row">
                             <div class="avatar-lg">
                                 <img src="./user.png" alt="Foto de perfil">
                             </div>
                             <div style="min-width:0;">
-                                <div
-                                    style="font-family:var(--serif); font-size:22px; color:rgba(239,231,214,.92); line-height:1.1;">
+                                <div style="font-family:var(--serif); font-size:22px; color:rgba(239,231,214,.92); line-height:1.1;"
+                                    id="nombreMostrado">
                                     Marcelo
                                 </div>
-                                <div class="meta-line">marcelo@email.com · Estado: activo</div>
+                                <div class="meta-line">
+                                    <span id="correoUsuario">marcelo@email.com</span>
+                                    · Estado: <span id="estadoUsuario">activo</span>
+                                </div>
                             </div>
                         </div>
 
                         <div class="grid-2">
                             <div class="field">
+                                <div class="label">Correo</div>
+                                <input class="input" type="email" id="correoInput" value="marcelo@email.com" readonly />
+                            </div>
+                            <div class="field">
+                                <div class="label">Nombre mostrado</div>
+                                <input class="input" type="text" id="nombreMostradoInput" value="Marcelo" readonly />
+                            </div>
+                        </div>
+
+                        <div style="height:14px;"></div>
+
+                        <div class="section-title" style="margin:4px 0 10px; padding:0;">
+                            <span class="dot" aria-hidden="true"></span>
+                            <span>Perfil (perfiles_usuario)</span>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="field">
                                 <div class="label">Nombre real</div>
-                                <input class="input" type="text" placeholder="Marcelo Pérez" value="Marcelo Pérez" />
+                                <input class="input" id="nombreReal" type="text" placeholder="Nombre y apellidos"
+                                    value="Marcelo Pérez" />
                             </div>
                             <div class="field">
                                 <div class="label">Teléfono</div>
-                                <input class="input" type="tel" placeholder="+34 600 000 000" value="+34 600 123 456" />
+                                <input class="input" id="telefono" type="tel" placeholder="+34 600 000 000"
+                                    value="+34 600 123 456" />
                             </div>
                         </div>
 
@@ -839,11 +856,12 @@
                         <div class="grid-2">
                             <div class="field">
                                 <div class="label">Ruta foto perfil</div>
-                                <input class="input" type="text" placeholder="./img/user.png" value="./user.png" />
+                                <input class="input" id="rutaFoto" type="text" placeholder="./user.png"
+                                    value="./user.png" />
                             </div>
                             <div class="field">
                                 <div class="label">Fecha inicio</div>
-                                <input class="input" type="date" value="2026-01-15" />
+                                <input class="input" id="fechaInicio" type="date" value="2026-01-15" />
                             </div>
                         </div>
 
@@ -857,7 +875,7 @@
                         <div class="grid-2">
                             <div class="field">
                                 <div class="label">Objetivo principal</div>
-                                <select class="select">
+                                <select class="select" id="objetivoPrincipal">
                                     <option value="salud" selected>salud</option>
                                     <option value="definir">definir</option>
                                     <option value="volumen">volumen</option>
@@ -866,7 +884,7 @@
                             </div>
                             <div class="field">
                                 <div class="label">Nivel</div>
-                                <select class="select">
+                                <select class="select" id="nivelUsuario">
                                     <option value="principiante" selected>principiante</option>
                                     <option value="intermedio">intermedio</option>
                                     <option value="avanzado">avanzado</option>
@@ -879,12 +897,11 @@
                         <div class="grid-2">
                             <div class="field">
                                 <div class="label">Días por semana</div>
-                                <input class="input" type="number" min="1" max="7" value="3" />
+                                <input class="input" id="diasSemana" type="number" min="1" max="7" value="3" />
                             </div>
                             <div class="field">
-                                <div class="label">Notas</div>
-                                <input class="input" type="text" placeholder="Preferencias o lesiones..."
-                                    value="Molestia leve en hombro derecho." />
+                                <div class="label">Duración estimada por sesión (solo UI)</div>
+                                <input class="input" type="text" value="45–60 min" readonly />
                             </div>
                         </div>
 
@@ -898,11 +915,11 @@
                         <div class="grid-2">
                             <div class="field">
                                 <div class="label">Peso (kg)</div>
-                                <input class="input" type="number" step="0.1" value="78.2" />
+                                <input class="input" id="pesoKg" type="number" step="0.01" value="78.20" />
                             </div>
                             <div class="field">
                                 <div class="label">Altura (cm)</div>
-                                <input class="input" type="number" value="178" />
+                                <input class="input" id="alturaCm" type="number" value="178" />
                             </div>
                         </div>
 
@@ -911,9 +928,9 @@
                             <button class="btn-ghost" type="button" id="resetBtn">Restablecer</button>
                         </div>
 
-                        <div id="toast"
-                            style="display:none; margin-top:12px; color:rgba(239,231,214,.70); font-size:12.5px;">
-                            Guardado (demo). Este formulario corresponde a <b>perfiles_usuario</b>.
+                        <div class="toast" id="toast">
+                            Guardado (demo). Este formulario corresponde a <b>usuarios</b> (solo lectura) +
+                            <b>perfiles_usuario</b>.
                         </div>
                     </section>
                 </div>
