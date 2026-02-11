@@ -6,6 +6,9 @@
     <div class="main">
         <div>
             <header class="hero">
+                <a href="{{ route('rutinas') }}"
+                    style="color:rgba(239,231,214,.5); text-decoration:none; font-size:12px; margin-bottom:8px; display:block;">&larr;
+                    Volver a Rutinas</a>
                 <h1>Detalle de Rutina</h1>
                 <p>Constancia técnica, evolución real.</p>
             </header>
@@ -22,7 +25,8 @@
                 <div class="rutina-head">
                     <div class="rutina-title">
                         <h2>Espalda & Bíceps: Hipertrofia</h2>
-                        <div class="sub">Diseñada para maximizar el reclutamiento de fibras en el plano sagital y frontal.
+                        <div class="sub">Diseñada para maximizar el reclutamiento de fibras en el plano sagital y
+                            frontal.
                             Balance de tracciones verticales y horizontales.</div>
                     </div>
                     <div class="chips">

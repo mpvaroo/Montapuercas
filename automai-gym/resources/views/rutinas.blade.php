@@ -38,7 +38,9 @@
                             <div class="detail"><span class="check-ico">✓</span> Nivel: Intermedio</div>
                         </div>
                         <div class="card-actions">
-                            <button class="btn-card">Ver Rutina</button>
+                            <a href="{{ route('detalle-rutina') }}" class="btn-card"
+                                style="text-decoration:none; display:flex; align-items:center; justify-content:center;">Ver
+                                Rutina</a>
                             <button class="btn-card highlight">Iniciar Rutina</button>
                         </div>
                     </div>
@@ -56,7 +58,9 @@
                             <div class="detail"><span class="check-ico">✓</span> Nivel: Principiante</div>
                         </div>
                         <div class="card-actions">
-                            <button class="btn-card">Ver Rutina</button>
+                            <a href="{{ route('detalle-rutina') }}" class="btn-card"
+                                style="text-decoration:none; display:flex; align-items:center; justify-content:center;">Ver
+                                Rutina</a>
                             <button class="btn-card highlight">Iniciar Rutina</button>
                         </div>
                     </div>
@@ -75,7 +79,9 @@
                                 <div class="detail"><span class="check-ico">✓</span> Nivel: Avanzado</div>
                             </div>
                             <div class="card-actions" style="grid-template-columns: 140px 140px; justify-content: start;">
-                                <button class="btn-card">Ver Rutina</button>
+                                <a href="{{ route('detalle-rutina') }}" class="btn-card"
+                                    style="text-decoration:none; display:flex; align-items:center; justify-content:center;">Ver
+                                    Rutina</a>
                                 <button class="btn-card highlight">Iniciar Rutina</button>
                             </div>
                         </div>
@@ -147,8 +153,8 @@
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-          PAGE SPECIFIC
-        -------------------------------------------------------------------------- */
+              PAGE SPECIFIC
+            -------------------------------------------------------------------------- */
         .main {
             display: grid;
             grid-template-columns: 1fr 380px;
@@ -228,8 +234,8 @@
         }
 
         /* --------------------------------------------------------------------------
-          ROUTINES GRID
-        -------------------------------------------------------------------------- */
+              ROUTINES GRID
+            -------------------------------------------------------------------------- */
         .routines-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;

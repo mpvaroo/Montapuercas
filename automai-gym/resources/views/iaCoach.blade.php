@@ -90,7 +90,8 @@
             <div class="chat-footer">
                 <div class="quick-actions">
                     <button class="chip primary">Optimizar rutina de mañana</button>
-                    <button class="chip">Ver mi progreso semanal</button>
+                    <a href="{{ route('progreso') }}" class="chip"
+                        style="text-decoration:none; display:grid; place-items:center;">Ver mi progreso semanal</a>
                     <button class="chip">¿Cuánto debo descansar hoy?</button>
                 </div>
 
@@ -112,8 +113,8 @@
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-          IA COACH STYLES
-        -------------------------------------------------------------------------- */
+              IA COACH STYLES
+            -------------------------------------------------------------------------- */
         .main {
             min-width: 0;
             display: grid;

@@ -22,7 +22,9 @@
                         <p class="bigline">Espalda y Bíceps</p>
                         <div class="meta">50 min · Intensidad moderada</div>
                     </div>
-                    <button class="btn" type="button">Empezar entrenamiento</button>
+                    <a href="{{ route('detalle-rutina') }}" class="btn"
+                        style="text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center;">Empezar
+                        entrenamiento</a>
                 </article>
 
                 <article class="card">
@@ -31,7 +33,9 @@
                         <p class="bigline">Fuerza y Enfoque</p>
                         <div class="meta">Semana 2 de 8 · 3/4 completados</div>
                     </div>
-                    <button class="btn" type="button">Ver rutina</button>
+                    <a href="{{ route('rutinas') }}" class="btn"
+                        style="text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center;">Ver
+                        rutina</a>
                 </article>
 
                 <article class="card">
@@ -46,7 +50,9 @@
                         </div>
                         <div class="meta" style="margin-top:10px;">Mantén el ritmo. Sin ruido.</div>
                     </div>
-                    <button class="btn" type="button">Ver progreso</button>
+                    <a href="{{ route('progreso') }}" class="btn"
+                        style="text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center;">Ver
+                        progreso</a>
                 </article>
             </div>
 
@@ -132,8 +138,8 @@
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-          MAIN DASHBOARD STYLES
-        -------------------------------------------------------------------------- */
+              MAIN DASHBOARD STYLES
+            -------------------------------------------------------------------------- */
         .main {
             display: grid;
             grid-template-columns: 1fr 380px;
@@ -316,8 +322,8 @@
         }
 
         /* --------------------------------------------------------------------------
-          CALENDARIO INTERACTIVO
-        -------------------------------------------------------------------------- */
+              CALENDARIO INTERACTIVO
+            -------------------------------------------------------------------------- */
         .calendar {
             margin-top: 14px;
             border-radius: var(--r);
@@ -558,8 +564,8 @@
         }
 
         /* --------------------------------------------------------------------------
-          IA COACH (CARD TIPO CHATGPT)
-        -------------------------------------------------------------------------- */
+              IA COACH (CARD TIPO CHATGPT)
+            -------------------------------------------------------------------------- */
         .chat {
             grid-column: 2 / 3;
             align-self: start;

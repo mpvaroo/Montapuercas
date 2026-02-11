@@ -12,7 +12,9 @@
                     <p>Tus clases y sesiones reservadas.</p>
                 </header>
 
-                <button class="btn-new">+ Nueva Reserva</button>
+                <a href="{{ route('calendario') }}" class="btn-new"
+                    style="display:flex; align-items:center; justify-content:center; text-decoration:none;">+ Nueva
+                    Reserva</a>
             </div>
 
             <!-- LISTA RESERVAS -->
@@ -45,7 +47,7 @@
 
                         <div class="res-actions">
                             <span class="res-date">Jueves 25 de Enero</span>
-                            <button class="btn-action-sm">Ver Detalles ›</button>
+                            <a href="{{ route('detalle-reserva') }}" class="btn-action-sm">Ver Detalles ›</a>
                         </div>
                     </div>
 
@@ -117,8 +119,8 @@
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-          RESERVAS PAGE
-        -------------------------------------------------------------------------- */
+              RESERVAS PAGE
+            -------------------------------------------------------------------------- */
         .main {
             display: grid;
             grid-template-columns: 1fr;
