@@ -38,6 +38,9 @@ return new class extends Migration {
             $table->dateTime('fecha_ultimo_acceso_usuario')->nullable();
             // Laravel Auth helper columns (optional but good for compatibility if needed later, but sticking to schema for now)
             $table->rememberToken();
+            $table->text('two_factor_secret')->nullable();
+            $table->text('two_factor_recovery_codes')->nullable();
+            $table->timestamp('two_factor_confirmed_at')->nullable();
         });
 
         // 3. USUARIOS_ROLES

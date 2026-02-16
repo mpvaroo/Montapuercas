@@ -56,26 +56,46 @@
                 </span>
                 IA Coach
             </a>
-            <a class="{{ request()->routeIs('panel-admin') ? 'active' : '' }}" href="{{ route('panel-admin') }}">
-                <span class="ico">
-                    <svg viewBox="0 0 24 24">
-                        <path
-                            d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.47 4.74-3.35 8.98-7 10.23V11.99H5V6.3l7-3.11v8.8z" />
-                    </svg>
-                </span>
-                Admin
-            </a>
+            @if(Auth::user()->isAdmin())
+                <a class="{{ request()->routeIs('panel-admin') ? 'active' : '' }}" href="{{ route('panel-admin') }}">
+                    <span class="ico">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.47 4.74-3.35 8.98-7 10.23V11.99H5V6.3l7-3.11v8.8z" />
+                        </svg>
+                    </span>
+                    Admin
+                </a>
+            @endif
         </nav>
     </div>
 
-    <div class="user">
-        <div class="avatar">
-            <img src="{{ asset('img/user.png') }}" alt="Foto de perfil">
-        </div>
-        <div>
-            <div class="name">Marcelo</div>
-            <div class="role">Usuario</div>
-        </div>
+    <div class="user-block">
+        <a href="{{ route('perfil') }}" class="user-link">
+            <div class="user">
+                <div class="avatar">
+                    <img src="{{ Auth::user()->perfil?->ruta_foto_perfil_usuario ? asset('storage/' . Auth::user()->perfil->ruta_foto_perfil_usuario) : asset('img/user.png') }}"
+                        alt="Foto de perfil">
+                </div>
+                <div>
+                    <div class="name">{{ Auth::user()->nombre_mostrado_usuario ?? 'Usuario' }}</div>
+                    <div class="role">{{ Auth::user()->rol?->nombre_rol ?? 'Usuario' }}</div>
+                </div>
+            </div>
+        </a>
+
+        <form method="POST" action="{{ route('logout') }}" style="margin-top: 10px;">
+            @csrf
+            <button type="submit" class="logout-btn">
+                <span class="ico">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M16 13v-2H7V8l-5 4 5 4v-3h9z m-1-9h-7v2h7v12h-7v2h7c1.1 0 2-0.9 2-2V6c0-1.1-0.9-2-2-2z" />
+                    </svg>
+                </span>
+                Cerrar sesión
+            </button>
+        </form>
     </div>
 </aside>
 
@@ -201,6 +221,55 @@
         font-size: 12px;
         color: rgba(239, 231, 214, .55);
         margin-top: 2px;
+    }
+
+    .user-link {
+        text-decoration: none;
+        display: block;
+        transition: transform .18s ease;
+    }
+
+    .user-link:hover {
+        transform: translateY(-1px);
+    }
+
+    .user-link:hover .user {
+        border-color: rgba(239, 231, 214, .25);
+        background: rgba(0, 0, 0, .15);
+    }
+
+    .user-block {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .logout-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 10px;
+        border-radius: 14px;
+        background: rgba(255, 69, 58, 0.08);
+        border: 1px solid rgba(255, 69, 58, 0.15);
+        color: rgba(255, 105, 97, 0.85);
+        font-family: var(--sans);
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all .18s ease;
+    }
+
+    .logout-btn:hover {
+        background: rgba(255, 69, 58, 0.12);
+        border-color: rgba(255, 69, 58, 0.25);
+        color: rgba(255, 105, 97, 1);
+        transform: translateX(2px);
+    }
+
+    .logout-btn .ico svg {
+        fill: currentColor;
     }
 
     @media (max-width: 900px) {

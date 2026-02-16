@@ -1,0 +1,31 @@
+Realizar  una  aplicación  web  sobre  el  tema  que  se  desee,  que  deberá  tener  como  
+mínimo los siguientes requisitos (8 puntos máximo en función de la dificultad):  
+• La Base de datos de la aplicación deberá tener al menos una relación 1:N y otra 
+N:M. Se deberá usar Eloquent para trabajar con la BD accediendo a datos de las 
+tablas relacionadas. 
+• Se tendrá que crear al menos un middleware personalizado para la aplicación. 
+• Se deberá crear algún Factory para la carga de datos automática en la BD. 
+• Se deberá controlar el acceso a la aplicación mediante el control de usuarios. Para 
+los usuarios de la aplicación habrá que guardar alguna información extra a parte 
+de la que guarda Laravel por defecto. 
+• Crear algún componente que se use en alguna vista. 
+• Personalizar las vistas por defecto de Laravel. 
+• Todos  los  formularios  deberán  validar  los  datos  de  entrada  (mediante  Laravel),  
+con al menos un Form Request y habrá que personalizar algunos errores HTTP. 
+Control de errores SQL. 
+• La aplicación deberá permitir en algún sitio que el usuario pueda subir archivos, 
+creando un CRUD para alguna tabla de la BD. 
+• Crear una parte de la aplicación que sirva como Web Service (API). 
+• Crear roles de usuarios, para que dependiendo del usuario logueado pueda acceder 
+a determinadas funciones de la aplicación. Para el usuario administrador hacer un 
+CRUD de usuarios. 
+• Implementar las funciones de recuperar la clave de un usuario y la de verificación 
+de la cuenta de correo antes de usar la aplicación. 
+• Notificaciones para el usuario cada vez que realice cualquier operación. 
+• Uso de Livewire en las partes que se crea oportuno.  
+  Nota (2 puntos): Se valorará la presentación,  complejidad, envergadura, eficiencia, 
+funcionalidad,  seguridad,  estructura,  etc,  de  la  aplicación.  También  se  tendrá  en  
+cuenta  todos  aquellos  aspectos  que  tenga  la  aplicación  y  no  sean  requisitos.  Por 
+ejemplo, modificación del contenido del email de verificación de correo y las vistas 
+asociadas  o  el  envío  de  email  al  usuario  para  cualquier  notificación,  generación  de  
+PDFs, etc. 

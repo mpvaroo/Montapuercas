@@ -18,145 +18,15 @@
                     <span class="notif-dot"></span>
                 </button>
                 <div class="user-pill">
-                    <div class="mini-avatar"><img src="{{ asset('img/user.png') }}" alt=""></div>
-                    Admin Marcelo
+                    <div class="mini-avatar"><img
+                            src="{{ Auth::user()->perfil?->ruta_foto_perfil_usuario ? asset('storage/' . Auth::user()->perfil->ruta_foto_perfil_usuario) : asset('img/user.png') }}"
+                            alt=""></div>
+                    Admin: {{ Auth::user()->nombre_mostrado_usuario }}
                 </div>
             </div>
         </header>
 
-        <section class="surface">
-            <nav class="tabs">
-                <div class="tab-left">
-                    <button class="tab active">Usuarios</button>
-                    <button class="tab">Clases</button>
-                    <button class="tab">Rutinas Master</button>
-                    <button class="tab">Soporte</button>
-                </div>
-                <div class="tab-right">
-                    <input type="text" class="search" placeholder="Buscar usuario (nombre/DNI)...">
-                    <button class="cta">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-                        </svg>
-                        Nuevo
-                    </button>
-                </div>
-            </nav>
-
-            <div class="content">
-                <div class="grid2">
-                    <!-- Lista de Usuarios -->
-                    <div class="panel">
-                        <div class="panel-h">
-                            <strong>Gestión de Usuarios</strong>
-                            <div class="pill">24 activos ahora</div>
-                        </div>
-                        <div class="table-wrap">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Usuario</th>
-                                        <th>Plan</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div style="font-weight:800;color:var(--cream);">Juan Pérez</div>
-                                            <div class="muted">juan@email.com</div>
-                                        </td>
-                                        <td><span class="pill" style="height:24px;font-size:9px;">Anual Power</span></td>
-                                        <td>
-                                            <div class="state"><span class="dot green"></span>Activo</div>
-                                        </td>
-                                        <td>
-                                            <div class="actions">
-                                                <button class="mini-btn primary">Ver</button>
-                                                <button class="mini-btn warn">Edit</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div style="font-weight:800;color:var(--cream);">Laura Selva</div>
-                                            <div class="muted">laura@email.com</div>
-                                        </td>
-                                        <td><span class="pill" style="height:24px;font-size:9px;">Mensual Fit</span></td>
-                                        <td>
-                                            <div class="state"><span class="dot"></span>Pendiente</div>
-                                        </td>
-                                        <td>
-                                            <div class="actions">
-                                                <button class="mini-btn primary">Ver</button>
-                                                <button class="mini-btn warn">Edit</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div style="font-weight:800;color:var(--cream);">Carlos Ibáñez</div>
-                                            <div class="muted">carlos@email.com</div>
-                                        </td>
-                                        <td><span class="pill" style="height:24px;font-size:9px;">Day Pass</span></td>
-                                        <td>
-                                            <div class="state"><span class="dot red"></span>Bloqueado</div>
-                                        </td>
-                                        <td>
-                                            <div class="actions">
-                                                <button class="mini-btn primary">Ver</button>
-                                                <button class="mini-btn warn">Edit</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Formulario/Detalle rápido -->
-                    <aside class="panel">
-                        <div class="panel-h"><strong>Detalle de Usuario</strong></div>
-                        <form class="form">
-                            <div class="field">
-                                <label>Nombre Completo</label>
-                                <input type="text" class="input" value="Juan Pérez">
-                            </div>
-                            <div class="field">
-                                <label>Correo Electrónico</label>
-                                <input type="email" class="input" value="juan@email.com">
-                            </div>
-                            <div class="row">
-                                <div class="field">
-                                    <label>Plan</label>
-                                    <select>
-                                        <option>Anual Power</option>
-                                        <option>Mensual Fit</option>
-                                    </select>
-                                </div>
-                                <div class="field">
-                                    <label>Estado</label>
-                                    <select>
-                                        <option>Activo</option>
-                                        <option>Baja</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label>Notas Administrativas</label>
-                                <textarea placeholder="Añade una nota interna..."></textarea>
-                            </div>
-                            <div class="divider"></div>
-                            <div class="row" style="margin-top:10px;">
-                                <button class="mini-btn danger" style="height:40px;">Suspender cuenta</button>
-                                <button class="cta" style="height:40px;justify-content:center;">Guardar cambios</button>
-                            </div>
-                        </form>
-                    </aside>
-                </div>
-            </div>
-        </section>
+        <livewire:admin.admin-dashboard />
     </main>
 @endsection
 

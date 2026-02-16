@@ -8,6 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -27,6 +30,13 @@ class User extends Authenticatable
      * @var string
      */
     protected $primaryKey = 'id_usuario';
+
+    /**
+     * Disable Laravel's default timestamps as we use custom Spanish ones.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -83,5 +93,78 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    /**
+     * The roles that belong to the user.
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Rol::class, 'usuarios_roles', 'id_usuario', 'id_rol')
+            ->withPivot('fecha_asignacion_rol');
+    }
+
+    /**
+     * Get the profile associated with the user.
+     */
+    public function perfil(): HasOne
+    {
+        return $this->hasOne(Perfil::class, 'id_usuario', 'id_usuario');
+    }
+
+    /**
+     * Get the settings associated with the user.
+     */
+    public function ajustes(): HasOne
+    {
+        return $this->hasOne(Ajustes::class, 'id_usuario', 'id_usuario');
+    }
+
+    /**
+     * Get the security settings associated with the user.
+     */
+    public function seguridad(): HasOne
+    {
+        return $this->hasOne(Seguridad::class, 'id_usuario', 'id_usuario');
+    }
+
+    /**
+     * Get the reservations for the user.
+     */
+    public function reservas(): HasMany
+    {
+        return $this->hasMany(ReservaClase::class, 'id_usuario', 'id_usuario');
+    }
+
+    /**
+     * Get the routines for the user.
+     */
+    public function rutinas(): HasMany
+    {
+        return $this->hasMany(RutinaUsuario::class, 'id_usuario', 'id_usuario');
+    }
+
+    /**
+     * Check if user has a specific role.
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->roles()->where('nombre_rol', $role)->exists();
+    }
+
+    /**
+     * Check if user is admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
+    /**
+     * Get the first role (helper for legacy view code).
+     */
+    public function getRolAttribute()
+    {
+        return $this->roles->first();
     }
 }
