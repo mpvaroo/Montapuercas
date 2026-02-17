@@ -34,4 +34,16 @@ class Perfil extends Model
     {
         return $this->belongsTo(User::class, 'id_usuario', 'id_usuario');
     }
+
+    /**
+     * Get the URL for the user's avatar.
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->ruta_foto_perfil_usuario) {
+            return asset('storage/' . $this->ruta_foto_perfil_usuario);
+        }
+
+        return asset('storage/avatars/nada.png');
+    }
 }

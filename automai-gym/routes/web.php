@@ -2,19 +2,23 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReservasController;
+
 
 Route::middleware(['auth',])->group(function () {
 
     Route::get('/', function () {
-        return view('welcome');
+        return redirect()->route('dashboard');
     })->name('home');
-    Route::view('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     Route::view('rutinas', 'rutinas')->name('rutinas');
-    Route::view('reservas', 'reservas')->name('reservas');
-    Route::view('calendario', 'calendario')->name('calendario');
+    Route::get('reservas', [ReservasController::class, 'index'])->name('reservas');
+    Route::post('reservas/{clase}/apuntar', [ReservasController::class, 'store'])->name('reservas.apuntar');
+    Route::delete('reservas/{clase}/cancelar', [ReservasController::class, 'destroy'])->name('reservas.cancelar');
+    Route::get('calendario', [ReservasController::class, 'calendario'])->name('calendario');
     Route::view('progreso', 'progreso')->name('progreso');
     Route::view('ia-coach', 'iaCoach')->name('ia-coach');
-    Route::view('detalle-reserva', 'detalle-reserva')->name('detalle-reserva');
+    Route::get('detalle-reserva/{id}', [ReservasController::class, 'show'])->name('detalle-reserva');
     Route::view('detalle-rutina', 'detalle-rutina')->name('detalle-rutina');
 
     Route::middleware(['admin'])->group(function () {

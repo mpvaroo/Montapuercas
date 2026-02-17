@@ -34,8 +34,7 @@
                     <div class="profile-row">
                         <div class="avatar-lg" style="cursor: pointer; position: relative;"
                             onclick="document.getElementById('avatarInput').click()">
-                            <img src="{{ Auth::user()->perfil->ruta_foto_perfil_usuario ? asset('storage/' . Auth::user()->perfil->ruta_foto_perfil_usuario) : asset('img/user.png') }}"
-                                alt="Foto de perfil" id="avatarPreview">
+                            <img src="{{ Auth::user()->avatar_url }}" alt="Foto de perfil" id="avatarPreview">
                             <div
                                 style="position: absolute; bottom: 0; right: 0; background: gold; color: #000; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 14px;">
                                 <i class="fas fa-camera"></i>
@@ -87,13 +86,13 @@
                         <div class="field">
                             <div class="label">Nombre real</div>
                             <input class="input" id="nombreReal" type="text" placeholder="Nombre y apellidos"
-                                value="{{ Auth::user()->perfil->nombre_real_usuario ?? '' }}" readonly />
+                                value="{{ Auth::user()->perfil?->nombre_real_usuario ?? '' }}" readonly />
                         </div>
                         <div class="field">
                             <div class="label">Teléfono</div>
                             <input class="input @error('telefono_usuario') error-border @enderror" id="telefono"
                                 name="telefono_usuario" type="tel" placeholder="+34 600 000 000"
-                                value="{{ old('telefono_usuario', Auth::user()->perfil->telefono_usuario ?? '') }}" />
+                                value="{{ old('telefono_usuario', Auth::user()->perfil?->telefono_usuario ?? '') }}" />
                             @error('telefono_usuario') <div class="error-msg">{{ $message }}</div> @enderror
                         </div>
                     </div>
@@ -105,7 +104,7 @@
                             <div class="label">Fecha inicio</div>
                             <input class="input @error('fecha_inicio_usuario') error-border @enderror" id="fechaInicio"
                                 name="fecha_inicio_usuario" type="date"
-                                value="{{ old('fecha_inicio_usuario', Auth::user()->perfil->fecha_inicio_usuario?->format('Y-m-d')) }}" />
+                                value="{{ old('fecha_inicio_usuario', Auth::user()->perfil?->fecha_inicio_usuario?->format('Y-m-d')) }}" />
                             @error('fecha_inicio_usuario') <div class="error-msg">{{ $message }}</div> @enderror
                         </div>
                     </div>
@@ -122,14 +121,14 @@
                             <div class="label">Objetivo principal</div>
                             <select class="select @error('objetivo_principal_usuario') error-border @enderror"
                                 id="objetivoPrincipal" name="objetivo_principal_usuario">
-                                <option value="salud" @selected(old('objetivo_principal_usuario', Auth::user()->perfil->objetivo_principal_usuario) == 'salud')>
+                                <option value="salud" @selected(old('objetivo_principal_usuario', Auth::user()->perfil?->objetivo_principal_usuario) == 'salud')>
                                     salud
                                 </option>
-                                <option value="definir" @selected(old('objetivo_principal_usuario', Auth::user()->perfil->objetivo_principal_usuario) == 'definir')>
+                                <option value="definir" @selected(old('objetivo_principal_usuario', Auth::user()->perfil?->objetivo_principal_usuario) == 'definir')>
                                     definir</option>
-                                <option value="volumen" @selected(old('objetivo_principal_usuario', Auth::user()->perfil->objetivo_principal_usuario) == 'volumen')>
+                                <option value="volumen" @selected(old('objetivo_principal_usuario', Auth::user()->perfil?->objetivo_principal_usuario) == 'volumen')>
                                     volumen</option>
-                                <option value="rendimiento" @selected(old('objetivo_principal_usuario', Auth::user()->perfil->objetivo_principal_usuario) == 'rendimiento')>rendimiento
+                                <option value="rendimiento" @selected(old('objetivo_principal_usuario', Auth::user()->perfil?->objetivo_principal_usuario) == 'rendimiento')>rendimiento
                                 </option>
                             </select>
                             @error('objetivo_principal_usuario') <div class="error-msg">{{ $message }}</div> @enderror
@@ -138,11 +137,11 @@
                             <div class="label">Nivel</div>
                             <select class="select @error('nivel_usuario') error-border @enderror" id="nivelUsuario"
                                 name="nivel_usuario">
-                                <option value="principiante" @selected(old('nivel_usuario', Auth::user()->perfil->nivel_usuario) == 'principiante')>
+                                <option value="principiante" @selected(old('nivel_usuario', Auth::user()->perfil?->nivel_usuario) == 'principiante')>
                                     principiante</option>
-                                <option value="intermedio" @selected(old('nivel_usuario', Auth::user()->perfil->nivel_usuario) == 'intermedio')>
+                                <option value="intermedio" @selected(old('nivel_usuario', Auth::user()->perfil?->nivel_usuario) == 'intermedio')>
                                     intermedio</option>
-                                <option value="avanzado" @selected(old('nivel_usuario', Auth::user()->perfil->nivel_usuario) == 'avanzado')>avanzado
+                                <option value="avanzado" @selected(old('nivel_usuario', Auth::user()->perfil?->nivel_usuario) == 'avanzado')>avanzado
                                 </option>
                             </select>
                             @error('nivel_usuario') <div class="error-msg">{{ $message }}</div> @enderror
@@ -156,7 +155,7 @@
                             <div class="label">Días por semana</div>
                             <input class="input @error('dias_entrenamiento_semana_usuario') error-border @enderror"
                                 id="diasSemana" name="dias_entrenamiento_semana_usuario" type="number" min="1" max="7"
-                                value="{{ old('dias_entrenamiento_semana_usuario', Auth::user()->perfil->dias_entrenamiento_semana_usuario ?? '') }}" />
+                                value="{{ old('dias_entrenamiento_semana_usuario', Auth::user()->perfil?->dias_entrenamiento_semana_usuario ?? '') }}" />
                             @error('dias_entrenamiento_semana_usuario') <div class="error-msg">{{ $message }}</div>
                             @enderror
                         </div>
@@ -178,14 +177,14 @@
                             <div class="label">Peso (kg)</div>
                             <input class="input @error('peso_kg_usuario') error-border @enderror" id="pesoKg"
                                 name="peso_kg_usuario" type="number" step="0.01"
-                                value="{{ old('peso_kg_usuario', Auth::user()->perfil->peso_kg_usuario ?? '') }}" />
+                                value="{{ old('peso_kg_usuario', Auth::user()->perfil?->peso_kg_usuario ?? '') }}" />
                             @error('peso_kg_usuario') <div class="error-msg">{{ $message }}</div> @enderror
                         </div>
                         <div class="field">
                             <div class="label">Altura (cm)</div>
                             <input class="input @error('altura_cm_usuario') error-border @enderror" id="alturaCm"
                                 name="altura_cm_usuario" type="number"
-                                value="{{ old('altura_cm_usuario', Auth::user()->perfil->altura_cm_usuario ?? '') }}" />
+                                value="{{ old('altura_cm_usuario', Auth::user()->perfil?->altura_cm_usuario ?? '') }}" />
                             @error('altura_cm_usuario') <div class="error-msg">{{ $message }}</div> @enderror
                         </div>
                     </div>

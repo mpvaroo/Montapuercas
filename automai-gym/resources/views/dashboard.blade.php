@@ -138,8 +138,8 @@
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-                  MAIN DASHBOARD STYLES
-                -------------------------------------------------------------------------- */
+                      MAIN DASHBOARD STYLES
+                    -------------------------------------------------------------------------- */
         .main {
             display: grid;
             grid-template-columns: 1fr 380px;
@@ -322,8 +322,8 @@
         }
 
         /* --------------------------------------------------------------------------
-                  CALENDARIO INTERACTIVO
-                -------------------------------------------------------------------------- */
+                      CALENDARIO INTERACTIVO
+                    -------------------------------------------------------------------------- */
         .calendar {
             margin-top: 14px;
             border-radius: var(--r);
@@ -564,8 +564,8 @@
         }
 
         /* --------------------------------------------------------------------------
-                  IA COACH (CARD TIPO CHATGPT)
-                -------------------------------------------------------------------------- */
+                      IA COACH (CARD TIPO CHATGPT)
+                    -------------------------------------------------------------------------- */
         .chat {
             grid-column: 2 / 3;
             align-self: start;
@@ -734,35 +734,8 @@
 
 @push('scripts')
     <script>
-        // Datos demo: reservas/clases por fecha (YYYY-MM-DD)
-        const demoEvents = {
-            "2026-01-24": [{
-                title: "Clase: Espalda & Core",
-                time: "11:00",
-                place: "Sala 2"
-            },
-            {
-                title: "Reserva: Spinning (confirmada)",
-                time: "18:30",
-                place: "Sala Cycling"
-            },
-            {
-                title: "Recordatorio: Registrar sesión",
-                time: "Después",
-                place: "App"
-            }
-            ],
-            "2026-01-26": [{
-                title: "Clase: Movilidad",
-                time: "10:00",
-                place: "Sala 1"
-            }],
-            "2026-01-29": [{
-                title: "Reserva: HIIT",
-                time: "19:00",
-                place: "Box"
-            }]
-        };
+        // Datos reales: reservas/clases por fecha (YYYY-MM-DD)
+        const demoEvents = @json($events);
 
         const calDaysEl = document.getElementById("calDays");
         const monthTitleEl = document.getElementById("monthTitle");
@@ -850,11 +823,11 @@
                 const empty = document.createElement("div");
                 empty.className = "event";
                 empty.innerHTML = `
-              <span class="badge" aria-hidden="true" style="opacity:.35"></span>
-              <div class="text">
-                <div class="title">Sin reservas para este día</div>
-                <div class="time">Usa IA Coach para reservar una clase</div>
-              </div>`;
+                  <span class="badge" aria-hidden="true" style="opacity:.35"></span>
+                  <div class="text">
+                    <div class="title">Sin reservas para este día</div>
+                    <div class="time">Usa IA Coach para reservar una clase</div>
+                  </div>`;
                 eventsListEl.appendChild(empty);
                 return;
             }
@@ -863,11 +836,11 @@
                 const item = document.createElement("div");
                 item.className = "event";
                 item.innerHTML = `
-              <span class="badge" aria-hidden="true"></span>
-              <div class="text">
-                <div class="title">${ev.title}</div>
-                <div class="time">${ev.time} · ${ev.place}</div>
-              </div>`;
+                  <span class="badge" aria-hidden="true"></span>
+                  <div class="text">
+                    <div class="title">${ev.title}</div>
+                    <div class="time">${ev.time} · ${ev.place}</div>
+                  </div>`;
                 eventsListEl.appendChild(item);
             });
         }

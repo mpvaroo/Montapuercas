@@ -74,8 +74,7 @@
         <a href="{{ route('perfil') }}" class="user-link">
             <div class="user">
                 <div class="avatar">
-                    <img src="{{ Auth::user()->perfil?->ruta_foto_perfil_usuario ? asset('storage/' . Auth::user()->perfil->ruta_foto_perfil_usuario) : asset('img/user.png') }}"
-                        alt="Foto de perfil">
+                    <img src="{{ Auth::user()->avatar_url }}" alt="Foto de perfil">
                 </div>
                 <div>
                     <div class="name">{{ Auth::user()->nombre_mostrado_usuario ?? 'Usuario' }}</div>

@@ -43,11 +43,5 @@ class ReservaClase extends Model
         return $this->belongsTo(ClaseGimnasio::class, 'id_clase_gimnasio', 'id_clase_gimnasio');
     }
 
-    /**
-     * Get the check-in associated with the reservation.
-     */
-    public function checkin(): HasOne
-    {
-        return $this->hasOne(CheckinReserva::class, 'id_reserva_clase', 'id_reserva_clase');
-    }
+
 }

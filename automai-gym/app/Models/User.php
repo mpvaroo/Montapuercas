@@ -167,4 +167,12 @@ class User extends Authenticatable
     {
         return $this->roles->first();
     }
+
+    /**
+     * Get the URL for the user's avatar.
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        return $this->perfil?->avatar_url ?? asset('storage/avatars/nada.png');
+    }
 }

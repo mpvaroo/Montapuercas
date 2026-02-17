@@ -12,9 +12,7 @@
                     <p>Tus clases y sesiones reservadas.</p>
                 </header>
 
-                <a href="{{ route('calendario') }}" class="btn-new"
-                    style="display:flex; align-items:center; justify-content:center; text-decoration:none;">+ Nueva
-                    Reserva</a>
+                
             </div>
 
             <!-- LISTA RESERVAS -->
@@ -22,94 +20,66 @@
                 <h2 class="section-title">Tu Próxima Reserva</h2>
 
                 <div class="res-list">
-                    <!-- Item 1: Spinning -->
-                    <div class="res-card">
-                        <div class="res-img-box">
-                            <div class="res-tag"><svg viewBox="0 0 24 24">
-                                    <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z" />
-                                </svg></div>
-                            <img src="{{ asset('img/reserva-1.png') }}" class="res-img" alt="Spinning">
-                            <div class="res-time">08:00 AM</div>
-                        </div>
+                    @forelse($clases as $clase)
+                        @php
+                            $reservada = in_array($clase->id_clase_gimnasio, $reservasUsuarioIds);
+                            $imgIndex = ($clase->id_clase_gimnasio % 3) + 1; // 1, 2, or 3
+                        @endphp
+                        <div class="res-card">
+                            <div class="res-img-box">
+                                <div class="res-tag"><svg viewBox="0 0 24 24">
+                                        <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z" />
+                                    </svg></div>
+                                <img src="{{ asset('img/reserva-' . $imgIndex . '.png') }}" class="res-img"
+                                    alt="{{ $clase->titulo_clase }}">
+                                <div class="res-time">{{ $clase->fecha_inicio_clase->format('h:i A') }}</div>
+                            </div>
 
-                        <div class="res-info">
-                            <h3 class="res-title">Spinning</h3>
-                            <span class="res-detail">Instructora: Laura</span>
-                            <span class="res-detail">Clase de ciclismo de alta intensidad</span>
-                            <div class="res-meta">
-                                <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                                </svg>
-                                Agregado a calendario
+                            <div class="res-info">
+                                <h3 class="res-title">{{ $clase->titulo_clase }}</h3>
+                                <span class="res-detail">Instructor: {{ $clase->instructor_clase }}</span>
+                                <span class="res-detail">{{ Str::limit($clase->descripcion_clase, 50) }}</span>
+                                <div class="res-meta" style="{{ $reservada ? '' : 'color:rgba(239,231,214,.45)' }}">
+                                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                                    </svg>
+                                    @if($reservada)
+                                        Agregado a calendario
+                                    @else
+                                        {{ $clase->cupo_maximo_clase }} Cupos
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="res-actions">
+                                <span class="res-date">{{ $clase->fecha_inicio_clase->translatedFormat('l j \d\e F') }}</span>
+
+                                @if($reservada)
+                                    <div style="display:flex; gap:8px;">
+                                        <a href="{{ route('detalle-reserva', ['id' => $clase->id_clase_gimnasio]) }}"
+                                            class="btn-action-sm">Ver Detalles ›</a>
+                                        <form action="{{ route('reservas.cancelar', $clase->id_clase_gimnasio) }}" method="POST"
+                                            onsubmit="return confirm('¿Estás seguro de cancelar esta reserva?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn-action-sm"
+                                                style="border-color:rgba(255,100,100,.30); color:rgba(255,160,160,.92);">Cancelar</button>
+                                        </form>
+                                    </div>
+                                @else
+                                    <form action="{{ route('reservas.apuntar', $clase->id_clase_gimnasio) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn-premium">Apuntarse</button>
+                                    </form>
+                                @endif
                             </div>
                         </div>
-
-                        <div class="res-actions">
-                            <span class="res-date">Jueves 25 de Enero</span>
-                            <a href="{{ route('detalle-reserva') }}" class="btn-action-sm">Ver Detalles ›</a>
+                    @empty
+                        <div style="text-align:center; padding: 40px; color: rgba(239,231,214,.6);">
+                            <p>No hay clases disponibles próximamente.</p>
                         </div>
-                    </div>
-
-                    <!-- Item 2: HIIT -->
-                    <div class="res-card">
-                        <div class="res-img-box">
-                            <div class="res-tag"><svg viewBox="0 0 24 24">
-                                    <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z" />
-                                </svg></div>
-                            <img src="{{ asset('img/reserva-2.png') }}" class="res-img" alt="HIIT">
-                            <div class="res-time">11:00 AM</div>
-                        </div>
-
-                        <div class="res-info">
-                            <h3 class="res-title">HIIT Express</h3>
-                            <span class="res-detail">Instructora: Rocío</span>
-                            <span class="res-detail">Rutina de HIIT, ritmo intenso</span>
-                            <div class="res-meta" style="color:rgba(239,231,214,.45)">
-                                <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                </svg>
-                                8 Asistentes
-                            </div>
-                        </div>
-
-                        <div class="res-actions">
-                            <span class="res-date">Jueves 25 de Enero</span>
-                            <button class="btn-action-sm"
-                                style="border-color:rgba(255,100,100,.30); color:rgba(255,160,160,.92);">Cancelar</button>
-                        </div>
-                    </div>
-
-                    <!-- Item 3: Personal Training -->
-                    <div class="res-card">
-                        <div class="res-img-box">
-                            <div class="res-tag"><svg viewBox="0 0 24 24">
-                                    <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z" />
-                                </svg></div>
-                            <img src="{{ asset('img/reserva-3.png') }}" class="res-img" alt="PT">
-                            <div class="res-time">05:00 PM</div>
-                        </div>
-
-                        <div class="res-info">
-                            <h3 class="res-title">Entrenamiento Personal</h3>
-                            <span class="res-detail">Sesión individual</span>
-                            <div class="res-meta">
-                                <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                                </svg>
-                                Agregado a calendario
-                            </div>
-                        </div>
-
-                        <div class="res-actions">
-                            <span class="res-date">Jueves 25 de Enero</span>
-                            <button class="btn-action-sm"
-                                style="border-color:rgba(255,100,100,.30); color:rgba(255,160,160,.92);">Cancelar</button>
-                        </div>
-                    </div>
-
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -119,8 +89,8 @@
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-              RESERVAS PAGE
-            -------------------------------------------------------------------------- */
+                      RESERVAS PAGE
+                    -------------------------------------------------------------------------- */
         .main {
             display: grid;
             grid-template-columns: 1fr;
@@ -355,6 +325,32 @@
             text-decoration: none;
             transition: background .2s, border-color .2s;
             white-space: nowrap;
+        }
+
+        .btn-premium {
+            padding: 9px 18px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #be9155 0%, #d4a373 100%);
+            color: #000;
+            font-size: 13px;
+            font-weight: 750;
+            border: none;
+            cursor: pointer;
+            transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            box-shadow: 0 4px 12px rgba(190, 145, 85, 0.25);
+            white-space: nowrap;
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(190, 145, 85, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .btn-premium:active {
+            transform: translateY(0);
         }
 
         .btn-action-sm:hover {

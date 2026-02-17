@@ -8,20 +8,19 @@
             <header class="surface-head">
                 <strong>Mi Calendario</strong>
                 <div class="head-actions">
-                    <button class="icon-btn" aria-label="Buscar"><svg viewBox="0 0 24 24">
-                            <path
-                                d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16a6.471 6.471 0 0 0 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                        </svg></button>
+                   
                     <div class="pill">Vista Mensual</div>
                 </div>
             </header>
 
             <div class="calendar-wrap">
                 <div class="monthbar">
-                    <div class="month">Enero 2026</div>
+                    <div class="month">{{ ucfirst($monthName) }}</div>
                     <div class="month-actions">
-                        <button class="icon-btn">‹</button>
-                        <button class="icon-btn">›</button>
+                        <a href="{{ route('calendario', ['month' => $prevMonth->month, 'year' => $prevMonth->year]) }}"
+                            class="icon-btn" style="text-decoration:none;">‹</a>
+                        <a href="{{ route('calendario', ['month' => $nextMonth->month, 'year' => $nextMonth->year]) }}"
+                            class="icon-btn" style="text-decoration:none;">›</a>
                     </div>
                 </div>
 
@@ -36,27 +35,38 @@
                 </div>
 
                 <div class="grid">
-                    <!-- Days... logic simplified for template -->
-                    @for ($i = 1; $i <= 31; $i++)
-                        <div class="day {{ $i == 25 ? 'today' : '' }}">
+                    @php
+                        $today = \Carbon\Carbon::now();
+                        $isCurrentMonth = ($today->month == $month && $today->year == $year);
+                    @endphp
+
+                    {{-- Empty days at start --}}
+                    @for ($i = 1; $i < $startOfWeek; $i++)
+                        <div class="day empty" style="opacity: 0.3; pointer-events: none;"></div>
+                    @endfor
+
+                    {{-- Days of the month --}}
+                    @for ($d = 1; $d <= $daysInMonth; $d++)
+                        @php
+                            $hasEvents = isset($reservasPorDia[$d]);
+                            $isToday = ($isCurrentMonth && $today->day == $d);
+                        @endphp
+                        <div class="day {{ $isToday ? 'today' : '' }}" onclick="selectDay({{ $d }})">
                             <div class="num">
-                                <span>{{ $i }}</span>
-                                @if ($i == 24 || $i == 26 || $i == 29)
+                                <span>{{ $d }}</span>
+                                @if ($hasEvents)
                                     <span class="badge"></span>
                                 @endif
                             </div>
                             <div class="events">
-                                @if ($i == 24)
-                                    <div class="event">
-                                        <i class="tag green"></i>
-                                        <span class="time">11:00</span> Espalda
-                                    </div>
-                                @endif
-                                @if ($i == 25)
-                                    <div class="event">
-                                        <i class="tag"></i>
-                                        <span class="time">08:00</span> Spinning
-                                    </div>
+                                @if ($hasEvents)
+                                    @foreach($reservasPorDia[$d] as $reserva)
+                                        <div class="event">
+                                            <i class="tag {{ $reserva->clase->id_clase_gimnasio % 2 == 0 ? 'green' : '' }}"></i>
+                                            <span class="time">{{ $reserva->clase->fecha_inicio_clase->format('H:i') }}</span>
+                                            {{ Str::limit($reserva->clase->titulo_clase, 10) }}
+                                        </div>
+                                    @endforeach
                                 @endif
                             </div>
                         </div>
@@ -68,41 +78,80 @@
         <aside class="panel">
             <div class="panel-card">
                 <header class="panel-head">
-                    <strong>25 de Enero</strong>
+                    <strong
+                        id="selected-date">{{ $isCurrentMonth ? $today->translatedFormat('j \d\e F') : 'Selecciona un día' }}</strong>
                 </header>
                 <div class="panel-body">
-                    <div class="legend">
-                        <div class="legend-item">
-                            <div class="legend-left">
-                                <i class="tag green"></i>
-                                <span>Entrenamientos</span>
-                            </div>
-                            <div class="legend-right">3 Hoy</div>
-                        </div>
+                    <div id="no-events"
+                        style="{{ ($isCurrentMonth && isset($reservasPorDia[$today->day])) ? 'display:none;' : '' }}">
+                        <p style="padding: 20px; color: rgba(239,231,214,.4); font-size: 13px; text-align: center;">
+                            No tienes clases reservadas para este día.
+                        </p>
                     </div>
 
-                    <div class="schedule">
-                        <div class="slot">
-                            <div class="left">
-                                <div class="info">
-                                    <div class="title">Spinning</div>
-                                    <div class="sub">Sala Cycling · Laura</div>
+                    <div id="events-list">
+                        @php
+                            $selectedDayReservas = ($isCurrentMonth && isset($reservasPorDia[$today->day])) ? $reservasPorDia[$today->day] : [];
+                        @endphp
+                        @foreach($selectedDayReservas as $reserva)
+                            <div class="schedule-item" data-day="{{ $today->day }}">
+                                <div class="slot">
+                                    <div class="left">
+                                        <div class="info">
+                                            <div class="title">{{ $reserva->clase->titulo_clase }}</div>
+                                            <div class="sub">{{ $reserva->clase->instructor_clase }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="right">{{ $reserva->clase->fecha_inicio_clase->format('H:i') }}</div>
                                 </div>
                             </div>
-                            <div class="right">08:00</div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
         </aside>
     </div>
+
+    <script>
+        const reservas = @json($reservasPorDia);
+        const monthName = @json(ucfirst($date->translatedFormat('F')));
+
+        function selectDay(day) {
+            document.getElementById('selected-date').innerText = day + " de " + monthName;
+            const list = document.getElementById('events-list');
+            const noEvents = document.getElementById('no-events');
+            list.innerHTML = '';
+
+            if (reservas[day]) {
+                noEvents.style.display = 'none';
+                reservas[day].forEach(reserva => {
+                    const time = new Date(reserva.clase.fecha_inicio_clase).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+                    list.innerHTML += `
+                                <div class="schedule">
+                                    <div class="slot">
+                                        <div class="left">
+                                            <div class="info">
+                                                <div class="title">${reserva.clase.titulo_clase}</div>
+                                                <div class="sub">${reserva.clase.instructor_clase}</div>
+                                            </div>
+                                        </div>
+                                        <div class="right">${time}</div>
+                                    </div>
+                                </div>
+                            `;
+                });
+            } else {
+                noEvents.style.display = 'block';
+            }
+        }
+    </script>
 @endsection
 
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-          CALENDARIO STYLES
-        -------------------------------------------------------------------------- */
+                  CALENDARIO STYLES
+                -------------------------------------------------------------------------- */
         .main {
             min-width: 0;
             display: grid;
@@ -276,6 +325,46 @@
         .panel-head strong {
             font-family: var(--serif);
             color: var(--cream);
+        }
+
+        .schedule {
+            display: grid;
+            gap: 12px;
+            padding: 16px;
+        }
+
+        .slot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-radius: 14px;
+            background: rgba(0, 0, 0, .12);
+            border: 1px solid rgba(239, 231, 214, .06);
+        }
+
+        .slot .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slot .title {
+            color: var(--cream);
+            font-family: var(--serif);
+            font-size: 15px;
+        }
+
+        .slot .sub {
+            color: rgba(239, 231, 214, .45);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .slot .right {
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 14px;
         }
 
         @media (max-width: 1200px) {

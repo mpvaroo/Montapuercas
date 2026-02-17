@@ -18,44 +18,60 @@
                     <span class="dot"></span>
                     <span>Información General</span>
                 </div>
-                <div class="pill">ID: #RES-7102</div>
+
             </div>
 
             <section class="panel">
                 <div class="head-grid">
                     <div class="title-block">
-                        <h2>Entrenamiento Personalizado</h2>
-                        <div class="sub">Sesión de alta intensidad con enfoque en fuerza funcional y movilidad.</div>
+                        <h2>{{ $clase->titulo_clase }}</h2>
+                        <div class="sub">{{ $clase->tipoClase->nombre_tipo_clase ?? 'Clase General' }}</div>
                     </div>
                     <div class="tags">
-                        <span class="tag green">Confirmada</span>
-                        <span class="tag bronze">Premium</span>
+                        @if($reserva)
+                            <span class="tag green ">{{ ucfirst($reserva->estado_reserva) }}</span>
+                        @else
+                            <span class="tag bronze">Disponible</span>
+                        @endif
+
                     </div>
                 </div>
 
                 <div class="metrics">
                     <div class="metric">
                         <div class="k">Fecha</div>
-                        <div class="v">24 Ene 2026</div>
+                        <div class="v">{{ $clase->fecha_inicio_clase->format('d M Y') }}</div>
                     </div>
                     <div class="metric">
                         <div class="k">Hora</div>
-                        <div class="v">11:00 — 12:30</div>
+                        <div class="v">{{ $clase->fecha_inicio_clase->format('H:i') }} —
+                            {{ $clase->fecha_fin_clase->format('H:i') }}
+                        </div>
                     </div>
                     <div class="metric">
                         <div class="k">Lugar</div>
-                        <div class="v">Sala 2 / Box 4</div>
+                        <div class="v">Sala Principal</div>
                     </div>
                     <div class="metric">
                         <div class="k">Coach</div>
-                        <div class="v">Alex Rivera</div>
+                        <div class="v">{{ $clase->instructor_clase }}</div>
                     </div>
                 </div>
 
                 <div class="btn-row">
-                    <button class="btn-ghost">Modificar fecha</button>
-                    <button class="btn-ghost">Contactar coach</button>
-                    <button class="btn-danger">Cancelar reserva</button>
+                    @if($reserva)
+                        <form action="{{ route('reservas.cancelar', $clase->id_clase_gimnasio) }}" method="POST"
+                            onsubmit="return confirm('¿Estás seguro de cancelar esta reserva?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn-danger">Cancelar reserva</button>
+                        </form>
+                    @else
+                        <form action="{{ route('reservas.apuntar', $clase->id_clase_gimnasio) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn-premium">Apuntarse ahora</button>
+                        </form>
+                    @endif
                 </div>
 
                 <p class="note">Nota: Las cancelaciones con menos de 2 horas de antelación pueden incurrir en
@@ -72,51 +88,25 @@
             <div class="class-card">
                 <article class="class-main">
                     <h3>Resumen de la clase</h3>
-                    <p class="class-title">Espalda & Core: Estabilidad</p>
+                    <p class="class-title">{{ $clase->titulo_clase }}</p>
                     <div class="class-meta">
-                        Enfoque en tracciones pesadas controladas seguido de un bloque de estabilidad lumbopélvica.
-                        Ideal para mejorar la postura y la fuerza de transferencia.
+                        {{ $clase->descripcion_clase }}
                     </div>
                 </article>
 
                 <aside class="class-right">
-                    <div class="mini-box">
+                    <div class="mini-box ">
                         <div class="k">Ocupación</div>
-                        <div class="v">8 / 12 plazas</div>
-                        <div class="bar"><span></span></div>
+                        <div class="v">{{ $clase->reservas()->count() }} / {{ $clase->cupo_maximo_clase }} plazas</div>
+                        <div class="bar"><span
+                                style="width: {{ ($clase->reservas()->count() / $clase->cupo_maximo_clase) * 100 }}%"></span>
+                        </div>
                     </div>
-                    <div class="mini-box">
-                        <div class="k">Equipo necesario</div>
-                        <div class="v">Toalla, Agua, Straps</div>
-                    </div>
+
                 </aside>
             </div>
 
-            <div class="section-title">
-                <div class="left">
-                    <span class="dot"></span>
-                    <span>Check-in Digital</span>
-                </div>
-            </div>
 
-            <div class="checkin-grid">
-                <div class="check-card">
-                    <h3>Asistencia</h3>
-                    <div class="row">
-                        <span class="k">Confirmar asistencia</span>
-                        <div class="switch">
-                            <div class="toggle on" id="toggleCheck"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="check-card">
-                    <h3>Equipamiento</h3>
-                    <div class="row">
-                        <span class="k">Kit de reserva (Straps)</span>
-                        <span class="v">Entregado</span>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- IA COACH (SIDEBAR DERECHA) -->
@@ -258,11 +248,18 @@
         }
 
         .tag {
-            padding: 6px 12px;
+            padding: 0 14px;
+            height: 26px;
             border-radius: 999px;
             font-size: 11px;
+            font-weight: 700;
             text-transform: uppercase;
             border: 1px solid rgba(239, 231, 214, .12);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 90px;
+            line-height: 1;
         }
 
         .tag.green {
@@ -306,6 +303,36 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             margin-top: 20px;
+        }
+
+        .btn-premium {
+            height: 44px;
+            padding: 0 24px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #be9155 0%, #d4a373 100%);
+            color: #000;
+            font-size: 13px;
+            font-weight: 750;
+            border: none;
+            cursor: pointer;
+            transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            box-shadow: 0 4px 15px rgba(190, 145, 85, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(190, 145, 85, 0.45);
+            filter: brightness(1.1);
+        }
+
+        .btn-premium:active {
+            transform: translateY(0);
         }
 
         .btn-ghost {
@@ -425,77 +452,7 @@
             background: #4ade80;
         }
 
-        .checkin-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 0 6px;
-        }
 
-        .check-card {
-            border-radius: var(--r);
-            padding: 18px;
-            background: rgba(0, 0, 0, .1);
-            border: 1px solid rgba(239, 231, 214, .12);
-        }
-
-        .check-card h3 {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: var(--cream-3);
-            margin: 0 0 12px;
-        }
-
-        .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, .2);
-            padding: 12px;
-            border: 1px solid rgba(239, 231, 214, .05);
-        }
-
-        .row .k {
-            font-size: 12px;
-            color: var(--cream-2);
-        }
-
-        .row .v {
-            font-size: 12px;
-            color: var(--cream);
-            font-weight: 700;
-        }
-
-        .toggle {
-            width: 44px;
-            height: 24px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, .1);
-            position: relative;
-            cursor: pointer;
-            transition: .3s;
-        }
-
-        .toggle::after {
-            content: "";
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #fff;
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            transition: .3s;
-        }
-
-        .toggle.on {
-            background: #4ade80;
-        }
-
-        .toggle.on::after {
-            left: 23px;
-        }
 
         /* IA Coach specific */
         .chat {

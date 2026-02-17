@@ -18,9 +18,7 @@
                     <span class="notif-dot"></span>
                 </button>
                 <div class="user-pill">
-                    <div class="mini-avatar"><img
-                            src="{{ Auth::user()->perfil?->ruta_foto_perfil_usuario ? asset('storage/' . Auth::user()->perfil->ruta_foto_perfil_usuario) : asset('img/user.png') }}"
-                            alt=""></div>
+                    <div class="mini-avatar"><img src="{{ Auth::user()->avatar_url }}" alt=""></div>
                     Admin: {{ Auth::user()->nombre_mostrado_usuario }}
                 </div>
             </div>

@@ -30,7 +30,7 @@ class ProfileController extends Controller
 
         if ($request->hasFile('foto_perfil')) {
             // Eliminar foto anterior si existe
-            if ($perfil->ruta_foto_perfil_usuario) {
+            if ($perfil && $perfil->ruta_foto_perfil_usuario) {
                 Storage::disk('public')->delete($perfil->ruta_foto_perfil_usuario);
             }
 
@@ -39,7 +39,10 @@ class ProfileController extends Controller
             $validated['ruta_foto_perfil_usuario'] = $path;
         }
 
-        $perfil->update($validated);
+        $user->perfil()->updateOrCreate(
+            ['id_usuario' => $user->id_usuario],
+            $validated
+        );
 
         return back()->with('status', 'perfil-updated');
     }
