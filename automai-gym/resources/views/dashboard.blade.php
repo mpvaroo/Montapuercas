@@ -16,43 +16,42 @@
             </div>
 
             <div class="grid-cards">
+                {{-- Card 1: rutinas_usuario (rutina activa) --}}
                 <article class="card">
                     <div>
-                        <h3>Entrenamiento de hoy</h3>
-                        <p class="bigline">Espalda y Bíceps</p>
-                        <div class="meta">50 min · Intensidad moderada</div>
+                        <h3>Rutina activa</h3>
+                        <p class="bigline">Fuerza — Espalda &amp; Bíceps</p>
+                        <div class="meta">
+                            id_rutina_usuario: <b style="color:rgba(239,231,214,.85);font-weight:800;">123</b>
+                            · objetivo: salud · nivel: intermedio · 50 min
+                        </div>
                     </div>
-                    <a href="{{ route('detalle-rutina') }}" class="btn"
-                        style="text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center;">Empezar
-                        entrenamiento</a>
+                    <a href="{{ route('rutinas') }}" class="btn">Ver rutina</a>
                 </article>
 
+                {{-- Card 2: rutinas_usuario (listado) --}}
                 <article class="card">
                     <div>
                         <h3>Mis Rutinas</h3>
-                        <p class="bigline">Fuerza y Enfoque</p>
-                        <div class="meta">Semana 2 de 8 · 3/4 completados</div>
+                        <p class="bigline">Rutinas creadas (usuario / IA / plantilla)</p>
+                        <div class="meta">Gestiona rutinas activas y origen_rutina</div>
                     </div>
-                    <a href="{{ route('rutinas') }}" class="btn"
-                        style="text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center;">Ver
-                        rutina</a>
+                    <a href="{{ route('rutinas') }}" class="btn">Abrir rutinas</a>
                 </article>
 
+                {{-- Card 3: registros_progreso --}}
                 <article class="card">
                     <div>
-                        <h3>Progreso semanal</h3>
+                        <h3>Último progreso</h3>
                         <div class="progress-row">
-                            <b>3 / 5</b>
-                            <span class="meta">entrenamientos</span>
+                            <b>78.40</b>
+                            <span class="meta">kg (registro)</span>
                         </div>
-                        <div class="bar" aria-label="Progreso semanal">
-                            <span></span>
+                        <div class="meta" style="margin-top:10px;">
+                            fecha_registro: 2026-01-29 · notas_progreso: —
                         </div>
-                        <div class="meta" style="margin-top:10px;">Mantén el ritmo. Sin ruido.</div>
                     </div>
-                    <a href="{{ route('progreso') }}" class="btn"
-                        style="text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center;">Ver
-                        progreso</a>
+                    <a href="{{ route('progreso') }}" class="btn">Ver progreso</a>
                 </article>
             </div>
 
@@ -78,7 +77,7 @@
 
                         <div class="cal-hint">
                             <span class="dot-mini" aria-hidden="true"></span>
-                            Días con reservas
+                            Días con clases / reservas
                         </div>
                     </div>
 
@@ -97,7 +96,7 @@
         <!-- IA COACH -->
         <aside class="chat" aria-label="IA Coach">
             <div class="chat-head">
-                <div class="left">
+                <div class="chat-head-left">
                     <div class="chip" aria-hidden="true">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                             <path
@@ -113,22 +112,22 @@
             </div>
 
             <div class="chat-body">
-                <div class="bubble ai">Hola Marcelo, ¿qué quieres hacer hoy: generar rutina o reservar una
-                    clase?</div>
-                <div class="bubble user">Hoy quiero entrenar espalda y bíceps, pero estoy cansado y con
-                    agujetas.</div>
-                <div class="bubble ai">Perfecto. Te preparo una rutina de baja fatiga (RPE 6–7) con énfasis en
-                    técnica.
-                    ¿Dispones de polea, mancuernas o máquinas?</div>
-                <div class="bubble user">Polea y mancuernas.</div>
-                <div class="bubble ai">Genial. Empiezo: calentamiento 6 min + movilidad escapular. Luego te paso
-                    5
-                    ejercicios y lo dejamos guardado en “Mis Rutinas”.</div>
+                <div class="bubble ai">
+                    Hola {{ Auth::user()->nombre_mostrado_usuario ?? 'Usuario' }}. Puedo:
+                    <b>crear_rutina</b> (rutinas_usuario) o <b>reservar_clase</b> (reservas_clase).
+                    ¿Qué hacemos?
+                </div>
+                <div class="bubble user">Quiero reservar una clase de fuerza.</div>
+                <div class="bubble ai">
+                    Perfecto. Te propongo una clase (clases_gimnasio) y creo la reserva (reservas_clase)
+                    con origen_reserva = <b>ia_coach</b>.
+                </div>
             </div>
 
             <div class="chat-foot">
                 <button class="iconbtn" type="button" aria-label="Adjuntar">＋</button>
-                <input class="chat-input" type="text" placeholder="Escribe un mensaje… (rutina / reserva)" />
+                <input class="chat-input" type="text"
+                    placeholder="Escribe un mensaje… (crear_rutina / reservar_clase)" />
                 <button class="iconbtn" type="button" aria-label="Enviar">➤</button>
             </div>
         </aside>
@@ -138,13 +137,18 @@
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-                      MAIN DASHBOARD STYLES
-                    -------------------------------------------------------------------------- */
+                                      MAIN DASHBOARD STYLES
+                                    -------------------------------------------------------------------------- */
         .main {
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 10px;
-            align-content: start;
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .main>div:first-child {
+            flex: 1;
             min-width: 0;
         }
 
@@ -280,11 +284,26 @@
             font-family: var(--sans);
             font-weight: 800;
             letter-spacing: .06em;
+            font-size: 13px;
             box-shadow: 0 18px 52px rgba(0, 0, 0, .50);
             transition: transform .18s ease, filter .18s ease, border-color .18s ease;
+            display: inline-grid;
+            place-items: center;
+            text-decoration: none;
         }
 
-        .progreso-row {
+        .btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.06);
+            border-color: rgba(239, 231, 214, .22);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            filter: brightness(1.02);
+        }
+
+        .progress-row {
             position: relative;
             z-index: 1;
             display: flex;
@@ -301,29 +320,9 @@
             line-height: 1;
         }
 
-        .bar {
-            position: relative;
-            z-index: 1;
-            margin-top: 10px;
-            width: 100%;
-            height: 10px;
-            border-radius: 999px;
-            border: 1px solid rgba(239, 231, 214, .14);
-            background: rgba(0, 0, 0, .18);
-            overflow: hidden;
-        }
-
-        .bar>span {
-            display: block;
-            height: 100%;
-            width: 60%;
-            background: linear-gradient(90deg, rgba(22, 250, 22, .18), rgba(239, 231, 214, .22));
-            border-right: 1px solid rgba(239, 231, 214, .16);
-        }
-
         /* --------------------------------------------------------------------------
-                      CALENDARIO INTERACTIVO
-                    -------------------------------------------------------------------------- */
+                                      CALENDARIO INTERACTIVO
+                                    -------------------------------------------------------------------------- */
         .calendar {
             margin-top: 14px;
             border-radius: var(--r);
@@ -345,6 +344,15 @@
             justify-content: space-between;
             gap: 10px;
             margin-bottom: 12px;
+        }
+
+        .calendar-head h2 {
+            margin: 0;
+            font-family: var(--serif);
+            font-weight: 500;
+            color: rgba(239, 231, 214, .92);
+            letter-spacing: .01em;
+            font-size: 22px;
         }
 
         .pill {
@@ -392,6 +400,11 @@
             transition: transform .18s ease, border-color .18s ease;
         }
 
+        .cal-nav:hover {
+            transform: translateY(-1px);
+            border-color: rgba(239, 231, 214, .18);
+        }
+
         .cal-month {
             text-align: center;
             font-family: var(--serif);
@@ -435,6 +448,12 @@
             user-select: none;
             position: relative;
             transition: transform .15s ease, border-color .15s ease, background .15s ease;
+        }
+
+        .day:hover {
+            transform: translateY(-1px);
+            border-color: rgba(239, 231, 214, .18);
+            background: rgba(0, 0, 0, .14);
         }
 
         .day.muted {
@@ -534,6 +553,7 @@
             border: 1px solid rgba(239, 231, 214, .10);
             background: rgba(0, 0, 0, .12);
             min-width: 0;
+            text-decoration: none;
         }
 
         .event .badge {
@@ -544,6 +564,10 @@
             border: 1px solid rgba(239, 231, 214, .12);
             box-shadow: 0 0 0 4px rgba(22, 250, 22, .05);
             flex: 0 0 10px;
+        }
+
+        .event .text {
+            min-width: 0;
         }
 
         .event .title {
@@ -564,11 +588,11 @@
         }
 
         /* --------------------------------------------------------------------------
-                      IA COACH (CARD TIPO CHATGPT)
-                    -------------------------------------------------------------------------- */
+                                      IA COACH (CARD TIPO CHATGPT)
+                                    -------------------------------------------------------------------------- */
         .chat {
-            grid-column: 2 / 3;
-            align-self: start;
+            flex: 0 0 380px;
+            width: 380px;
             position: sticky;
             top: 28px;
             height: calc(100vh - 56px);
@@ -585,7 +609,6 @@
             backdrop-filter: blur(18px) saturate(115%);
             -webkit-backdrop-filter: blur(18px) saturate(115%);
             overflow: hidden;
-            min-width: 0;
         }
 
         .chat-head {
@@ -595,6 +618,13 @@
             gap: 10px;
             padding: 6px 6px 10px;
             border-bottom: 1px solid rgba(239, 231, 214, .10);
+        }
+
+        .chat-head-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
         }
 
         .chip {
@@ -618,6 +648,9 @@
             letter-spacing: .02em;
             color: rgba(239, 231, 214, .92);
             font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .chat-head p {
@@ -635,6 +668,12 @@
             background: rgba(0, 0, 0, .12);
             color: rgba(239, 231, 214, .70);
             cursor: pointer;
+            transition: transform .18s ease, border-color .18s ease;
+        }
+
+        .kebab:hover {
+            transform: translateY(-1px);
+            border-color: rgba(239, 231, 214, .18);
         }
 
         .chat-body {
@@ -643,6 +682,8 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(239, 231, 214, .18) transparent;
         }
 
         .bubble {
@@ -654,6 +695,7 @@
             color: rgba(239, 231, 214, .82);
             font-size: 13px;
             line-height: 1.4;
+            letter-spacing: .01em;
             box-shadow: 0 12px 32px rgba(0, 0, 0, .24);
         }
 
@@ -689,6 +731,12 @@
             background: rgba(0, 0, 0, .12);
             color: rgba(239, 231, 214, .74);
             cursor: pointer;
+            transition: transform .18s ease, border-color .18s ease;
+        }
+
+        .iconbtn:hover {
+            transform: translateY(-1px);
+            border-color: rgba(239, 231, 214, .18);
         }
 
         .chat-input {
@@ -701,20 +749,20 @@
             outline: none;
             font-family: var(--sans);
             font-size: 13px;
+            transition: border-color .18s ease, box-shadow .18s ease;
+            width: 100%;
         }
 
-        @media (max-width: 1180px) {
-            .main {
-                grid-template-columns: 1fr;
-            }
+        .chat-input::placeholder {
+            color: rgba(239, 231, 214, .52);
+        }
 
-            .chat {
-                position: relative;
-                top: 0;
-                height: auto;
-                grid-column: 1 / -1;
-            }
+        .chat-input:focus {
+            border-color: rgba(239, 231, 214, .20);
+            box-shadow: 0 0 0 4px rgba(190, 145, 85, .10);
+        }
 
+        @media (max-width: 640px) {
             .grid-cards {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
@@ -764,6 +812,10 @@
             return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
         }
 
+        function hasAnyEvents(key) {
+            return Array.isArray(demoEvents[key]) && demoEvents[key].length > 0;
+        }
+
         function render() {
             calDaysEl.innerHTML = "";
             const year = view.getFullYear();
@@ -794,7 +846,7 @@
 
                 cell.textContent = date.getDate();
                 const key = fmtDateKey(date);
-                if (demoEvents[key]?.length) cell.classList.add("has-event");
+                if (hasAnyEvents(key)) cell.classList.add("has-event");
 
                 const today = new Date();
                 if (sameDay(date, today)) cell.classList.add("today");
@@ -825,8 +877,8 @@
                 empty.innerHTML = `
                   <span class="badge" aria-hidden="true" style="opacity:.35"></span>
                   <div class="text">
-                    <div class="title">Sin reservas para este día</div>
-                    <div class="time">Usa IA Coach para reservar una clase</div>
+                    <div class="title">Sin clases / reservas</div>
+                    <div class="time">Puedes reservar desde Reservas</div>
                   </div>`;
                 eventsListEl.appendChild(empty);
                 return;
