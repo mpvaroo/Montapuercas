@@ -3,8 +3,43 @@
 @section('title', 'Dashboard')
 
 @section('content')
+    <style>
+        /* LAYOUT CRÍTICO */
+        div.main {
+            display: flex !important;
+            flex-direction: row !important;
+            gap: 20px !important;
+            align-items: flex-start !important;
+            width: 100% !important;
+        }
+
+        div.dashboard-content {
+            flex: 1 1 0 !important;
+            min-width: 0 !important;
+        }
+
+        aside.chat {
+            flex: 0 0 380px !important;
+            width: 380px !important;
+            align-self: flex-start !important;
+            position: sticky !important;
+            top: 28px !important;
+            height: calc(100vh - 56px) !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        aside.chat .chat-body {
+            flex: 1 !important;
+            overflow-y: auto !important;
+        }
+
+        aside.chat .chat-foot {
+            flex-shrink: 0 !important;
+        }
+    </style>
     <div class="main">
-        <div>
+        <div class="dashboard-content">
             <header class="hero">
                 <h1>{{ __('Buenos días') }}, {{ Auth::user()->nombre_mostrado_usuario ?? 'Usuario' }}.</h1>
                 <p>Hoy entrenas con intención.</p>
@@ -137,8 +172,8 @@
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-                                      MAIN DASHBOARD STYLES
-                                    -------------------------------------------------------------------------- */
+                                              MAIN     DASHBOARD STYLES
+                                              ----  ---------------------------------------------------------------------- */
         .main {
             display: flex;
             flex-direction: row;
@@ -321,8 +356,8 @@
         }
 
         /* --------------------------------------------------------------------------
-                                      CALENDARIO INTERACTIVO
-                                    -------------------------------------------------------------------------- */
+                                                  CALENDARIO INTERACTIVO
+                                            ----    ---------------------------------------------------------------------- */
         .calendar {
             margin-top: 14px;
             border-radius: var(--r);
@@ -588,8 +623,8 @@
         }
 
         /* --------------------------------------------------------------------------
-                                      IA COACH (CARD TIPO CHATGPT)
-                                    -------------------------------------------------------------------------- */
+                                                IA C  OACH (CARD TIPO CHATGPT)
+                                                -------------------------------------------------------------------------- */
         .chat {
             flex: 0 0 380px;
             width: 380px;

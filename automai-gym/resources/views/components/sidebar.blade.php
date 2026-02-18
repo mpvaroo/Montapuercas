@@ -56,7 +56,7 @@
                 </span>
                 IA Coach
             </a>
-            @if(Auth::user()->isAdmin())
+            @if (Auth::user()->isAdmin())
                 <a class="{{ request()->routeIs('panel-admin') ? 'active' : '' }}" href="{{ route('panel-admin') }}">
                     <span class="ico">
                         <svg viewBox="0 0 24 24">
@@ -100,8 +100,10 @@
 
 <style>
     .sidebar {
-        position: sticky;
+        position: fixed;
         top: 28px;
+        left: 10px;
+        width: 240px;
         height: calc(100vh - 56px);
         padding: 18px 14px;
         background: transparent;
@@ -111,6 +113,7 @@
         flex-direction: column;
         justify-content: space-between;
         overflow: hidden;
+        z-index: 100;
     }
 
     .brand {
