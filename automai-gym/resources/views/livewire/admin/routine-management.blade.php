@@ -19,6 +19,8 @@ new class extends Component {
     public $exerciseSearch = '';
     public $muscleGroup = '';
 
+    public $dia_semana = '';
+
     public function createRoutine()
     {
         $this->resetForm();
@@ -34,6 +36,7 @@ new class extends Component {
         $this->nivel = $rutina->nivel_rutina_usuario;
         $this->duracion = $rutina->duracion_estimada_minutos;
         $this->instrucciones = $rutina->instrucciones_rutina;
+        $this->dia_semana = $rutina->dia_semana;
         $this->selectedExercises = $rutina->ejercicios->pluck('id_ejercicio')->toArray();
     }
 
@@ -55,6 +58,7 @@ new class extends Component {
             'nivel_rutina_usuario' => $this->nivel,
             'duracion_estimada_minutos' => $this->duracion,
             'instrucciones_rutina' => $this->instrucciones,
+            'dia_semana' => $this->dia_semana,
             'origen_rutina' => 'plantilla',
             'rutina_activa' => true,
         ];
@@ -86,19 +90,21 @@ new class extends Component {
         $this->nivel = 'intermedio';
         $this->duracion = 60;
         $this->instrucciones = '';
+        $this->dia_semana = '';
         $this->selectedExercises = [];
     }
 
     public function with(): array
     {
         return [
-            'rutinas' => RutinaUsuario::where('origen_rutina', 'plantilla')->get(),
+            'rutinas' => RutinaUsuario::where('origen_rutina', 'plantilla')->where('id_usuario', Auth::id())->get(),
             'availableExercises' => Ejercicio::where('nombre_ejercicio', 'like', '%' . $this->exerciseSearch . '%')
                 ->when($this->muscleGroup, function ($q) {
                     return $q->where('grupo_muscular_principal', $this->muscleGroup);
                 })
                 ->get(),
             'muscleGroups' => ['pecho', 'espalda', 'pierna', 'hombro', 'biceps', 'triceps', 'core', 'cardio', 'fullbody'],
+            'days' => ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo', 'descanso'],
         ];
     }
 };
@@ -108,7 +114,7 @@ new class extends Component {
     <!-- Lista de Rutinas -->
     <div class="panel">
         <div class="panel-h" style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
-            <strong>Rutinas Master (Plantillas)</strong>
+            <strong>Mis Rutinas y Plantillas</strong>
             <button class="mini-btn primary" wire:click="createRoutine()">+ Nueva Rutina</button>
         </div>
         <div class="table-wrap">
@@ -116,20 +122,25 @@ new class extends Component {
                 <thead>
                     <tr>
                         <th>Nombre / Objetivo</th>
-                        <th>Nivel</th>
+                        <th>Día / Nivel</th>
                         <th>Duración</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($rutinas as $rutina)
+                    @foreach ($rutinas as $rutina)
                         <tr>
                             <td>
-                                <div style="font-weight:800;color:var(--cream);">{{ $rutina->nombre_rutina_usuario }}</div>
+                                <div style="font-weight:800;color:var(--cream);">{{ $rutina->nombre_rutina_usuario }}
+                                </div>
                                 <div style="color:rgba(255,255,255,0.7); font-size:12px;">
                                     {{ ucfirst($rutina->objetivo_rutina_usuario) }}</div>
                             </td>
-                            <td><span class="pill">{{ $rutina->nivel_rutina_usuario }}</span></td>
+                            <td>
+                                <div style="font-weight:800;color:var(--cream);font-size:11px;text-transform:uppercase;">
+                                    {{ $rutina->dia_semana ?? 'Sin asignar' }}</div>
+                                <span class="pill">{{ $rutina->nivel_rutina_usuario }}</span>
+                            </td>
                             <td style="color:white;">{{ $rutina->duracion_estimada_minutos }} min</td>
                             <td>
                                 <div class="actions">
@@ -148,9 +159,10 @@ new class extends Component {
     </div>
 
     <!-- Formulario -->
-    @if($editingRoutine)
+    @if ($editingRoutine)
         <aside class="panel">
-            <div class="panel-h"><strong>{{ $editingRoutine === 'new' ? 'Nueva Rutina Master' : 'Editar Rutina' }}</strong>
+            <div class="panel-h">
+                <strong>{{ $editingRoutine === 'new' ? 'Nueva Rutina Master' : 'Editar Rutina' }}</strong>
             </div>
             <form class="form" wire:submit.prevent="saveRoutine">
                 <div class="field">
@@ -177,6 +189,15 @@ new class extends Component {
                         </select>
                     </div>
                     <div class="field">
+                        <label>Día Programado</label>
+                        <select wire:model="dia_semana" class="input">
+                            <option value="">Sin asignar / Libre</option>
+                            @foreach ($days as $day)
+                                <option value="{{ $day }}">{{ ucfirst($day) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="field">
                         <label>Duración (min)</label>
                         <input type="number" class="input" wire:model="duracion">
                     </div>
@@ -195,7 +216,7 @@ new class extends Component {
                             wire:model.live="exerciseSearch">
                         <select wire:model.live="muscleGroup" style="width:150px;">
                             <option value="">Todos</option>
-                            @foreach($muscleGroups as $mg)
+                            @foreach ($muscleGroups as $mg)
                                 <option value="{{ $mg }}">{{ ucfirst($mg) }}</option>
                             @endforeach
                         </select>
@@ -203,12 +224,14 @@ new class extends Component {
 
                     <div class="exercise-grid"
                         style="max-height: 200px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px;">
-                        @foreach($availableExercises as $ejercicio)
+                        @foreach ($availableExercises as $ejercicio)
                             <div wire:click="toggleExercise({{ $ejercicio->id_ejercicio }})"
                                 class="exercise-item {{ in_array($ejercicio->id_ejercicio, $selectedExercises) ? 'selected' : '' }}"
                                 style="padding:8px; border:1px solid var(--cream-4); border-radius:8px; cursor:pointer; font-size:11px; text-align:center;">
-                                <div style="font-weight:bold; color:var(--cream);">{{ $ejercicio->nombre_ejercicio }}</div>
-                                <div class="muted" style="font-size:9px;">{{ ucfirst($ejercicio->grupo_muscular_principal) }}
+                                <div style="font-weight:bold; color:var(--cream);">{{ $ejercicio->nombre_ejercicio }}
+                                </div>
+                                <div class="muted" style="font-size:9px;">
+                                    {{ ucfirst($ejercicio->grupo_muscular_principal) }}
                                 </div>
                             </div>
                         @endforeach

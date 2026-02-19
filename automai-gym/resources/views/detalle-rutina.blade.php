@@ -18,39 +18,39 @@
                     <span class="dot"></span>
                     <span>Configuración de la Rutina</span>
                 </div>
-                <div class="pill">Versión 2.4 — IA Gen</div>
+                <div class="pill">{{ $routine->origen_rutina === 'ia_coach' ? 'Generada por IA' : 'Plantilla / Usuario' }}
+                </div>
             </div>
 
             <section class="panel">
                 <div class="rutina-head">
                     <div class="rutina-title">
-                        <h2>Espalda & Bíceps: Hipertrofia</h2>
-                        <div class="sub">Diseñada para maximizar el reclutamiento de fibras en el plano sagital y
-                            frontal.
-                            Balance de tracciones verticales y horizontales.</div>
+                        <h2>{{ $routine->nombre_rutina_usuario }}</h2>
+                        <div class="sub">{{ $routine->instrucciones_rutina ?? 'Sin instrucciones adicionales.' }}</div>
                     </div>
                     <div class="chips">
-                        <span class="tag green">Nivel Avanzado</span>
-                        <span class="tag bronze">75 min aprox.</span>
+                        <span class="tag green">Nivel {{ ucfirst($routine->nivel_rutina_usuario) }}</span>
+                        <span class="tag bronze">{{ $routine->duracion_estimada_minutos }} min aprox.</span>
                     </div>
                 </div>
 
                 <div class="metrics">
                     <div class="metric">
                         <div class="k">Frecuencia</div>
-                        <div class="v">2x / semana</div>
+                        <div class="v">
+                            {{ $routine->dia_semana ? 'Semanal (' . ucfirst($routine->dia_semana) . ')' : 'Libre' }}</div>
                     </div>
                     <div class="metric">
                         <div class="k">Intensidad</div>
-                        <div class="v">RPE 8 — 9</div>
+                        <div class="v">Objetivo: {{ ucfirst($routine->objetivo_rutina_usuario) }}</div>
                     </div>
                     <div class="metric">
                         <div class="k">Ejercicios</div>
-                        <div class="v">6 bloques</div>
+                        <div class="v">{{ $routine->ejercicios->count() }} bloques</div>
                     </div>
                     <div class="metric">
-                        <div class="k">Objetivo</div>
-                        <div class="v">Fuerza / Masa</div>
+                        <div class="k">Origen</div>
+                        <div class="v">{{ ucfirst($routine->origen_rutina) }}</div>
                     </div>
                 </div>
 
@@ -59,9 +59,6 @@
                     <button class="btn-ghost">Editar rutina</button>
                     <button class="btn-ghost" onclick="toggleModal()">Añadir ejercicio</button>
                 </div>
-
-                <p class="note">Nota: Esta rutina ha sido ajustada por tu IA Coach según tu nivel de fatiga reportado
-                    ayer.</p>
             </section>
 
             <div class="section-title">
@@ -72,98 +69,41 @@
             </div>
 
             <div class="list">
-                <!-- Item 1 -->
-                <article class="item">
-                    <div class="num">01</div>
-                    <div class="info">
-                        <div class="name">Dominadas con lastre</div>
-                        <div class="muscle">Dorsal ancho, redondo mayor</div>
-                    </div>
-                    <div class="params">
-                        <div class="p">
-                            <div class="k">Series</div>
-                            <div class="v">4</div>
+                @forelse($routine->ejercicios as $index => $ejercicio)
+                    <article class="item">
+                        <div class="num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</div>
+                        <div class="info">
+                            <div class="name">{{ $ejercicio->nombre_ejercicio }}</div>
+                            <div class="muscle">{{ $ejercicio->grupo_muscular_principal }}</div>
                         </div>
-                        <div class="p">
-                            <div class="k">Reps</div>
-                            <div class="v">6 — 8</div>
+                        <div class="params">
+                            <div class="p">
+                                <div class="k">Series</div>
+                                <div class="v">{{ $ejercicio->pivot->series_objetivo }}</div>
+                            </div>
+                            <div class="p">
+                                <div class="k">Reps</div>
+                                <div class="v">{{ $ejercicio->pivot->repeticiones_objetivo }}</div>
+                            </div>
+                            <div class="p">
+                                <div class="k">Carga</div>
+                                <div class="v">{{ $ejercicio->pivot->peso_objetivo_kg ?? '0' }} kg</div>
+                            </div>
+                            <div class="p">
+                                <div class="k">Descanso</div>
+                                <div class="v">{{ $ejercicio->pivot->descanso_segundos ?? '60' }}s</div>
+                            </div>
                         </div>
-                        <div class="p">
-                            <div class="k">Carga</div>
-                            <div class="v">+15 kg</div>
+                        <div class="item-actions">
+                            <button class="mini green">Ver técnica</button>
+                            <button class="mini">Historial</button>
                         </div>
-                        <div class="p">
-                            <div class="k">Descanso</div>
-                            <div class="v">180s</div>
-                        </div>
-                    </div>
-                    <div class="item-actions">
-                        <button class="mini green">Ver técnica</button>
-                        <button class="mini">Historial</button>
-                    </div>
-                </article>
-
-                <!-- Item 2 -->
-                <article class="item">
-                    <div class="num">02</div>
-                    <div class="info">
-                        <div class="name">Remo con barra (Pendlay)</div>
-                        <div class="muscle">Trapecio medio, romboides</div>
-                    </div>
-                    <div class="params">
-                        <div class="p">
-                            <div class="k">Series</div>
-                            <div class="v">3</div>
-                        </div>
-                        <div class="p">
-                            <div class="k">Reps</div>
-                            <div class="v">8 — 10</div>
-                        </div>
-                        <div class="p">
-                            <div class="k">Carga</div>
-                            <div class="v">80 kg</div>
-                        </div>
-                        <div class="p">
-                            <div class="k">Descanso</div>
-                            <div class="v">120s</div>
-                        </div>
-                    </div>
-                    <div class="item-actions">
-                        <button class="mini green">Ver técnica</button>
-                        <button class="mini">Historial</button>
-                    </div>
-                </article>
-
-                <!-- Item 3 -->
-                <article class="item">
-                    <div class="num">03</div>
-                    <div class="info">
-                        <div class="name">Jalón al pecho (Agarre neutro)</div>
-                        <div class="muscle">Dorsal inferior</div>
-                    </div>
-                    <div class="params">
-                        <div class="p">
-                            <div class="k">Series</div>
-                            <div class="v">3</div>
-                        </div>
-                        <div class="p">
-                            <div class="k">Reps</div>
-                            <div class="v">12</div>
-                        </div>
-                        <div class="p">
-                            <div class="k">Carga</div>
-                            <div class="v">65 kg</div>
-                        </div>
-                        <div class="p">
-                            <div class="k">Descanso</div>
-                            <div class="v">90s</div>
-                        </div>
-                    </div>
-                    <div class="item-actions">
-                        <button class="mini green">Ver técnica</button>
-                        <button class="mini">Historial</button>
-                    </div>
-                </article>
+                    </article>
+                @empty
+                    <p
+                        style="color:var(--cream); padding:20px; text-align:center; background:rgba(0,0,0,0.2); border-radius:14px;">
+                        Esta rutina aún no tiene ejercicios asignados.</p>
+                @endforelse
             </div>
         </div>
 

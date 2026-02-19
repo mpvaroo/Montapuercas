@@ -145,6 +145,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the progress records for the user.
+     */
+    public function registrosProgreso(): HasMany
+    {
+        return $this->hasMany(RegistroProgreso::class, 'id_usuario', 'id_usuario');
+    }
+
+    /**
      * Check if user has a specific role.
      */
     public function hasRole(string $role): bool

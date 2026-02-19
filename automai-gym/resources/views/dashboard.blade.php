@@ -51,25 +51,36 @@
             </div>
 
             <div class="grid-cards">
-                {{-- Card 1: rutinas_usuario (rutina activa) --}}
+                {{-- Card 1: rutinas_usuario (rutina activa para hoy) --}}
                 <article class="card">
                     <div>
-                        <h3>Rutina activa</h3>
-                        <p class="bigline">Fuerza — Espalda &amp; Bíceps</p>
-                        <div class="meta">
-                            id_rutina_usuario: <b style="color:rgba(239,231,214,.85);font-weight:800;">123</b>
-                            · objetivo: salud · nivel: intermedio · 50 min
-                        </div>
+                        <h3>Rutina para hoy</h3>
+                        @if ($routineToday)
+                            <p class="bigline">{{ $routineToday->nombre_rutina_usuario }}</p>
+                            <div class="meta">
+                                objetivo: {{ $routineToday->objetivo_rutina_usuario }} ·
+                                nivel: {{ $routineToday->nivel_rutina_usuario }} ·
+                                {{ $routineToday->duracion_estimada_minutos }} min
+                            </div>
+                        @else
+                            <p class="bigline">Día de descanso</p>
+                            <div class="meta">Recupera fuerzas para mañana.</div>
+                        @endif
                     </div>
-                    <a href="{{ route('rutinas') }}" class="btn">Ver rutina</a>
+                    @if ($routineToday)
+                        <a href="{{ route('detalle-rutina', $routineToday->id_rutina_usuario) }}" class="btn">Ver
+                            rutina</a>
+                    @else
+                        <a href="{{ route('rutinas') }}" class="btn">Ver mis rutinas</a>
+                    @endif
                 </article>
 
                 {{-- Card 2: rutinas_usuario (listado) --}}
                 <article class="card">
                     <div>
-                        <h3>Mis Rutinas</h3>
-                        <p class="bigline">Rutinas creadas (usuario / IA / plantilla)</p>
-                        <div class="meta">Gestiona rutinas activas y origen_rutina</div>
+                        <h3>Explorar Rutinas</h3>
+                        <p class="bigline">Mis RUTINAS &amp; Planes</p>
+                        <div class="meta">Gestiona tus entrenamientos activos.</div>
                     </div>
                     <a href="{{ route('rutinas') }}" class="btn">Abrir rutinas</a>
                 </article>
@@ -78,13 +89,19 @@
                 <article class="card">
                     <div>
                         <h3>Último progreso</h3>
-                        <div class="progress-row">
-                            <b>78.40</b>
-                            <span class="meta">kg (registro)</span>
-                        </div>
-                        <div class="meta" style="margin-top:10px;">
-                            fecha_registro: 2026-01-29 · notas_progreso: —
-                        </div>
+                        @if ($randomProgress)
+                            <div class="progress-row">
+                                <b>{{ number_format($randomProgress['value'], 2) }}</b>
+                                <span class="meta">{{ $randomProgress['unit'] }} ({{ $randomProgress['label'] }})</span>
+                            </div>
+                            <div class="meta" style="margin-top:10px;">
+                                fecha_registro: {{ $randomProgress['date'] }} · notas:
+                                {{ $randomProgress['notes'] ?? '—' }}
+                            </div>
+                        @else
+                            <p class="bigline">Sin registros</p>
+                            <div class="meta">Registra tus medidas hoy.</div>
+                        @endif
                     </div>
                     <a href="{{ route('progreso') }}" class="btn">Ver progreso</a>
                 </article>
@@ -172,8 +189,8 @@
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-                                              MAIN     DASHBOARD STYLES
-                                              ----  ---------------------------------------------------------------------- */
+                                                  MAIN     DASHBOARD STYLES
+                                                  ----  ---------------------------------------------------------------------- */
         .main {
             display: flex;
             flex-direction: row;
@@ -356,8 +373,8 @@
         }
 
         /* --------------------------------------------------------------------------
-                                                  CALENDARIO INTERACTIVO
-                                            ----    ---------------------------------------------------------------------- */
+                                                      CALENDARIO INTERACTIVO
+                                                ----    ---------------------------------------------------------------------- */
         .calendar {
             margin-top: 14px;
             border-radius: var(--r);
@@ -623,8 +640,8 @@
         }
 
         /* --------------------------------------------------------------------------
-                                                IA C  OACH (CARD TIPO CHATGPT)
-                                                -------------------------------------------------------------------------- */
+                                                    IA C  OACH (CARD TIPO CHATGPT)
+                                                    -------------------------------------------------------------------------- */
         .chat {
             flex: 0 0 380px;
             width: 380px;

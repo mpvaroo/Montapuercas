@@ -24,6 +24,7 @@ class RutinaUsuario extends Model
         'origen_rutina',
         'instrucciones_rutina',
         'rutina_activa',
+        'dia_semana',
     ];
 
     protected $casts = [

@@ -11,7 +11,10 @@ Route::middleware(['auth',])->group(function () {
         return redirect()->route('dashboard');
     })->name('home');
     Route::get('dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
-    Route::view('rutinas', 'rutinas')->name('rutinas');
+    Route::get('rutinas', function () {
+        $routines = auth()->user()->rutinas()->with('ejercicios')->get();
+        return view('rutinas', compact('routines'));
+    })->name('rutinas');
     Route::get('reservas', [ReservasController::class, 'index'])->name('reservas');
     Route::post('reservas/{clase}/apuntar', [ReservasController::class, 'store'])->name('reservas.apuntar');
     Route::delete('reservas/{clase}/cancelar', [ReservasController::class, 'destroy'])->name('reservas.cancelar');
@@ -19,7 +22,10 @@ Route::middleware(['auth',])->group(function () {
     Route::view('progreso', 'progreso')->name('progreso');
     Route::view('ia-coach', 'iaCoach')->name('ia-coach');
     Route::get('detalle-reserva/{id}', [ReservasController::class, 'show'])->name('detalle-reserva');
-    Route::view('detalle-rutina', 'detalle-rutina')->name('detalle-rutina');
+    Route::get('detalle-rutina/{id}', function ($id) {
+        $routine = \App\Models\RutinaUsuario::with('ejercicios')->findOrFail($id);
+        return view('detalle-rutina', compact('routine'));
+    })->name('detalle-rutina');
 
     Route::middleware(['admin'])->group(function () {
         Route::view('panel-admin', 'panel-admin')->name('panel-admin');

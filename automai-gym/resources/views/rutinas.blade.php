@@ -26,67 +26,39 @@
 
             <!-- Routine Cards Grid -->
             <div class="routines-grid">
-                <!-- Card 1 -->
-                <div class="routine-card focus-top">
-                    <img class="routine-img" src="{{ asset('img/rutina-1.png') }}" alt="Fuerza">
-                    <div class="routine-frame"></div>
-                    <div class="routine-overlay">
-                        <h3>Fuerza y Musculación</h3>
-                        <div class="routine-details">
-                            <div class="detail"><span class="check-ico">✓</span> 4 Días a la semana</div>
-                            <div class="detail"><span class="check-ico">✓</span> Duración: 60 min</div>
-                            <div class="detail"><span class="check-ico">✓</span> Nivel: Intermedio</div>
-                        </div>
-                        <div class="card-actions">
-                            <a href="{{ route('detalle-rutina') }}" class="btn-card"
-                                style="text-decoration:none; display:flex; align-items:center; justify-content:center;">Ver
-                                Rutina</a>
-                            <button class="btn-card highlight">Iniciar Rutina</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="routine-card">
-                    <img class="routine-img" src="{{ asset('img/rutina-2.png') }}" alt="Cardio">
-                    <div class="routine-frame"></div>
-                    <div class="routine-overlay">
-                        <h3>Cardio y Quema Grasa</h3>
-                        <div class="routine-details">
-                            <div class="detail"><span class="check-ico">✓</span> 3 Días a la semana</div>
-                            <div class="detail"><span class="check-ico">✓</span> Duración: 45 min</div>
-                            <div class="detail"><span class="check-ico">✓</span> Nivel: Principiante</div>
-                        </div>
-                        <div class="card-actions">
-                            <a href="{{ route('detalle-rutina') }}" class="btn-card"
-                                style="text-decoration:none; display:flex; align-items:center; justify-content:center;">Ver
-                                Rutina</a>
-                            <button class="btn-card highlight">Iniciar Rutina</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="routine-card full-width focus-low">
-                    <img class="routine-img" src="{{ asset('img/rutina-3.png') }}" alt="Full Body">
-                    <div class="routine-frame"></div>
-                    <div class="routine-overlay">
-                        <div style="max-width: 520px;">
-                            <h3>Rutina Full Body</h3>
-                            <div class="routine-details">
-                                <div class="detail"><span class="check-ico">✓</span> 2 Días a la semana</div>
-                                <div class="detail"><span class="check-ico">✓</span> Duración: 50 min</div>
-                                <div class="detail"><span class="check-ico">✓</span> Nivel: Avanzado</div>
-                            </div>
-                            <div class="card-actions" style="grid-template-columns: 140px 140px; justify-content: start;">
-                                <a href="{{ route('detalle-rutina') }}" class="btn-card"
-                                    style="text-decoration:none; display:flex; align-items:center; justify-content:center;">Ver
-                                    Rutina</a>
-                                <button class="btn-card highlight">Iniciar Rutina</button>
+                @forelse($routines as $index => $rutina)
+                    <div
+                        class="routine-card {{ $index % 3 == 0 ? 'focus-top' : ($index % 3 == 2 ? 'full-width focus-low' : '') }}">
+                        <img class="routine-img" src="{{ asset('img/rutina-' . (($index % 3) + 1) . '.png') }}"
+                            alt="{{ $rutina->nombre_rutina_usuario }}">
+                        <div class="routine-frame"></div>
+                        <div class="routine-overlay">
+                            <div style="{{ $index % 3 == 2 ? 'max-width: 520px;' : '' }}">
+                                <h3>{{ $rutina->nombre_rutina_usuario }}</h3>
+                                <div class="routine-details">
+                                    <div class="detail"><span class="check-ico">✓</span>
+                                        {{ $rutina->dia_semana ? ucfirst($rutina->dia_semana) : 'Libre' }}</div>
+                                    <div class="detail"><span class="check-ico">✓</span> Duración:
+                                        {{ $rutina->duracion_estimada_minutos }} min</div>
+                                    <div class="detail"><span class="check-ico">✓</span> Nivel:
+                                        {{ ucfirst($rutina->nivel_rutina_usuario) }}</div>
+                                </div>
+                                <div class="card-actions"
+                                    style="{{ $index % 3 == 2 ? 'grid-template-columns: 140px 140px; justify-content: start;' : '' }}">
+                                    <a href="{{ route('detalle-rutina', $rutina->id_rutina_usuario) }}" class="btn-card"
+                                        style="text-decoration:none; display:flex; align-items:center; justify-content:center;">Ver
+                                        Rutina</a>
+                                    <button class="btn-card highlight">Iniciar Rutina</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @empty
+                    <div
+                        style="grid-column: 1 / -1; text-align: center; color: var(--cream); padding: 40px; background: rgba(0,0,0,0.2); border-radius: 12px;">
+                        <p>No tienes rutinas activas. ¡Crea una nueva o pide ayuda a tu IA Coach!</p>
+                    </div>
+                @endforelse
             </div>
         </div>
 
@@ -153,8 +125,8 @@
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-              PAGE SPECIFIC
-            -------------------------------------------------------------------------- */
+                  PAGE SPECIFIC
+                -------------------------------------------------------------------------- */
         .main {
             display: grid;
             grid-template-columns: 1fr 380px;
@@ -234,8 +206,8 @@
         }
 
         /* --------------------------------------------------------------------------
-              ROUTINES GRID
-            -------------------------------------------------------------------------- */
+                  ROUTINES GRID
+                -------------------------------------------------------------------------- */
         .routines-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
