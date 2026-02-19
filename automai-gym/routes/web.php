@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservasController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProgresoController;
 
 
 Route::middleware(['auth',])->group(function () {
@@ -18,7 +19,10 @@ Route::middleware(['auth',])->group(function () {
     Route::post('reservas/{clase}/apuntar', [ReservasController::class, 'store'])->name('reservas.apuntar');
     Route::delete('reservas/{clase}/cancelar', [ReservasController::class, 'destroy'])->name('reservas.cancelar');
     Route::get('calendario', [ReservasController::class, 'calendario'])->name('calendario');
-    Route::view('progreso', 'progreso')->name('progreso');
+    Route::get('progreso', [ProgresoController::class, 'index'])->name('progreso');
+    Route::post('progreso', [ProgresoController::class, 'store'])->name('progreso.store');
+    Route::get('progreso/historial', [ProgresoController::class, 'historial'])->name('progreso.historial');
+    Route::get('progreso/detalle/{id}', [ProgresoController::class, 'detalle'])->name('progreso.detalle');
     Route::view('ia-coach', 'iaCoach')->name('ia-coach');
     Route::get('detalle-reserva/{id}', [ReservasController::class, 'show'])->name('detalle-reserva');
     Route::get('detalle-rutina/{id}', function ($id) {
