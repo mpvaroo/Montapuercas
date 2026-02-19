@@ -4,8 +4,43 @@ use Livewire\Component;
 use App\Models\ClaseGimnasio;
 use App\Models\TipoClase;
 
+use Livewire\WithPagination;
+use Livewire\Attributes\Url;
+
 new class extends Component {
+    use WithPagination;
+
     public $editingClass = null;
+
+    // Sorting
+    #[Url(as: 'orden')]
+    public $sortField = 'fecha_inicio_clase';
+    #[Url(as: 'dir')]
+    public $sortDir = 'desc';
+
+    // Filters (Keep Date & Search)
+    public $search = '';
+    public $dateFilter = '';
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatingDateFilter()
+    {
+        $this->resetPage();
+    }
+
+    public function sortBy($field)
+    {
+        if ($this->sortField === $field) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDir = 'asc'; // Default asc for text, maybe desc for dates? Let's stick to asc default toggle
+        }
+        $this->resetPage();
+    }
 
     // Form fields
     public $id_tipo_clase = '';
@@ -14,7 +49,7 @@ new class extends Component {
     public $inicio = '';
     public $fin = '';
     public $cupo = 20;
-    public $estado = 'programada';
+    public $estado = 'publicada';
 
     public function createClass()
     {
@@ -86,8 +121,20 @@ new class extends Component {
 
     public function with(): array
     {
+        // Whitelist sort fields
+        $allowed = ['titulo_clase', 'fecha_inicio_clase', 'cupo_maximo_clase', 'estado_clase'];
+        $sort = in_array($this->sortField, $allowed) ? $this->sortField : 'fecha_inicio_clase';
+
         return [
-            'clases' => ClaseGimnasio::with('tipoClase')->orderBy('fecha_inicio_clase', 'desc')->get(),
+            'clases' => ClaseGimnasio::with('tipoClase')
+                ->where(function ($q) {
+                    $q->where('titulo_clase', 'like', '%' . $this->search . '%')->orWhere('instructor_clase', 'like', '%' . $this->search . '%');
+                })
+                ->when($this->dateFilter, function ($q) {
+                    $q->whereDate('fecha_inicio_clase', $this->dateFilter);
+                })
+                ->orderBy($sort, $this->sortDir)
+                ->paginate(10),
             'tipos' => TipoClase::all(),
         ];
     }
@@ -97,28 +144,73 @@ new class extends Component {
 <div class="grid2">
     <!-- Lista de Clases -->
     <div class="panel">
-        <div class="panel-h">
-            <strong>Gestión de Clases</strong>
-            <button class="mini-btn primary" wire:click="createClass()">+ Nueva Clase</button>
+        <div class="panel-h"
+            style="display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <strong>Gestión de Clases</strong>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-grow: 1; justify-content: flex-end; align-items: center;">
+                <!-- Filtros (Solo Fecha y Búsqueda) -->
+                <input type="date"
+                    style="width: 130px; height: 32px; font-size: 12px; padding: 0 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--cream-4); color: var(--cream);"
+                    wire:model.live="dateFilter">
+
+                <input type="text" placeholder="Buscar clase..."
+                    style="width: 150px; height: 32px; font-size: 12px; padding: 0 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--cream-4); color: var(--cream);"
+                    wire:model.live="search">
+
+                <button class="mini-btn primary" wire:click="createClass()" style="height: 32px; padding: 0 15px;">+
+                    Nueva</button>
+            </div>
         </div>
         <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
-                        <th>Clase / Instructor</th>
-                        <th>Horario</th>
-                        <th>Cupo</th>
-                        <th>Estado</th>
+                        <th wire:click="sortBy('titulo_clase')" style="cursor:pointer; user-select:none;">
+                            Clase / Instructor
+                            @if ($sortField === 'titulo_clase')
+                                <span style="color:var(--cream);">{{ $sortDir === 'asc' ? '↑' : '↓' }}</span>
+                            @else
+                                <span style="color:rgba(255,255,255,0.2);">⇅</span>
+                            @endif
+                        </th>
+                        <th wire:click="sortBy('fecha_inicio_clase')" style="cursor:pointer; user-select:none;">
+                            Horario
+                            @if ($sortField === 'fecha_inicio_clase')
+                                <span style="color:var(--cream);">{{ $sortDir === 'asc' ? '↑' : '↓' }}</span>
+                            @else
+                                <span style="color:rgba(255,255,255,0.2);">⇅</span>
+                            @endif
+                        </th>
+                        <th wire:click="sortBy('cupo_maximo_clase')" style="cursor:pointer; user-select:none;">
+                            Cupo
+                            @if ($sortField === 'cupo_maximo_clase')
+                                <span style="color:var(--cream);">{{ $sortDir === 'asc' ? '↑' : '↓' }}</span>
+                            @else
+                                <span style="color:rgba(255,255,255,0.2);">⇅</span>
+                            @endif
+                        </th>
+                        <th wire:click="sortBy('estado_clase')" style="cursor:pointer; user-select:none;">
+                            Estado
+                            @if ($sortField === 'estado_clase')
+                                <span style="color:var(--cream);">{{ $sortDir === 'asc' ? '↑' : '↓' }}</span>
+                            @else
+                                <span style="color:rgba(255,255,255,0.2);">⇅</span>
+                            @endif
+                        </th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($clases as $clase)
+                    @foreach ($clases as $clase)
                         <tr>
                             <td>
                                 <div style="font-weight:800;color:var(--cream);">{{ $clase->titulo_clase }}</div>
                                 <div class="muted">{{ $clase->instructor_clase }}
-                                    ({{ $clase->tipoClase->nombre_tipo_clase }})</div>
+                                    ({{ $clase->tipoClase->nombre_tipo_clase }})
+                                </div>
                             </td>
                             <td>
                                 <div style="font-size:11px; color:var(--cream);">
@@ -152,7 +244,7 @@ new class extends Component {
     </div>
 
     <!-- Formulario -->
-    @if($editingClass)
+    @if ($editingClass)
         <aside class="panel">
             <div class="panel-h"><strong>{{ $editingClass === 'new' ? 'Nueva Clase' : 'Editar Clase' }}</strong></div>
             <form class="form" wire:submit.prevent="saveClass">
@@ -164,7 +256,7 @@ new class extends Component {
                     <label>Tipo de Clase</label>
                     <select wire:model="id_tipo_clase" required>
                         <option value="">Seleccionar tipo</option>
-                        @foreach($tipos as $tipo)
+                        @foreach ($tipos as $tipo)
                             <option value="{{ $tipo->id_tipo_clase }}">{{ $tipo->nombre_tipo_clase }}</option>
                         @endforeach
                     </select>
@@ -199,7 +291,8 @@ new class extends Component {
                 </div>
                 <div class="divider"></div>
                 <div class="row" style="margin-top:10px;">
-                    <button type="button" class="mini-btn primary" wire:click="$set('editingClass', null)">Cancelar</button>
+                    <button type="button" class="mini-btn primary"
+                        wire:click="$set('editingClass', null)">Cancelar</button>
                     <button type="submit" class="cta" style="height:40px;justify-content:center;">Guardar</button>
                 </div>
             </form>

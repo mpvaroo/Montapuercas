@@ -4,9 +4,16 @@ use Livewire\Component;
 use App\Models\User;
 use App\Models\Rol;
 use Livewire\WithPagination;
+use Livewire\Attributes\Url;
 
 new class extends Component {
     use WithPagination;
+
+    // Sorting
+    #[Url(as: 'orden')]
+    public $sortField = 'nombre_mostrado_usuario';
+    #[Url(as: 'dir')]
+    public $sortDir = 'asc';
 
     public $search = '';
     public $editingUser = null;
@@ -22,6 +29,22 @@ new class extends Component {
         $this->search = $search;
     }
 
+    public function sortBy($field)
+    {
+        if ($this->sortField === $field) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
     public function createUser()
     {
         $this->resetForm();
@@ -34,11 +57,6 @@ new class extends Component {
         $this->correo = '';
         $this->id_rol = '';
         $this->estado = 'activo';
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
     }
 
     public function editUser($id)
@@ -86,12 +104,16 @@ new class extends Component {
 
     public function with(): array
     {
+        // Whitelist sort fields
+        $allowed = ['nombre_mostrado_usuario', 'correo_usuario', 'estado_usuario'];
+        $sort = in_array($this->sortField, $allowed) ? $this->sortField : 'nombre_mostrado_usuario';
+
         return [
             'users' => User::with('roles')
                 ->where(function ($query) {
-                    $query->where('nombre_mostrado_usuario', 'like', '%' . $this->search . '%')
-                        ->orWhere('correo_usuario', 'like', '%' . $this->search . '%');
+                    $query->where('nombre_mostrado_usuario', 'like', '%' . $this->search . '%')->orWhere('correo_usuario', 'like', '%' . $this->search . '%');
                 })
+                ->orderBy($sort, $this->sortDir)
                 ->paginate(10),
             'allRoles' => Rol::all(),
         ];
@@ -109,9 +131,10 @@ new class extends Component {
                 <div class="pill">{{ \App\Models\User::where('estado_usuario', 'activo')->count() }} activos</div>
             </div>
 
-            <div style="display: flex; gap: 10px; flex-grow: 1; justify-content: flex-end;">
-                <input type="text" class="search" placeholder="Buscar..."
-                    style="width: 200px; height: 32px; font-size: 13px; padding: 0 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--cream-4); color: var(--cream);"
+            <div style="display: flex; gap: 10px; flex-grow: 1; justify-content: flex-end; align-items: center;">
+                <!-- Filtros (Solo Búsqueda, el resto es visual por columnas) -->
+                <input type="text" class="search" placeholder="Buscar usuario..."
+                    style="width: 200px; height: 32px; font-size: 12px; padding: 0 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--cream-4); color: var(--cream);"
                     wire:model.live="search">
 
                 <button class="mini-btn primary" wire:click="createUser" style="height: 32px; padding: 0 15px;">
@@ -123,17 +146,33 @@ new class extends Component {
             <table>
                 <thead>
                     <tr>
-                        <th>Usuario</th>
+                        <th wire:click="sortBy('nombre_mostrado_usuario')" style="cursor:pointer; user-select:none;">
+                            Usuario
+                            @if ($sortField === 'nombre_mostrado_usuario')
+                                <span style="color:var(--cream);">{{ $sortDir === 'asc' ? '↑' : '↓' }}</span>
+                            @else
+                                <span style="color:rgba(255,255,255,0.2);">⇅</span>
+                            @endif
+                        </th>
                         <th>Rol</th>
-                        <th>Estado</th>
+                        <!-- Rol es N:M difícil de ordenar sin join complejo, lo dejo estático por ahora -->
+                        <th wire:click="sortBy('estado_usuario')" style="cursor:pointer; user-select:none;">
+                            Estado
+                            @if ($sortField === 'estado_usuario')
+                                <span style="color:var(--cream);">{{ $sortDir === 'asc' ? '↑' : '↓' }}</span>
+                            @else
+                                <span style="color:rgba(255,255,255,0.2);">⇅</span>
+                            @endif
+                        </th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($users as $user)
+                    @foreach ($users as $user)
                         <tr>
                             <td>
-                                <div style="font-weight:800;color:var(--cream);">{{ $user->nombre_mostrado_usuario }}</div>
+                                <div style="font-weight:800;color:var(--cream);">{{ $user->nombre_mostrado_usuario }}
+                                </div>
                                 <div class="muted">{{ $user->correo_usuario }}</div>
                             </td>
                             <td>
@@ -164,7 +203,7 @@ new class extends Component {
     </div>
 
     <!-- Formulario/Detalle rápido -->
-    @if($editingUser)
+    @if ($editingUser)
         <aside class="panel">
             <div class="panel-h"><strong>{{ $editingUser === 'new' ? 'Nuevo Usuario' : 'Detalle de Usuario' }}</strong>
             </div>
@@ -182,7 +221,7 @@ new class extends Component {
                         <label>Rol</label>
                         <select wire:model="id_rol">
                             <option value="">Seleccionar rol</option>
-                            @foreach($allRoles as $rol)
+                            @foreach ($allRoles as $rol)
                                 <option value="{{ $rol->id_rol }}">{{ ucfirst($rol->nombre_rol) }}</option>
                             @endforeach
                         </select>
@@ -198,8 +237,10 @@ new class extends Component {
                 </div>
                 <div class="divider"></div>
                 <div class="row" style="margin-top:10px;">
-                    <button type="button" class="mini-btn primary" wire:click="$set('editingUser', null)">Cancelar</button>
-                    <button type="submit" class="cta" style="height:40px;justify-content:center;">Guardar cambios</button>
+                    <button type="button" class="mini-btn primary"
+                        wire:click="$set('editingUser', null)">Cancelar</button>
+                    <button type="submit" class="cta" style="height:40px;justify-content:center;">Guardar
+                        cambios</button>
                 </div>
             </form>
         </aside>
@@ -207,8 +248,8 @@ new class extends Component {
         <div class="panel"
             style="display: flex; align-items: center; justify-content: center; padding: 40px; text-align: center; color: var(--cream-3);">
             <div>
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    style="margin-bottom: 10px; opacity: 0.5;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" style="margin-bottom: 10px; opacity: 0.5;">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>

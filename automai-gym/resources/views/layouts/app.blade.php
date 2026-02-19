@@ -152,6 +152,7 @@
 
         @stack('styles')
     </style>
+    @livewireStyles
 </head>
 
 <body>
@@ -171,6 +172,7 @@
     </main>
 
     @stack('scripts')
+    @livewireScripts
 </body>
 
 </html>

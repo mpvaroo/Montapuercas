@@ -70,7 +70,10 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // 5. Generar Rutinas para Mario con Ejercicios (solo si no tiene)
+        // 5. Datos de progreso para Mario (11 semanas con pérdida de peso)
+        $this->call(RegistrosProgresoSeeder::class);
+
+        // 6. Generar Rutinas para Mario con Ejercicios (solo si no tiene)
         if ($mario->rutinas()->count() == 0) {
             $ejercicios = Ejercicio::all();
             RutinaUsuario::factory(2)->create([

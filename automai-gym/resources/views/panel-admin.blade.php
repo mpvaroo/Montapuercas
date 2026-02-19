@@ -10,13 +10,7 @@
                 <p>Control total, visión estratégica.</p>
             </div>
             <div class="top-actions">
-                <button class="icon-btn" aria-label="Notificaciones">
-                    <svg viewBox="0 0 24 24">
-                        <path
-                            d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4a1.5 1.5 0 0 0-3 0v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
-                    </svg>
-                    <span class="notif-dot"></span>
-                </button>
+                <!-- Notification Bell Removed -->
                 <div class="user-pill">
                     <div class="mini-avatar"><img src="{{ Auth::user()->avatar_url }}" alt=""></div>
                     Admin: {{ Auth::user()->nombre_mostrado_usuario }}
@@ -131,7 +125,7 @@
         .surface {
             border-radius: 18px;
             border: 1px solid rgba(239, 231, 214, .1);
-            background: rgba(0, 0, 0, .1);
+            background: rgba(0, 0, 0, .95);
             overflow: hidden;
         }
 
@@ -187,18 +181,29 @@
         }
 
         .cta {
-            height: 36px;
-            padding: 0 18px;
-            border-radius: 999px;
+            height: 40px;
+            padding: 0 24px;
+            border-radius: 10px;
             background: var(--greenBtn1);
-            color: #fff;
-            font-size: 11px;
-            font-weight: 800;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
             border: none;
-            display: flex;
+            display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .cta:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
         }
 
         .cta svg {
@@ -220,7 +225,7 @@
         .panel {
             border-radius: 14px;
             border: 1px solid rgba(239, 231, 214, .1);
-            background: rgba(0, 0, 0, .15);
+            background: rgba(0, 0, 0, .95);
             overflow: hidden;
         }
 
@@ -256,7 +261,7 @@
             text-align: left;
             font-size: 9px;
             text-transform: uppercase;
-            color: var(--cream-3);
+            color: var(--cream-2);
             border-bottom: 1px solid rgba(239, 231, 214, .1);
         }
 
@@ -264,6 +269,7 @@
             padding: 12px 15px;
             vertical-align: middle;
             border-bottom: 1px solid rgba(239, 231, 214, .05);
+            color: var(--cream-2);
         }
 
         .state {
@@ -296,20 +302,44 @@
             gap: 8px;
         }
 
+        .row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
         .mini-btn {
-            height: 28px;
-            padding: 0 12px;
-            border-radius: 999px;
-            border: 1px solid rgba(239, 231, 214, .15);
-            background: transparent;
+            height: 32px;
+            padding: 0 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(239, 231, 214, .2);
+            background: rgba(255, 255, 255, 0.03);
             color: var(--cream-2);
-            font-size: 10px;
-            font-weight: 800;
+            font-size: 11px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .mini-btn:hover {
+            background: rgba(239, 231, 214, .1);
+            border-color: var(--cream);
+            color: var(--cream);
+            transform: translateY(-1px);
         }
 
         .mini-btn.primary {
-            background: rgba(239, 231, 214, .05);
+            background: rgba(239, 231, 214, .08);
+            border-color: rgba(239, 231, 214, .25);
+        }
+
+        .mini-btn.primary:hover {
+            background: rgba(239, 231, 214, .15);
+            border-color: var(--cream);
         }
 
         .form {
@@ -360,6 +390,18 @@
             background: rgba(248, 113, 113, .1);
             color: #f87171;
             border: 1px solid rgba(248, 113, 113, .2);
+        }
+
+        /* FIX SELECT OPTIONS dark background */
+        select,
+        option {
+            background-color: #000 !important;
+            color: var(--cream);
+        }
+
+        select:focus,
+        option:hover {
+            background-color: #222 !important;
         }
     </style>
 @endpush

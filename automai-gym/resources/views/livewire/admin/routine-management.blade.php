@@ -4,8 +4,38 @@ use Livewire\Component;
 use App\Models\RutinaUsuario;
 use App\Models\Ejercicio;
 
+use Livewire\WithPagination;
+use Livewire\Attributes\Url;
+
 new class extends Component {
+    use WithPagination;
+
     public $editingRoutine = null;
+
+    // Sorting
+    #[Url(as: 'orden')]
+    public $sortField = 'nombre_rutina_usuario';
+    #[Url(as: 'dir')]
+    public $sortDir = 'asc';
+
+    // Filters
+    public $routineSearch = '';
+
+    public function updatingRoutineSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function sortBy($field)
+    {
+        if ($this->sortField === $field) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
 
     // Form fields
     public $nombre = '';
@@ -15,7 +45,7 @@ new class extends Component {
     public $instrucciones = '';
     public $selectedExercises = []; // IDs of selected exercises
 
-    // Filters
+    // Filters (for form exercises)
     public $exerciseSearch = '';
     public $muscleGroup = '';
 
@@ -96,8 +126,16 @@ new class extends Component {
 
     public function with(): array
     {
+        // Whitelist sort fields
+        $allowed = ['nombre_rutina_usuario', 'dia_semana', 'duracion_estimada_minutos'];
+        $sort = in_array($this->sortField, $allowed) ? $this->sortField : 'nombre_rutina_usuario';
+
         return [
-            'rutinas' => RutinaUsuario::where('origen_rutina', 'plantilla')->where('id_usuario', Auth::id())->get(),
+            'rutinas' => RutinaUsuario::where('origen_rutina', 'plantilla')
+                ->where('id_usuario', Auth::id())
+                ->where('nombre_rutina_usuario', 'like', '%' . $this->routineSearch . '%')
+                ->orderBy($sort, $this->sortDir)
+                ->paginate(10),
             'availableExercises' => Ejercicio::where('nombre_ejercicio', 'like', '%' . $this->exerciseSearch . '%')
                 ->when($this->muscleGroup, function ($q) {
                     return $q->where('grupo_muscular_principal', $this->muscleGroup);
@@ -113,17 +151,51 @@ new class extends Component {
 <div class="grid2">
     <!-- Lista de Rutinas -->
     <div class="panel">
-        <div class="panel-h" style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
-            <strong>Mis Rutinas y Plantillas</strong>
-            <button class="mini-btn primary" wire:click="createRoutine()">+ Nueva Rutina</button>
+        <div class="panel-h"
+            style="display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <strong>Mis Rutinas y Plantillas</strong>
+            </div>
+
+            <div
+                style="display: flex; gap: 10px; flex-grow: 1; justify-content: flex-end; align-items: center; flex-wrap: wrap;">
+                <!-- Filtros (Solo Búsqueda) -->
+                <input type="text" placeholder="Buscar rutina..."
+                    style="width: 140px; height: 32px; font-size: 12px; padding: 0 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--cream-4); color: var(--cream);"
+                    wire:model.live="routineSearch">
+
+                <button class="mini-btn primary" wire:click="createRoutine()" style="height: 32px; padding: 0 15px;">+
+                    Nueva</button>
+            </div>
         </div>
         <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
-                        <th>Nombre / Objetivo</th>
-                        <th>Día / Nivel</th>
-                        <th>Duración</th>
+                        <th wire:click="sortBy('nombre_rutina_usuario')" style="cursor:pointer; user-select:none;">
+                            Nombre / Objetivo
+                            @if ($sortField === 'nombre_rutina_usuario')
+                                <span style="color:var(--cream);">{{ $sortDir === 'asc' ? '↑' : '↓' }}</span>
+                            @else
+                                <span style="color:rgba(255,255,255,0.2);">⇅</span>
+                            @endif
+                        </th>
+                        <th wire:click="sortBy('dia_semana')" style="cursor:pointer; user-select:none;">
+                            Día / Nivel
+                            @if ($sortField === 'dia_semana')
+                                <span style="color:var(--cream);">{{ $sortDir === 'asc' ? '↑' : '↓' }}</span>
+                            @else
+                                <span style="color:rgba(255,255,255,0.2);">⇅</span>
+                            @endif
+                        </th>
+                        <th wire:click="sortBy('duracion_estimada_minutos')" style="cursor:pointer; user-select:none;">
+                            Duración
+                            @if ($sortField === 'duracion_estimada_minutos')
+                                <span style="color:var(--cream);">{{ $sortDir === 'asc' ? '↑' : '↓' }}</span>
+                            @else
+                                <span style="color:rgba(255,255,255,0.2);">⇅</span>
+                            @endif
+                        </th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -137,7 +209,8 @@ new class extends Component {
                                     {{ ucfirst($rutina->objetivo_rutina_usuario) }}</div>
                             </td>
                             <td>
-                                <div style="font-weight:800;color:var(--cream);font-size:11px;text-transform:uppercase;">
+                                <div
+                                    style="font-weight:800;color:var(--cream);font-size:11px;text-transform:uppercase;">
                                     {{ $rutina->dia_semana ?? 'Sin asignar' }}</div>
                                 <span class="pill">{{ $rutina->nivel_rutina_usuario }}</span>
                             </td>
