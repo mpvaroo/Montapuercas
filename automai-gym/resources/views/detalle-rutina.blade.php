@@ -56,8 +56,8 @@
 
                 <div class="btn-row">
                     <button class="btn">Empezar ahora</button>
-                    <button class="btn-ghost">Editar rutina</button>
-                    <button class="btn-ghost" onclick="toggleModal()">Añadir ejercicio</button>
+                    <button class="btn-ghost" onclick="toggleModal('modalEdit')">Editar rutina</button>
+                    <button class="btn-ghost" onclick="toggleModal('modalAdd')">Añadir ejercicio</button>
                 </div>
             </section>
 
@@ -95,8 +95,9 @@
                             </div>
                         </div>
                         <div class="item-actions">
-                            <button class="mini green">Ver técnica</button>
-                            <button class="mini">Historial</button>
+                            <button class="mini"
+                                onclick="editExerciseBlock({{ json_encode($ejercicio->pivot) }}, '{{ $ejercicio->nombre_ejercicio }}', {{ $ejercicio->id_ejercicio }})">Editar
+                                bloque</button>
                         </div>
                     </article>
                 @empty
@@ -139,37 +140,165 @@
         </aside>
     </div>
 
-    <!-- Modal para añadir ejercicios (portado del original) -->
+    <!-- Modal para editar rutina -->
+    <div class="modal-backdrop" id="modalEdit">
+        <div class="modal">
+            <div class="modal-head">
+                <h3>Editar datos de la rutina</h3>
+                <button class="close" onclick="toggleModal('modalEdit')">✕</button>
+            </div>
+            <form action="{{ route('rutina.update', $routine->id_rutina_usuario) }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="field">
+                        <span class="label">Nombre de la rutina</span>
+                        <input class="input" type="text" name="nombre_rutina_usuario"
+                            value="{{ $routine->nombre_rutina_usuario }}" required>
+                    </div>
+                    <div class="grid2">
+                        <div class="field">
+                            <span class="label">Objetivo</span>
+                            <input class="input" type="text" name="objetivo_rutina_usuario"
+                                value="{{ $routine->objetivo_rutina_usuario }}">
+                        </div>
+                        <div class="field">
+                            <span class="label">Nivel</span>
+                            <select class="input" name="nivel_rutina_usuario">
+                                <option value="principiante"
+                                    {{ $routine->nivel_rutina_usuario == 'principiante' ? 'selected' : '' }}>Principiante
+                                </option>
+                                <option value="intermedio"
+                                    {{ $routine->nivel_rutina_usuario == 'intermedio' ? 'selected' : '' }}>Intermedio
+                                </option>
+                                <option value="avanzado"
+                                    {{ $routine->nivel_rutina_usuario == 'avanzado' ? 'selected' : '' }}>Avanzado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid2">
+                        <div class="field">
+                            <span class="label">Duración (min)</span>
+                            <input class="input" type="number" name="duracion_estimada_minutos"
+                                value="{{ $routine->duracion_estimada_minutos }}">
+                        </div>
+                        <div class="field">
+                            <span class="label">Día programado</span>
+                            <select class="input" name="dia_semana">
+                                <option value="">Libre</option>
+                                @foreach (['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo', 'descanso'] as $day)
+                                    <option value="{{ $day }}"
+                                        {{ $routine->dia_semana == $day ? 'selected' : '' }}>{{ ucfirst($day) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <span class="label">Instrucciones</span>
+                        <textarea class="input" name="instrucciones_rutina" style="height:80px;">{{ $routine->instrucciones_rutina }}</textarea>
+                    </div>
+                </div>
+                <div class="modal-foot">
+                    <button type="button" class="btn-wide" onclick="toggleModal('modalEdit')">Cancelar</button>
+                    <button type="submit" class="btn-wide primary">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para añadir ejercicios -->
     <div class="modal-backdrop" id="modalAdd">
         <div class="modal">
             <div class="modal-head">
                 <h3>Añadir bloque a la rutina</h3>
-                <button class="close" onclick="toggleModal()">✕</button>
+                <button class="close" onclick="toggleModal('modalAdd')">✕</button>
             </div>
-            <div class="modal-body">
-                <div class="field">
-                    <span class="label">Buscar ejercicio</span>
-                    <input class="input" type="text" placeholder="Ej: Facepull, Curl Martillo...">
-                </div>
-                <div class="grid2">
+            <form action="{{ route('rutina.add_exercise', $routine->id_rutina_usuario) }}" method="POST">
+                @csrf
+                <div class="modal-body">
                     <div class="field">
-                        <span class="label">Series</span>
-                        <input class="input" type="number" value="3">
+                        <span class="label">Buscar ejercicio</span>
+                        <select class="input" name="id_ejercicio" required>
+                            <option value="">Selecciona un ejercicio...</option>
+                            @foreach ($allExercises as $ex)
+                                <option value="{{ $ex->id_ejercicio }}">{{ $ex->nombre_ejercicio }}
+                                    ({{ $ex->grupo_muscular_principal }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="grid2">
+                        <div class="field">
+                            <span class="label">Series</span>
+                            <input class="input" type="number" name="series" value="3">
+                        </div>
+                        <div class="field">
+                            <span class="label">Repeticiones</span>
+                            <input class="input" type="text" name="reps" placeholder="Ej: 10-12">
+                        </div>
+                    </div>
+                    <div class="grid2">
+                        <div class="field">
+                            <span class="label">Carga (kg)</span>
+                            <input class="input" type="number" name="peso" step="0.5" placeholder="0">
+                        </div>
+                        <div class="field">
+                            <span class="label">Descanso (s)</span>
+                            <input class="input" type="number" name="descanso" value="60">
+                        </div>
                     </div>
                     <div class="field">
-                        <span class="label">Repeticiones</span>
-                        <input class="input" type="text" value="10-12">
+                        <span class="label">Notas técnicas</span>
+                        <textarea class="input" name="notas" style="height:80px;" placeholder="Ej: Pausa arriba..."></textarea>
                     </div>
                 </div>
-                <div class="field">
-                    <span class="label">Notas técnicas</span>
-                    <textarea class="input" style="height:80px;" placeholder="Ej: Pausa arriba, codos pegados..."></textarea>
+                <div class="modal-foot">
+                    <button type="button" class="btn-wide" onclick="toggleModal('modalAdd')">Cancelar</button>
+                    <button type="submit" class="btn-wide primary">Confirmar bloque</button>
                 </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para editar ejercicio individual -->
+    <div class="modal-backdrop" id="modalEditEx">
+        <div class="modal">
+            <div class="modal-head">
+                <h3 id="exEditTitle">Editar bloque</h3>
+                <button class="close" onclick="toggleModal('modalEditEx')">✕</button>
             </div>
-            <div class="modal-foot">
-                <button class="btn-wide" onclick="toggleModal()">Cancelar</button>
-                <button class="btn-wide primary" onclick="toggleModal()">Confirmar bloque</button>
-            </div>
+            <form id="formEditEx" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="grid2">
+                        <div class="field">
+                            <span class="label">Series</span>
+                            <input class="input" type="number" name="series" id="editExSeries">
+                        </div>
+                        <div class="field">
+                            <span class="label">Repeticiones</span>
+                            <input class="input" type="text" name="reps" id="editExReps">
+                        </div>
+                    </div>
+                    <div class="grid2">
+                        <div class="field">
+                            <span class="label">Carga (kg)</span>
+                            <input class="input" type="number" name="peso" step="0.5" id="editExPeso">
+                        </div>
+                        <div class="field">
+                            <span class="label">Descanso (s)</span>
+                            <input class="input" type="number" name="descanso" id="editExDescanso">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <span class="label">Notas técnicas</span>
+                        <textarea class="input" name="notas" id="editExNotas" style="height:80px;"></textarea>
+                    </div>
+                </div>
+                <div class="modal-foot">
+                    <button type="button" class="btn-wide" onclick="toggleModal('modalEditEx')">Cancelar</button>
+                    <button type="submit" class="btn-wide primary">Guardar cambios</button>
+                </div>
+            </form>
         </div>
     </div>
 @endsection
@@ -232,6 +361,7 @@
             color: rgba(239, 231, 214, .70);
             font-size: 11px;
             text-transform: uppercase;
+            width: fit-content;
         }
 
         .panel {
@@ -272,11 +402,14 @@
         }
 
         .tag {
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 999px;
             font-size: 11px;
             text-transform: uppercase;
             border: 1px solid rgba(239, 231, 214, .12);
+            width: fit-content;
+            display: inline-flex;
+            align-items: center;
         }
 
         .tag.green {
@@ -470,28 +603,31 @@
         .modal-backdrop {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, .6);
+            background: rgba(0, 0, 0, .4);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 100;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(14px);
+            padding: 20px;
         }
 
         .modal {
-            width: min(600px, 90%);
-            border-radius: var(--r);
-            background: #0a0a0a;
+            width: min(500px, 100%);
+            border-radius: 24px;
+            background: rgba(15, 15, 15, .85);
             border: 1px solid rgba(239, 231, 214, .15);
-            padding: 25px;
+            padding: 30px;
             box-shadow: 0 40px 100px rgba(0, 0, 0, .8);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal-head {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .modal-head h3 {
@@ -505,46 +641,87 @@
             background: transparent;
             border: none;
             color: var(--cream-3);
-            font-size: 20px;
+            font-size: 22px;
             cursor: pointer;
+            padding: 5px;
+            line-height: 1;
         }
 
-        .field {
+        .modal-body {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 5px;
+        }
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .field .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: rgba(239, 231, 214, .5);
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
         }
 
         .input {
-            height: 44px;
+            width: 100%;
+            height: 46px;
             border-radius: 12px;
-            background: rgba(255, 255, 255, .05);
+            background: rgba(255, 255, 255, .03);
             border: 1px solid rgba(239, 231, 214, .1);
             color: #fff;
-            padding: 0 12px;
+            padding: 0 14px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: rgba(239, 231, 214, .3);
+            background: rgba(255, 255, 255, .05);
+        }
+
+        select.input option {
+            background: #111;
+            color: #fff;
         }
 
         .modal-foot {
             display: flex;
             gap: 12px;
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
         .btn-wide {
             flex: 1;
-            height: 44px;
+            height: 46px;
             border-radius: 999px;
             border: 1px solid rgba(239, 231, 214, .12);
             background: transparent;
             color: var(--cream);
             font-weight: 800;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-wide:hover {
+            background: rgba(255, 255, 255, .05);
         }
 
         .btn-wide.primary {
             background: var(--greenBtn1);
             color: #fff;
             border: none;
+        }
+
+        .btn-wide.primary:hover {
+            filter: brightness(1.1);
         }
 
         @media (max-width: 1100px) {
@@ -561,9 +738,30 @@
 
 @push('scripts')
     <script>
-        function toggleModal() {
-            const m = document.getElementById('modalAdd');
+        function toggleModal(id) {
+            const m = document.getElementById(id);
+            if (!m) return;
             m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-backdrop')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        function editExerciseBlock(pivot, name, exId) {
+            document.getElementById('exEditTitle').innerText = 'Editar: ' + name;
+            document.getElementById('editExSeries').value = pivot.series_objetivo;
+            document.getElementById('editExReps').value = pivot.repeticiones_objetivo;
+            document.getElementById('editExPeso').value = pivot.peso_objetivo_kg;
+            document.getElementById('editExDescanso').value = pivot.descanso_segundos;
+            document.getElementById('editExNotas').value = pivot.notas_ejercicio;
+
+            const form = document.getElementById('formEditEx');
+            form.action = `/detalle-rutina/{{ $routine->id_rutina_usuario }}/exercise/${exId}/update`;
+
+            toggleModal('modalEditEx');
         }
     </script>
 @endpush

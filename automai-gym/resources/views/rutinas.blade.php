@@ -6,12 +6,16 @@
     <style>
         /* LAYOUT CRÍTICO RUTINAS */
         div.main {
-            display: block !important;
+            display: grid !important;
+            grid-template-columns: 1fr 380px;
+            gap: 24px;
             width: 100% !important;
         }
 
-        div.content {
-            min-width: 0 !important;
+        @media (max-width: 1200px) {
+            div.main {
+                grid-template-columns: 1fr !important;
+            }
         }
     </style>
     <div class="main">
@@ -21,56 +25,7 @@
                 <p>Tus entrenamientos personalizados.</p>
             </header>
 
-            <!-- Action Bar -->
-            <div class="actions">
-                <a href="#" class="btn-action btn-primary">
-                    <span>+</span> Crear Nueva Rutina
-                </a>
-                <a href="#" class="btn-action btn-secondary">
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z" />
-                    </svg>
-                    Calendario de Entrenamientos
-                </a>
-            </div>
-
-            <!-- Routine Cards Grid -->
-            <div class="routines-grid">
-                @forelse($routines as $index => $rutina)
-                    <div
-                        class="routine-card {{ $index % 3 == 0 ? 'focus-top' : ($index % 3 == 2 ? 'full-width focus-low' : '') }}">
-                        <img class="routine-img" src="{{ asset('img/rutina-' . (($index % 3) + 1) . '.png') }}"
-                            alt="{{ $rutina->nombre_rutina_usuario }}">
-                        <div class="routine-frame"></div>
-                        <div class="routine-overlay">
-                            <div style="{{ $index % 3 == 2 ? 'max-width: 520px;' : '' }}">
-                                <h3>{{ $rutina->nombre_rutina_usuario }}</h3>
-                                <div class="routine-details">
-                                    <div class="detail"><span class="check-ico">✓</span>
-                                        {{ $rutina->dia_semana ? ucfirst($rutina->dia_semana) : 'Libre' }}</div>
-                                    <div class="detail"><span class="check-ico">✓</span> Duración:
-                                        {{ $rutina->duracion_estimada_minutos }} min</div>
-                                    <div class="detail"><span class="check-ico">✓</span> Nivel:
-                                        {{ ucfirst($rutina->nivel_rutina_usuario) }}</div>
-                                </div>
-                                <div class="card-actions"
-                                    style="{{ $index % 3 == 2 ? 'grid-template-columns: 140px 140px; justify-content: start;' : '' }}">
-                                    <a href="{{ route('detalle-rutina', $rutina->id_rutina_usuario) }}" class="btn-card"
-                                        style="text-decoration:none; display:flex; align-items:center; justify-content:center;">Ver
-                                        Rutina</a>
-                                    <button class="btn-card highlight">Iniciar Rutina</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @empty
-                    <div
-                        style="grid-column: 1 / -1; text-align: center; color: var(--cream); padding: 40px; background: rgba(0,0,0,0.2); border-radius: 12px;">
-                        <p>No tienes rutinas activas. ¡Crea una nueva o pide ayuda a tu IA Coach!</p>
-                    </div>
-                @endforelse
-            </div>
+            @livewire('user.routine-management')
         </div>
 
     </div>
@@ -79,8 +34,8 @@
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-                                  PAGE SPECIFIC
-                                -------------------------------------------------------------------------- */
+                                                                  PAGE SPECIFIC
+                                                                -------------------------------------------------------------------------- */
         .main {
             display: grid;
             grid-template-columns: 1fr 380px;
@@ -160,8 +115,8 @@
         }
 
         /* --------------------------------------------------------------------------
-                                  ROUTINES GRID
-                                -------------------------------------------------------------------------- */
+                                                                  ROUTINES GRID
+                                                                -------------------------------------------------------------------------- */
         .routines-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -417,6 +372,124 @@
                 grid-template-columns: 1fr;
                 max-width: 100%;
             }
+        }
+
+        /* Modal Styles */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            backdrop-filter: blur(14px);
+            padding: 20px;
+        }
+
+        .modal {
+            width: min(550px, 100%);
+            border-radius: 24px;
+            background: rgba(15, 15, 15, .95);
+            border: 1px solid rgba(239, 231, 214, .2);
+            padding: 30px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, .8);
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            z-index: 100000;
+        }
+
+        .modal-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-head h3 {
+            font-family: var(--serif);
+            font-size: 22px;
+            color: var(--cream);
+            margin: 0;
+        }
+
+        .close {
+            background: transparent;
+            border: none;
+            color: var(--cream-3);
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .field .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: rgba(239, 231, 214, .5);
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .input-modal {
+            width: 100%;
+            height: 46px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(239, 231, 214, .1);
+            color: #fff;
+            padding: 0 14px;
+            font-family: inherit;
+        }
+
+        .grid-modal {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .exercise-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, .2);
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(239, 231, 214, .05);
+        }
+
+        .ex-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        .modal-foot {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn-wide {
+            flex: 1;
+            height: 46px;
+            border-radius: 999px;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: transparent;
+            color: var(--cream);
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .btn-wide.primary {
+            background: var(--greenBtn1);
+            color: #fff;
+            border: none;
         }
     </style>
 @endpush

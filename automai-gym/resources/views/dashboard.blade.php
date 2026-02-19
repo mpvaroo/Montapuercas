@@ -128,8 +128,8 @@
                         <div class="cal-days" id="calDays"></div>
 
                         <div class="cal-hint">
-                            <span class="dot-mini" aria-hidden="true"></span>
-                            Días con clases / reservas
+                            <span class="dot-mini green" aria-hidden="true"></span> Clases
+                            <span class="dot-mini gold" style="margin-left:8px;" aria-hidden="true"></span> Rutinas
                         </div>
                     </div>
 
@@ -189,8 +189,8 @@
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-                                                  MAIN     DASHBOARD STYLES
-                                                  ----  ---------------------------------------------------------------------- */
+                                                      MAIN     DASHBOARD STYLES
+                                                      ----  ---------------------------------------------------------------------- */
         .main {
             display: flex;
             flex-direction: row;
@@ -373,8 +373,8 @@
         }
 
         /* --------------------------------------------------------------------------
-                                                      CALENDARIO INTERACTIVO
-                                                ----    ---------------------------------------------------------------------- */
+                                                          CALENDARIO INTERACTIVO
+                                                    ----    ---------------------------------------------------------------------- */
         .calendar {
             margin-top: 14px;
             border-radius: var(--r);
@@ -539,6 +539,15 @@
             box-shadow: 0 0 0 3px rgba(22, 250, 22, .06);
         }
 
+        .day.has-rutina::after {
+            background: rgba(190, 145, 85, .75);
+            box-shadow: 0 0 0 3px rgba(190, 145, 85, .12);
+        }
+
+        .day.has-both::after {
+            background: linear-gradient(135deg, rgba(22, 250, 22, .5) 50%, rgba(190, 145, 85, .75) 50%);
+        }
+
         .cal-hint {
             margin-top: 12px;
             display: flex;
@@ -555,6 +564,17 @@
             background: rgba(22, 250, 22, .34);
             border: 1px solid rgba(239, 231, 214, .14);
             box-shadow: 0 0 0 4px rgba(22, 250, 22, .06);
+            display: inline-block;
+        }
+
+        .dot-mini.gold {
+            background: rgba(190, 145, 85, .80);
+            box-shadow: 0 0 0 4px rgba(190, 145, 85, .10);
+            border-color: rgba(190, 145, 85, .20);
+        }
+
+        .dot-mini.green {
+            background: rgba(22, 250, 22, .34);
         }
 
         .cal-right {
@@ -618,6 +638,12 @@
             flex: 0 0 10px;
         }
 
+        .event .badge.gold {
+            background: rgba(190, 145, 85, .75);
+            border-color: rgba(190, 145, 85, .20);
+            box-shadow: 0 0 0 4px rgba(190, 145, 85, .08);
+        }
+
         .event .text {
             min-width: 0;
         }
@@ -640,8 +666,8 @@
         }
 
         /* --------------------------------------------------------------------------
-                                                    IA C  OACH (CARD TIPO CHATGPT)
-                                                    -------------------------------------------------------------------------- */
+                                                        IA C  OACH (CARD TIPO CHATGPT)
+                                                        -------------------------------------------------------------------------- */
         .chat {
             flex: 0 0 380px;
             width: 380px;
@@ -868,6 +894,21 @@
             return Array.isArray(demoEvents[key]) && demoEvents[key].length > 0;
         }
 
+        function hasOnlyRutinas(key) {
+            if (!Array.isArray(demoEvents[key])) return false;
+            return demoEvents[key].every(e => e.type === 'rutina');
+        }
+
+        function hasClases(key) {
+            if (!Array.isArray(demoEvents[key])) return false;
+            return demoEvents[key].some(e => e.type === 'clase');
+        }
+
+        function hasRutinas(key) {
+            if (!Array.isArray(demoEvents[key])) return false;
+            return demoEvents[key].some(e => e.type === 'rutina');
+        }
+
         function render() {
             calDaysEl.innerHTML = "";
             const year = view.getFullYear();
@@ -898,7 +939,11 @@
 
                 cell.textContent = date.getDate();
                 const key = fmtDateKey(date);
-                if (hasAnyEvents(key)) cell.classList.add("has-event");
+                if (hasAnyEvents(key)) {
+                    cell.classList.add("has-event");
+                    if (hasClases(key) && hasRutinas(key)) cell.classList.add("has-both");
+                    else if (hasRutinas(key)) cell.classList.add("has-rutina");
+                }
 
                 const today = new Date();
                 if (sameDay(date, today)) cell.classList.add("today");
@@ -929,21 +974,25 @@
                 empty.innerHTML = `
                   <span class="badge" aria-hidden="true" style="opacity:.35"></span>
                   <div class="text">
-                    <div class="title">Sin clases / reservas</div>
-                    <div class="time">Puedes reservar desde Reservas</div>
+                    <div class="title">Sin clases ni rutinas</div>
+                    <div class="time">Reserva una clase o asigna un día a una rutina</div>
                   </div>`;
                 eventsListEl.appendChild(empty);
                 return;
             }
 
             events.forEach(ev => {
+                const isRutina = ev.type === 'rutina';
+                const badgeClass = isRutina ? 'badge gold' : 'badge';
+                const timeText = isRutina ? 'Entrenamiento Personal' : `${ev.time} · ${ev.place}`;
+                const titleStyle = isRutina ? 'style="color: rgba(190,145,85,.9);"' : '';
                 const item = document.createElement("div");
                 item.className = "event";
                 item.innerHTML = `
-                  <span class="badge" aria-hidden="true"></span>
+                  <span class="${badgeClass}" aria-hidden="true"></span>
                   <div class="text">
-                    <div class="title">${ev.title}</div>
-                    <div class="time">${ev.time} · ${ev.place}</div>
+                    <div class="title" ${titleStyle}>${ev.title}</div>
+                    <div class="time">${timeText}</div>
                   </div>`;
                 eventsListEl.appendChild(item);
             });

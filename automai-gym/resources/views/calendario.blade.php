@@ -8,7 +8,7 @@
             <header class="surface-head">
                 <strong>Mi Calendario</strong>
                 <div class="head-actions">
-                   
+
                     <div class="pill">Vista Mensual</div>
                 </div>
             </header>
@@ -37,7 +37,7 @@
                 <div class="grid">
                     @php
                         $today = \Carbon\Carbon::now();
-                        $isCurrentMonth = ($today->month == $month && $today->year == $year);
+                        $isCurrentMonth = $today->month == $month && $today->year == $year;
                     @endphp
 
                     {{-- Empty days at start --}}
@@ -48,8 +48,8 @@
                     {{-- Days of the month --}}
                     @for ($d = 1; $d <= $daysInMonth; $d++)
                         @php
-                            $hasEvents = isset($reservasPorDia[$d]);
-                            $isToday = ($isCurrentMonth && $today->day == $d);
+                            $hasEvents = isset($eventosPorDia[$d]);
+                            $isToday = $isCurrentMonth && $today->day == $d;
                         @endphp
                         <div class="day {{ $isToday ? 'today' : '' }}" onclick="selectDay({{ $d }})">
                             <div class="num">
@@ -60,11 +60,12 @@
                             </div>
                             <div class="events">
                                 @if ($hasEvents)
-                                    @foreach($reservasPorDia[$d] as $reserva)
+                                    @foreach ($eventosPorDia[$d] as $evento)
                                         <div class="event">
-                                            <i class="tag {{ $reserva->clase->id_clase_gimnasio % 2 == 0 ? 'green' : '' }}"></i>
-                                            <span class="time">{{ $reserva->clase->fecha_inicio_clase->format('H:i') }}</span>
-                                            {{ Str::limit($reserva->clase->titulo_clase, 10) }}
+                                            <i class="tag {{ $evento['tipo'] === 'clase' ? 'green' : 'gold' }}"></i>
+                                            <span
+                                                class="time">{{ $evento['hora'] === 'Todo el día' ? 'Rutina' : $evento['hora'] }}</span>
+                                            {{ Str::limit($evento['titulo'], 10) }}
                                         </div>
                                     @endforeach
                                 @endif
@@ -83,26 +84,35 @@
                 </header>
                 <div class="panel-body">
                     <div id="no-events"
-                        style="{{ ($isCurrentMonth && isset($reservasPorDia[$today->day])) ? 'display:none;' : '' }}">
+                        style="{{ $isCurrentMonth && isset($eventosPorDia[$today->day]) ? 'display:none;' : '' }}">
                         <p style="padding: 20px; color: rgba(239,231,214,.4); font-size: 13px; text-align: center;">
-                            No tienes clases reservadas para este día.
+                            No tienes clases ni rutinas para este día.
                         </p>
                     </div>
 
                     <div id="events-list">
                         @php
-                            $selectedDayReservas = ($isCurrentMonth && isset($reservasPorDia[$today->day])) ? $reservasPorDia[$today->day] : [];
+                            $selectedDayEventos =
+                                $isCurrentMonth && isset($eventosPorDia[$today->day])
+                                    ? $eventosPorDia[$today->day]
+                                    : [];
                         @endphp
-                        @foreach($selectedDayReservas as $reserva)
+                        @foreach ($selectedDayEventos as $evento)
                             <div class="schedule-item" data-day="{{ $today->day }}">
                                 <div class="slot">
                                     <div class="left">
+                                        <i class="tag {{ $evento['tipo'] === 'clase' ? 'green' : 'gold' }}"
+                                            style="flex-shrink:0;"></i>
                                         <div class="info">
-                                            <div class="title">{{ $reserva->clase->titulo_clase }}</div>
-                                            <div class="sub">{{ $reserva->clase->instructor_clase }}</div>
+                                            <div class="title"
+                                                style="{{ $evento['tipo'] === 'rutina' ? 'color: var(--gold);' : '' }}">
+                                                {{ $evento['titulo'] }}
+                                            </div>
+                                            <div class="sub">{{ $evento['sub'] }}</div>
                                         </div>
                                     </div>
-                                    <div class="right">{{ $reserva->clase->fecha_inicio_clase->format('H:i') }}</div>
+                                    <div class="right">
+                                        {{ $evento['hora'] === 'Todo el día' ? 'Rutina' : $evento['hora'] }}</div>
                                 </div>
                             </div>
                         @endforeach
@@ -113,7 +123,7 @@
     </div>
 
     <script>
-        const reservas = @json($reservasPorDia);
+        const eventos = @json($eventosPorDia);
         const monthName = @json(ucfirst($date->translatedFormat('F')));
 
         function selectDay(day) {
@@ -122,20 +132,23 @@
             const noEvents = document.getElementById('no-events');
             list.innerHTML = '';
 
-            if (reservas[day]) {
+            if (eventos[day]) {
                 noEvents.style.display = 'none';
-                reservas[day].forEach(reserva => {
-                    const time = new Date(reserva.clase.fecha_inicio_clase).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+                eventos[day].forEach(evento => {
+                    const titleStyle = evento.tipo === 'rutina' ? 'style="color: var(--gold);"' : '';
+                    const tagClass = evento.tipo === 'clase' ? 'green' : 'gold';
+                    const horaText = evento.hora === 'Todo el día' ? 'Rutina' : evento.hora;
                     list.innerHTML += `
                                 <div class="schedule">
                                     <div class="slot">
                                         <div class="left">
+                                            <i class="tag ${tagClass}" style="flex-shrink:0;"></i>
                                             <div class="info">
-                                                <div class="title">${reserva.clase.titulo_clase}</div>
-                                                <div class="sub">${reserva.clase.instructor_clase}</div>
+                                                <div class="title" ${titleStyle}>${evento.titulo}</div>
+                                                <div class="sub">${evento.sub}</div>
                                             </div>
                                         </div>
-                                        <div class="right">${time}</div>
+                                        <div class="right">${horaText}</div>
                                     </div>
                                 </div>
                             `;
@@ -150,8 +163,8 @@
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-                  CALENDARIO STYLES
-                -------------------------------------------------------------------------- */
+                                  CALENDARIO STYLES
+                                -------------------------------------------------------------------------- */
         .main {
             min-width: 0;
             display: grid;
@@ -298,6 +311,9 @@
             width: 10px;
             height: 10px;
             border-radius: 999px;
+        }
+
+        .tag.gold {
             background: rgba(190, 145, 85, .85);
         }
 
@@ -346,7 +362,7 @@
         .slot .left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .slot .title {

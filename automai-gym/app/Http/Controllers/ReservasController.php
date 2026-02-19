@@ -6,6 +6,7 @@ use App\Models\ClaseGimnasio;
 use App\Models\ReservaClase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
 
 class ReservasController extends Controller
@@ -105,11 +106,64 @@ class ReservasController extends Controller
             })
             ->get();
 
-        // Agrupar por día
-        $reservasPorDia = [];
+        // Rutinas activas del usuario (protegido: si falta la columna dia_semana, no rompemos el calendario)
+        $rutinas = collect();
+        try {
+            if (Schema::hasColumn('rutinas_usuario', 'dia_semana')) {
+                $rutinas = \App\Models\RutinaUsuario::where('id_usuario', $user->id_usuario)
+                    ->whereNotNull('dia_semana')
+                    ->where('rutina_activa', true)
+                    ->get();
+            }
+        } catch (\Exception $e) {
+            // La columna no existe todavía; el calendario seguirá mostrando reservas
+        }
+
+        // Agrupar todo por día
+        $eventosPorDia = [];
+
+        // Añadir Reservas
         foreach ($reservas as $reserva) {
             $dia = $reserva->clase->fecha_inicio_clase->day;
-            $reservasPorDia[$dia][] = $reserva;
+            $eventosPorDia[$dia][] = [
+                'tipo' => 'clase',
+                'titulo' => $reserva->clase->titulo_clase,
+                'sub' => $reserva->clase->instructor_clase,
+                'hora' => $reserva->clase->fecha_inicio_clase->format('H:i'),
+                'id' => $reserva->clase->id_clase_gimnasio
+            ];
+        }
+
+        // Mapear Rutinas a días específicos del mes
+        $daysInMonth = $date->daysInMonth;
+        $mapaDias = [
+            1 => 'lunes',
+            2 => 'martes',
+            3 => 'miercoles',
+            4 => 'jueves',
+            5 => 'viernes',
+            6 => 'sabado',
+            7 => 'domingo',
+        ];
+
+        if ($rutinas->isNotEmpty()) {
+            for ($d = 1; $d <= $daysInMonth; $d++) {
+                $currentDate = Carbon::createFromDate($year, $month, $d);
+                $dayOfWeek = $currentDate->dayOfWeekIso;
+                $dayNameInDB = $mapaDias[$dayOfWeek] ?? null;
+
+                foreach ($rutinas as $rutina) {
+                    if ($rutina->dia_semana === $dayNameInDB) {
+                        $eventosPorDia[$d][] = [
+                            'tipo' => 'rutina',
+                            'titulo' => $rutina->nombre_rutina_usuario,
+                            'sub' => 'Entrenamiento Personal',
+                            'hora' => 'Todo el día',
+                            'id' => $rutina->id_rutina_usuario
+                        ];
+                    }
+                }
+            }
         }
 
         // Lógica de cuadrícula
@@ -124,7 +178,7 @@ class ReservasController extends Controller
             'monthName',
             'daysInMonth',
             'startOfWeek',
-            'reservasPorDia',
+            'eventosPorDia',
             'month',
             'year',
             'prevMonth',
