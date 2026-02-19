@@ -3,6 +3,17 @@
 @section('title', 'Mis Rutinas')
 
 @section('content')
+    <style>
+        /* LAYOUT CRÍTICO RUTINAS */
+        div.main {
+            display: block !important;
+            width: 100% !important;
+        }
+
+        div.content {
+            min-width: 0 !important;
+        }
+    </style>
     <div class="main">
         <div class="content">
             <header class="hero">
@@ -62,71 +73,14 @@
             </div>
         </div>
 
-        <!-- Right Panel -->
-        <div class="panel">
-            <!-- Objectives -->
-            <div class="panel-card">
-                <h3 class="panel-head">Mis Objetivos Semanales</h3>
-
-                <div class="stat-row">
-                    <div class="stat-head"><span>Entrenamientos:</span> <span>3 / 5</span></div>
-                    <div class="stat-bar">
-                        <div class="stat-fill" style="width: 60%"></div>
-                    </div>
-                </div>
-
-                <div class="stat-row">
-                    <div class="stat-head"><span>Calorías Quemadas:</span> <span>1,200 / 2,000 kcal</span></div>
-                    <div class="stat-bar">
-                        <div class="stat-fill" style="width: 55%"></div>
-                    </div>
-                </div>
-
-                <div class="stat-row">
-                    <div class="stat-head"><span>Tiempo de Ejercicio:</span> <span>90 / 180 min</span></div>
-                    <div class="stat-bar">
-                        <div class="stat-fill" style="width: 50%"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Saved Routines -->
-            <div class="panel-card">
-                <div style="display:flex; justify-content:space-between; align-items:baseline; gap:12px;">
-                    <h3 class="panel-head" style="margin:0;">Rutinas Guardadas</h3>
-                    <a href="#"
-                        style="font-size:12px; color:rgba(239,231,214,.5); text-decoration:none; white-space:nowrap;">
-                        Ver Todas >
-                    </a>
-                </div>
-
-                <div class="saved-list" style="margin-top:18px;">
-                    <div class="saved-item">
-                        <div class="saved-icon"><svg width="16" viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22 14.86 20.57 16.29 22 18.43 19.86 19.86 21.29 21.29 19.86l-1.43-1.43 1.43-1.43 1.43 1.43-1.43 1.43zM6 6h.01v.01H6V6zm12 12h.01v.01H18V18z" />
-                            </svg></div>
-                        <span style="font-size:13px; color:var(--cream);">Estiramientos y Movilidad</span>
-                    </div>
-
-                    <div class="saved-item">
-                        <div class="saved-icon"><svg width="16" viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42A8.962 8.962 0 0 0 12 4c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-1.52-.42-2.95-1.12-4.19C19.33 8.3 19.12 7.8 18.88 7.39zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z" />
-                            </svg></div>
-                        <span style="font-size:13px; color:var(--cream);">HIIT Express</span>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 @endsection
 
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-                  PAGE SPECIFIC
-                -------------------------------------------------------------------------- */
+                                  PAGE SPECIFIC
+                                -------------------------------------------------------------------------- */
         .main {
             display: grid;
             grid-template-columns: 1fr 380px;
@@ -206,8 +160,8 @@
         }
 
         /* --------------------------------------------------------------------------
-                  ROUTINES GRID
-                -------------------------------------------------------------------------- */
+                                  ROUTINES GRID
+                                -------------------------------------------------------------------------- */
         .routines-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;

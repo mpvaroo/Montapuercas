@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-02-2026 a las 14:06:59
+-- Tiempo de generación: 19-02-2026 a las 09:29:39
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -63,8 +63,8 @@ CREATE TABLE `cache` (
 --
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('laravel-cache-45b427b416163d86a662c88d685aaeb6', 'i:1;', 1771419864),
-('laravel-cache-45b427b416163d86a662c88d685aaeb6:timer', 'i:1771419864;', 1771419864);
+('laravel-cache-45b427b416163d86a662c88d685aaeb6', 'i:1;', 1771486696),
+('laravel-cache-45b427b416163d86a662c88d685aaeb6:timer', 'i:1771486696;', 1771486696);
 
 -- --------------------------------------------------------
 
@@ -238,7 +238,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (2, '0001_01_01_000002_create_jobs_table', 1),
 (3, '2025_02_11_150000_create_custom_gym_schema', 1),
 (4, '2026_02_17_180000_update_origen_reserva_enum', 1),
-(5, '2026_02_17_182000_drop_checkin_reserva_table', 1);
+(5, '2026_02_17_182000_drop_checkin_reserva_table', 1),
+(6, '2026_02_19_100000_add_dia_semana_to_rutinas_usuario_table', 2);
 
 -- --------------------------------------------------------
 
@@ -369,16 +370,17 @@ CREATE TABLE `rutinas_usuario` (
   `origen_rutina` enum('usuario','ia_coach','plantilla') NOT NULL DEFAULT 'usuario',
   `instrucciones_rutina` text DEFAULT NULL,
   `fecha_creacion_rutina` datetime NOT NULL DEFAULT current_timestamp(),
-  `rutina_activa` tinyint(1) NOT NULL DEFAULT 1
+  `rutina_activa` tinyint(1) NOT NULL DEFAULT 1,
+  `dia_semana` enum('lunes','martes','miercoles','jueves','viernes','sabado','domingo','descanso') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `rutinas_usuario`
 --
 
-INSERT INTO `rutinas_usuario` (`id_rutina_usuario`, `id_usuario`, `nombre_rutina_usuario`, `objetivo_rutina_usuario`, `nivel_rutina_usuario`, `duracion_estimada_minutos`, `origen_rutina`, `instrucciones_rutina`, `fecha_creacion_rutina`, `rutina_activa`) VALUES
-(1, 2, 'Nemo doloremque.', 'volumen', 'intermedio', 58, 'usuario', 'Temporibus odit earum quia suscipit id. Qui quidem eveniet quis asperiores vero ab enim pariatur. Esse ullam aut earum atque. Non hic et fugit voluptates quasi ut.', '2026-02-18 12:51:04', 1),
-(2, 2, 'Qui vero.', 'rendimiento', 'avanzado', 59, 'usuario', 'Voluptatibus molestiae sed molestias ut. Quia recusandae voluptas non nam nulla architecto aliquid. Et consequatur eum et quia perspiciatis voluptatum laborum.', '2026-02-18 12:51:04', 1);
+INSERT INTO `rutinas_usuario` (`id_rutina_usuario`, `id_usuario`, `nombre_rutina_usuario`, `objetivo_rutina_usuario`, `nivel_rutina_usuario`, `duracion_estimada_minutos`, `origen_rutina`, `instrucciones_rutina`, `fecha_creacion_rutina`, `rutina_activa`, `dia_semana`) VALUES
+(1, 2, 'Nemo doloremque.', 'volumen', 'intermedio', 58, 'usuario', 'Temporibus odit earum quia suscipit id. Qui quidem eveniet quis asperiores vero ab enim pariatur. Esse ullam aut earum atque. Non hic et fugit voluptates quasi ut.', '2026-02-18 12:51:04', 1, NULL),
+(2, 2, 'Qui vero.', 'rendimiento', 'avanzado', 59, 'usuario', 'Voluptatibus molestiae sed molestias ut. Quia recusandae voluptas non nam nulla architecto aliquid. Et consequatur eum et quia perspiciatis voluptatum laborum.', '2026-02-18 12:51:04', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -424,7 +426,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('jQlH6BiXmjxJwPeX3iRQ8Ub4U0cvqlLcxh48KN3H', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiRjM4cFlsNnJkTFlITnFrWGJWanZ6d0tsUjQ3WDIyUGpHWXM0UkVyZyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjMxOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvZGFzaGJvYXJkIjtzOjU6InJvdXRlIjtzOjk6ImRhc2hib2FyZCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1771419805);
+('9NLkGi35XhKZTgTbMXVZLf1dyDtkGPxEO9B4yEQy', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiMVBMMTNzcHlTeXFZVVZUZkRQeDhtc3Q1TkV6Vjkwc0ZIdU5TWlBKVyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjM2OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvZGV0YWxsZS1ydXRpbmEiO3M6NToicm91dGUiO3M6MTQ6ImRldGFsbGUtcnV0aW5hIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1771488696);
 
 -- --------------------------------------------------------
 
@@ -713,7 +715,7 @@ ALTER TABLE `mensajes_ia`
 -- AUTO_INCREMENT de la tabla `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `perfiles_usuario`
