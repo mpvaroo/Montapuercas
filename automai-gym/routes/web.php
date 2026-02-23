@@ -7,7 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProgresoController;
 
 
-Route::middleware(['auth',])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/', function () {
         return redirect()->route('dashboard');
@@ -22,6 +22,7 @@ Route::middleware(['auth',])->group(function () {
     Route::get('progreso', [ProgresoController::class, 'index'])->name('progreso');
     Route::post('progreso', [ProgresoController::class, 'store'])->name('progreso.store');
     Route::get('progreso/historial', [ProgresoController::class, 'historial'])->name('progreso.historial');
+    Route::get('progreso/pdf', [ProgresoController::class, 'downloadPdf'])->name('progreso.pdf');
     Route::get('progreso/detalle/{id}', [ProgresoController::class, 'detalle'])->name('progreso.detalle');
     Route::view('ia-coach', 'iaCoach')->name('ia-coach');
     Route::get('detalle-reserva/{id}', [ReservasController::class, 'show'])->name('detalle-reserva');
@@ -81,3 +82,5 @@ Route::middleware(['auth',])->group(function () {
 });
 
 require __DIR__ . '/settings.php';
+
+

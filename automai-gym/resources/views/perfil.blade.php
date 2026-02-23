@@ -34,14 +34,26 @@
                     <div class="profile-row">
                         <div class="avatar-lg" style="cursor: pointer; position: relative;"
                             onclick="document.getElementById('avatarInput').click()">
-                            <img src="{{ Auth::user()->avatar_url }}" alt="Foto de perfil" id="avatarPreview">
+                            @php $avatarUrl = Auth::user()->avatar_url; @endphp
+                            <div id="avatarWrapper"
+                                style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;">
+                                @if ($avatarUrl)
+                                    <img src="{{ $avatarUrl }}" alt="Foto de perfil" id="avatarPreview"
+                                        style="width:100%;height:100%;object-fit:cover;"
+                                        onerror="this.style.display='none';document.getElementById('avatarInitials').style.display='flex';">
+                                @endif
+                                <div id="avatarInitials"
+                                    style="display:{{ $avatarUrl ? 'none' : 'flex' }};width:100%;height:100%;align-items:center;justify-content:center;font-family:var(--serif);font-size:22px;font-weight:500;color:rgba(239,231,214,.86);background:rgba(0,0,0,.10);">
+                                    {{ Auth::user()->initials() }}
+                                </div>
+                            </div>
                             <div
                                 style="position: absolute; bottom: 0; right: 0; background: gold; color: #000; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 14px;">
                                 <i class="fas fa-camera"></i>
                             </div>
                         </div>
                         <input type="file" name="foto_perfil" id="avatarInput" style="display: none;"
-                            onchange="previewImage(this)">
+                            accept="image/png,image/jpeg,image/jpg" onchange="previewImage(this)">
                         <div style="min-width:0;">
                             <button type="button" class="btn-small"
                                 style="margin-bottom: 8px; font-size: 12px; padding: 4px 12px; background: rgba(239,231,214,.08); color: var(--gold); border: 1px solid rgba(190,145,85,.3);"
@@ -59,6 +71,11 @@
                             @error('foto_perfil')
                                 <div style="color: #ff4444; font-size: 11px; margin-top: 5px;">{{ $message }}</div>
                             @enderror
+                            <div id="avatarError" style="display:none; color: #ff4444; font-size: 11px; margin-top: 5px;">
+                            </div>
+                            <div
+                                style="font-size: 11px; color: rgba(239,231,214,.38); margin-top: 4px; letter-spacing:.06em;">
+                                Solo PNG y JPG · Máx. 2 MB</div>
                         </div>
                     </div>
 
@@ -93,7 +110,9 @@
                             <input class="input @error('telefono_usuario') error-border @enderror" id="telefono"
                                 name="telefono_usuario" type="tel" placeholder="+34 600 000 000"
                                 value="{{ old('telefono_usuario', Auth::user()->perfil?->telefono_usuario ?? '') }}" />
-                            @error('telefono_usuario') <div class="error-msg">{{ $message }}</div> @enderror
+                            @error('telefono_usuario')
+                                <div class="error-msg">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
@@ -105,7 +124,9 @@
                             <input class="input @error('fecha_inicio_usuario') error-border @enderror" id="fechaInicio"
                                 name="fecha_inicio_usuario" type="date"
                                 value="{{ old('fecha_inicio_usuario', Auth::user()->perfil?->fecha_inicio_usuario?->format('Y-m-d')) }}" />
-                            @error('fecha_inicio_usuario') <div class="error-msg">{{ $message }}</div> @enderror
+                            @error('fecha_inicio_usuario')
+                                <div class="error-msg">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
@@ -131,7 +152,9 @@
                                 <option value="rendimiento" @selected(old('objetivo_principal_usuario', Auth::user()->perfil?->objetivo_principal_usuario) == 'rendimiento')>rendimiento
                                 </option>
                             </select>
-                            @error('objetivo_principal_usuario') <div class="error-msg">{{ $message }}</div> @enderror
+                            @error('objetivo_principal_usuario')
+                                <div class="error-msg">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="field">
                             <div class="label">Nivel</div>
@@ -144,7 +167,9 @@
                                 <option value="avanzado" @selected(old('nivel_usuario', Auth::user()->perfil?->nivel_usuario) == 'avanzado')>avanzado
                                 </option>
                             </select>
-                            @error('nivel_usuario') <div class="error-msg">{{ $message }}</div> @enderror
+                            @error('nivel_usuario')
+                                <div class="error-msg">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
@@ -154,9 +179,11 @@
                         <div class="field">
                             <div class="label">Días por semana</div>
                             <input class="input @error('dias_entrenamiento_semana_usuario') error-border @enderror"
-                                id="diasSemana" name="dias_entrenamiento_semana_usuario" type="number" min="1" max="7"
+                                id="diasSemana" name="dias_entrenamiento_semana_usuario" type="number" min="1"
+                                max="7"
                                 value="{{ old('dias_entrenamiento_semana_usuario', Auth::user()->perfil?->dias_entrenamiento_semana_usuario ?? '') }}" />
-                            @error('dias_entrenamiento_semana_usuario') <div class="error-msg">{{ $message }}</div>
+                            @error('dias_entrenamiento_semana_usuario')
+                                <div class="error-msg">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="field">
@@ -178,14 +205,18 @@
                             <input class="input @error('peso_kg_usuario') error-border @enderror" id="pesoKg"
                                 name="peso_kg_usuario" type="number" step="0.01"
                                 value="{{ old('peso_kg_usuario', Auth::user()->perfil?->peso_kg_usuario ?? '') }}" />
-                            @error('peso_kg_usuario') <div class="error-msg">{{ $message }}</div> @enderror
+                            @error('peso_kg_usuario')
+                                <div class="error-msg">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="field">
                             <div class="label">Altura (cm)</div>
                             <input class="input @error('altura_cm_usuario') error-border @enderror" id="alturaCm"
                                 name="altura_cm_usuario" type="number"
                                 value="{{ old('altura_cm_usuario', Auth::user()->perfil?->altura_cm_usuario ?? '') }}" />
-                            @error('altura_cm_usuario') <div class="error-msg">{{ $message }}</div> @enderror
+                            @error('altura_cm_usuario')
+                                <div class="error-msg">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
@@ -669,11 +700,45 @@
 
         function previewImage(input) {
             if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    document.getElementById('avatarPreview').src = e.target.result;
+                const file = input.files[0];
+                const allowed = ['image/png', 'image/jpeg', 'image/jpg'];
+
+                if (!allowed.includes(file.type)) {
+                    // Reset input and show error
+                    input.value = '';
+                    const errorEl = document.getElementById('avatarError');
+                    if (errorEl) {
+                        errorEl.textContent = 'Solo se permiten imágenes JPG y PNG.';
+                        errorEl.style.display = 'block';
+                    }
+                    return;
                 }
-                reader.readAsDataURL(input.files[0]);
+
+                // Hide previous error if valid
+                const errorEl = document.getElementById('avatarError');
+                if (errorEl) errorEl.style.display = 'none';
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Show the img element with preview, hide initials
+                    let img = document.getElementById('avatarPreview');
+                    const initials = document.getElementById('avatarInitials');
+
+                    if (!img) {
+                        // Image element may not exist if no previous avatar — create it
+                        img = document.createElement('img');
+                        img.id = 'avatarPreview';
+                        img.alt = 'Foto de perfil';
+                        img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+                        const wrapper = document.getElementById('avatarWrapper');
+                        if (wrapper) wrapper.prepend(img);
+                    }
+
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    if (initials) initials.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
             }
         }
     </script>

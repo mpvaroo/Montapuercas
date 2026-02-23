@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
@@ -169,6 +169,17 @@ class User extends Authenticatable
     }
 
     /**
+     * Route notifications for the mail channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return string|array
+     */
+    public function routeNotificationForMail($notification)
+    {
+        return $this->correo_usuario;
+    }
+
+    /**
      * Get the first role (helper for legacy view code).
      */
     public function getRolAttribute()
@@ -177,10 +188,40 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the email address that should be used for verification.
+     *
+     * @return string
+     */
+    public function getEmailForVerification(): string
+    {
+        return $this->correo_usuario;
+    }
+
+    /**
+     * Get the name of the email verified at column.
+     *
+     * @return string
+     */
+    public function getEmailVerifiedAtColumn(): string
+    {
+        return 'email_verified_at';
+    }
+
+    /**
+     * Send the email verification notification.
+     *
+     * @return void
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new \App\Notifications\VerifyEmailSpanish());
+    }
+
+    /**
      * Get the URL for the user's avatar.
      */
     public function getAvatarUrlAttribute(): string
     {
-        return $this->perfil?->avatar_url ?? asset('storage/avatars/nada.png');
+        return $this->perfil?->avatar_url ?? asset('avatars/nada.png');
     }
 }

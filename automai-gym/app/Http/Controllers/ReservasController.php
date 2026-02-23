@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
+use App\Mail\ReservationConfirmed;
+use Illuminate\Support\Facades\Mail;
 
 class ReservasController extends Controller
 {
@@ -53,7 +55,7 @@ class ReservasController extends Controller
         }
 
         // Crear o actualizar reserva (si estaba cancelada)
-        ReservaClase::updateOrCreate(
+        $reserva = ReservaClase::updateOrCreate(
             [
                 'id_usuario' => $user->id_usuario,
                 'id_clase_gimnasio' => $clase->id_clase_gimnasio,
@@ -65,7 +67,14 @@ class ReservasController extends Controller
             ]
         );
 
-        return back()->with('success', '¡Te has apuntado a la clase correctamente!');
+        // Enviar correo de confirmación
+        try {
+            Mail::to($user->correo_usuario)->send(new ReservationConfirmed($reserva->load(['user', 'clase'])));
+        } catch (\Exception $e) {
+            // No bloqueamos el flujo si falla el correo, pero registramos el error si fuera necesario
+        }
+
+        return back()->with('success', '¡Te has apuntado a la clase correctamente! Te hemos enviado un correo de confirmación.');
     }
 
     /**

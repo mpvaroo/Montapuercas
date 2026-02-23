@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\File;
 use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProfileController extends Controller
 {
@@ -28,15 +28,29 @@ class ProfileController extends Controller
 
         $validated = $request->validated();
 
+        // Remove the uploaded file object — we only store the derived path string
+        unset($validated['foto_perfil']);
+
         if ($request->hasFile('foto_perfil')) {
-            // Eliminar foto anterior si existe
+            // Delete previous photo if it exists
             if ($perfil && $perfil->ruta_foto_perfil_usuario) {
-                Storage::disk('public')->delete($perfil->ruta_foto_perfil_usuario);
+                $oldPath = public_path($perfil->ruta_foto_perfil_usuario);
+                if (File::exists($oldPath)) {
+                    File::delete($oldPath);
+                }
             }
 
-            // Guardar nueva foto
-            $path = $request->file('foto_perfil')->store('avatars', 'public');
-            $validated['ruta_foto_perfil_usuario'] = $path;
+            // Store directly in public/avatars/ — no symlink required
+            $avatarDir = public_path('avatars');
+            if (!File::isDirectory($avatarDir)) {
+                File::makeDirectory($avatarDir, 0755, true);
+            }
+
+            $filename = Str::random(40) . '.' . $request->file('foto_perfil')->getClientOriginalExtension();
+            $request->file('foto_perfil')->move($avatarDir, $filename);
+
+            // Store as a relative path from public root
+            $validated['ruta_foto_perfil_usuario'] = 'avatars/' . $filename;
         }
 
         $user->perfil()->updateOrCreate(

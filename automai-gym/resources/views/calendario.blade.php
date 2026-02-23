@@ -18,9 +18,17 @@
                     <div class="month">{{ ucfirst($monthName) }}</div>
                     <div class="month-actions">
                         <a href="{{ route('calendario', ['month' => $prevMonth->month, 'year' => $prevMonth->year]) }}"
-                            class="icon-btn" style="text-decoration:none;">‹</a>
+                            class="icon-btn" aria-label="Mes anterior">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                            </svg>
+                        </a>
                         <a href="{{ route('calendario', ['month' => $nextMonth->month, 'year' => $nextMonth->year]) }}"
-                            class="icon-btn" style="text-decoration:none;">›</a>
+                            class="icon-btn" aria-label="Siguiente mes">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                            </svg>
+                        </a>
                     </div>
                 </div>
 
@@ -163,8 +171,8 @@
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-                                  CALENDARIO STYLES
-                                -------------------------------------------------------------------------- */
+                                      CALENDARIO STYLES
+                                    -------------------------------------------------------------------------- */
         .main {
             min-width: 0;
             display: grid;
@@ -233,6 +241,37 @@
             font-weight: 500;
             color: var(--cream);
             font-size: 20px;
+        }
+
+        .month-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(255, 255, 255, .03);
+            color: var(--cream);
+            transition: all .2s ease;
+            text-decoration: none;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, .08);
+            border-color: rgba(239, 231, 214, .25);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .25);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
         }
 
         .dow {

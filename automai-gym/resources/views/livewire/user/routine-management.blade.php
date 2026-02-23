@@ -96,12 +96,17 @@ new class extends Component {
 
     public function with(): array
     {
-        $query = RutinaUsuario::where('id_usuario', Auth::id());
+        $query = RutinaUsuario::query();
 
         if ($this->filter === 'usuario') {
-            $query->where('origen_rutina', 'usuario');
+            $query->where('id_usuario', Auth::id())->where('origen_rutina', 'usuario');
         } elseif ($this->filter === 'plantilla') {
             $query->where('origen_rutina', 'plantilla');
+        } else {
+            // 'all' - Show user's routines OR templates
+            $query->where(function ($q) {
+                $q->where('id_usuario', Auth::id())->orWhere('origen_rutina', 'plantilla');
+            });
         }
 
         return [
@@ -210,19 +215,22 @@ new class extends Component {
         <div class="modal-backdrop" style="display: flex;">
             <div class="modal">
                 <div class="modal-head">
-                    <h3>Diseñar nueva rutina</h3>
-                    <button class="close" wire:click="toggleModal">✕</button>
+                    <div>
+                        <h3>Diseñar nueva rutina</h3>
+                        <p>GESTIÓN DE RUTINAS</p>
+                    </div>
+                    <button class="modal-close" wire:click="toggleModal">✕</button>
                 </div>
-                <form wire:submit.prevent="saveRoutine">
+                <form wire:submit.prevent="saveRoutine" style="display: contents;">
                     <div class="modal-body">
                         <div class="field">
-                            <span class="label">Nombre de la rutina</span>
+                            <label class="label">Nombre de la rutina</label>
                             <input class="input-modal" type="text" wire:model="nombre"
                                 placeholder="Ej: Empuje Hipertrofia" required>
                         </div>
-                        <div class="grid-modal">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                             <div class="field">
-                                <span class="label">Objetivo</span>
+                                <label class="label">Objetivo</label>
                                 <select class="input-modal" wire:model="objetivo" required>
                                     <option value="rendimiento">Fuerza / Rendimiento</option>
                                     <option value="volumen">Hipertrofia / Volumen</option>
@@ -231,7 +239,7 @@ new class extends Component {
                                 </select>
                             </div>
                             <div class="field">
-                                <span class="label">Nivel</span>
+                                <label class="label">Nivel</label>
                                 <select class="input-modal" wire:model="nivel" required>
                                     <option value="principiante">Principiante</option>
                                     <option value="intermedio">Intermedio</option>
@@ -239,13 +247,13 @@ new class extends Component {
                                 </select>
                             </div>
                         </div>
-                        <div class="grid-modal">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                             <div class="field">
-                                <span class="label">Duración (min)</span>
+                                <label class="label">Duración (min)</label>
                                 <input class="input-modal" type="number" wire:model="duracion">
                             </div>
                             <div class="field">
-                                <span class="label">Día programado</span>
+                                <label class="label">Día programado</label>
                                 <select class="input-modal" wire:model="dia_semana">
                                     <option value="">Libre</option>
                                     @foreach ($days as $day)
@@ -255,7 +263,7 @@ new class extends Component {
                             </div>
                         </div>
                         <div class="field">
-                            <span class="label">Instrucciones</span>
+                            <label class="label">Instrucciones</label>
                             <textarea class="input-modal" wire:model="instrucciones" style="height:60px;"></textarea>
                         </div>
 
@@ -288,8 +296,8 @@ new class extends Component {
                         </div>
                     </div>
                     <div class="modal-foot">
-                        <button type="button" class="btn-wide" wire:click="toggleModal">Cancelar</button>
-                        <button type="submit" class="btn-wide primary">Crear Rutina</button>
+                        <button type="button" class="modal-btn secondary" wire:click="toggleModal">CANCELAR</button>
+                        <button type="submit" class="modal-btn primary">CREAR RUTINA</button>
                     </div>
                 </form>
             </div>

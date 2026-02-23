@@ -231,103 +231,108 @@ new class extends Component {
         </div>
     </div>
 
-    <!-- Formulario -->
+    <!-- Formulario (Modal) -->
     @if ($editingRoutine)
-        <aside class="panel">
-            <div class="panel-h">
-                <strong>{{ $editingRoutine === 'new' ? 'Nueva Rutina Master' : 'Editar Rutina' }}</strong>
+        <div class="modal-backdrop" style="display: flex;">
+            <div class="modal">
+                <div class="modal-head">
+                    <div>
+                        <h3>{{ $editingRoutine === 'new' ? 'Nueva Rutina Master' : 'Editar Rutina' }}</h3>
+                        <p>GESTIÓN DE PLANTILLAS</p>
+                    </div>
+                    <button class="modal-close" wire:click="$set('editingRoutine', null)">✕</button>
+                </div>
+                <form class="modal-body" wire:submit.prevent="saveRoutine" id="routineForm">
+                    <div class="field">
+                        <label>Nombre de la Rutina</label>
+                        <input type="text" class="field-input" wire:model="nombre" required>
+                    </div>
+                    <div class="field">
+                        <label>Objetivo Principal</label>
+                        <select wire:model="objetivo" class="field-input" required>
+                            <option value="">Seleccionar objetivo...</option>
+                            <option value="definir">Definir</option>
+                            <option value="volumen">Volumen</option>
+                            <option value="rendimiento">Rendimiento</option>
+                            <option value="salud">Salud</option>
+                        </select>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                        <div class="field">
+                            <label>Nivel Sugerido</label>
+                            <select wire:model="nivel" class="field-input">
+                                <option value="principiante">Principiante</option>
+                                <option value="intermedio">Intermedio</option>
+                                <option value="avanzado">Avanzado</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Día Programado</label>
+                            <select wire:model="dia_semana" class="field-input">
+                                <option value="">Sin asignar</option>
+                                @foreach ($days as $day)
+                                    <option value="{{ $day }}">{{ ucfirst($day) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Duración (min)</label>
+                            <input type="number" class="field-input" wire:model="duracion">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Instrucciones Generales</label>
+                        <textarea class="field-input" wire:model="instrucciones" style="height: 60px;"></textarea>
+                    </div>
+
+                    <div class="divider" style="height: 1px; background: rgba(239, 231, 214, 0.1); margin: 10px 0;">
+                    </div>
+
+                    <div class="field">
+                        <label>Seleccionar Ejercicios ({{ count($selectedExercises) }})</label>
+                        <div style="display:flex; gap:10px; margin-bottom:10px;">
+                            <input type="text" class="field-input" placeholder="Filtrar ejercicios..."
+                                wire:model.live="exerciseSearch" style="height: 38px;">
+                            <select wire:model.live="muscleGroup" class="field-input"
+                                style="width:150px; height: 38px;">
+                                <option value="">Todos</option>
+                                @foreach ($muscleGroups as $mg)
+                                    <option value="{{ $mg }}">{{ ucfirst($mg) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="exercise-grid"
+                            style="max-height: 180px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; padding: 4px;">
+                            @foreach ($availableExercises as $ejercicio)
+                                <div wire:click="toggleExercise({{ $ejercicio->id_ejercicio }})"
+                                    class="exercise-item {{ in_array($ejercicio->id_ejercicio, $selectedExercises) ? 'selected' : '' }}"
+                                    style="padding:10px; border:1px solid rgba(239, 231, 214, 0.1); border-radius:12px; cursor:pointer; font-size:11px; text-align:center; transition: all 0.2s; background: rgba(255, 255, 255, 0.02);">
+                                    <div style="font-weight:800; color:var(--cream);">
+                                        {{ $ejercicio->nombre_ejercicio }}
+                                    </div>
+                                    <div class="muted"
+                                        style="font-size:9px; color: rgba(239, 231, 214, 0.5); text-transform: uppercase;">
+                                        {{ ucfirst($ejercicio->grupo_muscular_principal) }}
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <style>
+                        .exercise-item.selected {
+                            background: rgba(190, 145, 85, 0.2) !important;
+                            border-color: rgba(190, 145, 85, 0.4) !important;
+                        }
+                    </style>
+                </form>
+                <div class="modal-foot">
+                    <button type="button" class="modal-btn secondary"
+                        wire:click="$set('editingRoutine', null)">CANCELAR</button>
+                    <button type="submit" form="routineForm" class="modal-btn primary">GUARDAR PLANTILLA</button>
+                </div>
             </div>
-            <form class="form" wire:submit.prevent="saveRoutine">
-                <div class="field">
-                    <label>Nombre de la Rutina</label>
-                    <input type="text" class="input" wire:model="nombre" required>
-                </div>
-                <div class="field">
-                    <label>Objetivo Principal</label>
-                    <select wire:model="objetivo" class="input" required>
-                        <option value="">Seleccionar objetivo</option>
-                        <option value="definir">Definir</option>
-                        <option value="volumen">Volumen</option>
-                        <option value="rendimiento">Rendimiento</option>
-                        <option value="salud">Salud</option>
-                    </select>
-                </div>
-                <div class="row">
-                    <div class="field">
-                        <label>Nivel Sugerido</label>
-                        <select wire:model="nivel" class="input">
-                            <option value="principiante">Principiante</option>
-                            <option value="intermedio">Intermedio</option>
-                            <option value="avanzado">Avanzado</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label>Día Programado</label>
-                        <select wire:model="dia_semana" class="input">
-                            <option value="">Sin asignar / Libre</option>
-                            @foreach ($days as $day)
-                                <option value="{{ $day }}">{{ ucfirst($day) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label>Duración (min)</label>
-                        <input type="number" class="input" wire:model="duracion">
-                    </div>
-                </div>
-                <div class="field">
-                    <label>Instrucciones Generales</label>
-                    <textarea class="input" wire:model="instrucciones"></textarea>
-                </div>
-
-                <div class="divider"></div>
-
-                <div class="field">
-                    <label>Ejercicios Seleccionados ({{ count($selectedExercises) }})</label>
-                    <div style="display:flex; gap:10px; margin-bottom:10px;">
-                        <input type="text" class="input" placeholder="Filtrar ejercicios..."
-                            wire:model.live="exerciseSearch">
-                        <select wire:model.live="muscleGroup" style="width:150px;">
-                            <option value="">Todos</option>
-                            @foreach ($muscleGroups as $mg)
-                                <option value="{{ $mg }}">{{ ucfirst($mg) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="exercise-grid"
-                        style="max-height: 200px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px;">
-                        @foreach ($availableExercises as $ejercicio)
-                            <div wire:click="toggleExercise({{ $ejercicio->id_ejercicio }})"
-                                class="exercise-item {{ in_array($ejercicio->id_ejercicio, $selectedExercises) ? 'selected' : '' }}"
-                                style="padding:8px; border:1px solid var(--cream-4); border-radius:8px; cursor:pointer; font-size:11px; text-align:center;">
-                                <div style="font-weight:bold; color:var(--cream);">{{ $ejercicio->nombre_ejercicio }}
-                                </div>
-                                <div class="muted" style="font-size:9px;">
-                                    {{ ucfirst($ejercicio->grupo_muscular_principal) }}
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                <style>
-                    .exercise-item.selected {
-                        background: var(--primary);
-                        border-color: var(--primary);
-                    }
-
-                    .exercise-item.selected .muted {
-                        color: rgba(255, 255, 255, 0.7);
-                    }
-                </style>
-                <div class="divider"></div>
-                <div class="row" style="margin-top:10px;">
-                    <button type="button" class="mini-btn primary"
-                        wire:click="$set('editingRoutine', null)">Cancelar</button>
-                    <button type="submit" class="cta" style="height:40px;justify-content:center;">Guardar</button>
-                </div>
-            </form>
-        </aside>
+        </div>
     @endif
 </div>

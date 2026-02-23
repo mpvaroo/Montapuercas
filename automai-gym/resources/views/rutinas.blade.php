@@ -34,8 +34,8 @@
 @push('styles')
     <style>
         /* --------------------------------------------------------------------------
-                                                                  PAGE SPECIFIC
-                                                                -------------------------------------------------------------------------- */
+                                                                      PAGE SPECIFIC
+                                                                    -------------------------------------------------------------------------- */
         .main {
             display: grid;
             grid-template-columns: 1fr 380px;
@@ -115,8 +115,8 @@
         }
 
         /* --------------------------------------------------------------------------
-                                                                  ROUTINES GRID
-                                                                -------------------------------------------------------------------------- */
+                                                                      ROUTINES GRID
+                                                                    -------------------------------------------------------------------------- */
         .routines-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -374,122 +374,4 @@
             }
         }
 
-        /* Modal Styles */
-        .modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, .6);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            backdrop-filter: blur(14px);
-            padding: 20px;
-        }
-
-        .modal {
-            width: min(550px, 100%);
-            border-radius: 24px;
-            background: rgba(15, 15, 15, .95);
-            border: 1px solid rgba(239, 231, 214, .2);
-            padding: 30px;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, .8);
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            z-index: 100000;
-        }
-
-        .modal-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .modal-head h3 {
-            font-family: var(--serif);
-            font-size: 22px;
-            color: var(--cream);
-            margin: 0;
-        }
-
-        .close {
-            background: transparent;
-            border: none;
-            color: var(--cream-3);
-            font-size: 22px;
-            cursor: pointer;
-        }
-
-        .field .label {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: rgba(239, 231, 214, .5);
-            font-weight: 700;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .input-modal {
-            width: 100%;
-            height: 46px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, .03);
-            border: 1px solid rgba(239, 231, 214, .1);
-            color: #fff;
-            padding: 0 14px;
-            font-family: inherit;
-        }
-
-        .grid-modal {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .exercise-selector {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            max-height: 150px;
-            overflow-y: auto;
-            background: rgba(0, 0, 0, .2);
-            padding: 10px;
-            border-radius: 12px;
-            border: 1px solid rgba(239, 231, 214, .05);
-        }
-
-        .ex-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: #ccc;
-            cursor: pointer;
-        }
-
-        .modal-foot {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .btn-wide {
-            flex: 1;
-            height: 46px;
-            border-radius: 999px;
-            border: 1px solid rgba(239, 231, 214, .12);
-            background: transparent;
-            color: var(--cream);
-            font-weight: 800;
-            cursor: pointer;
-        }
-
-        .btn-wide.primary {
-            background: var(--greenBtn1);
-            color: #fff;
-            border: none;
-        }
-    </style>
-@endpush
+    @endpush

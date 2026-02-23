@@ -74,7 +74,20 @@
         <a href="{{ route('perfil') }}" class="user-link">
             <div class="user">
                 <div class="avatar">
-                    <img src="{{ Auth::user()->avatar_url }}" alt="Foto de perfil">
+                    @php $sidebarAvatar = Auth::user()->avatar_url; @endphp
+                    @if ($sidebarAvatar)
+                        <img src="{{ $sidebarAvatar }}" alt="Foto de perfil"
+                            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                        <span
+                            style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-family:var(--serif);font-size:15px;font-weight:500;color:rgba(239,231,214,.86);">
+                            {{ Auth::user()->initials() }}
+                        </span>
+                    @else
+                        <span
+                            style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;font-family:var(--serif);font-size:15px;font-weight:500;color:rgba(239,231,214,.86);">
+                            {{ Auth::user()->initials() }}
+                        </span>
+                    @endif
                 </div>
                 <div>
                     <div class="name">{{ Auth::user()->nombre_mostrado_usuario ?? 'Usuario' }}</div>

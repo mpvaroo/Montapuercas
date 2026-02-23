@@ -30,7 +30,7 @@ class ProfileUpdateRequest extends FormRequest
             'dias_entrenamiento_semana_usuario' => 'nullable|integer|min:1|max:7',
             'peso_kg_usuario' => 'nullable|numeric|min:0',
             'altura_cm_usuario' => 'nullable|numeric|min:0',
-            'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 
@@ -41,6 +41,7 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'foto_perfil.image' => 'El archivo debe ser una imagen.',
+            'foto_perfil.mimes' => 'Solo se permiten imágenes JPG y PNG.',
             'foto_perfil.max' => 'La imagen no debe pesar más de 2MB.',
             'dias_entrenamiento_semana_usuario.max' => 'El máximo de días es 7.',
             'dias_entrenamiento_semana_usuario.min' => 'El mínimo de días es 1.',

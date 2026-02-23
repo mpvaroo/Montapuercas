@@ -26,7 +26,15 @@
                 <h1>Historial</h1>
                 <p>Todos tus registros · registros_progreso</p>
             </div>
-            <a href="{{ route('progreso') }}" class="btn-action" style="text-decoration:none;">← VOLVER</a>
+            <div style="display:flex; gap:10px;">
+                <a href="{{ route('progreso.pdf') }}" class="btn-action primary-gold">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 16l-5-5h3V4h4v7h3l-5 5zm9-9h-6v2h4v10H5V9h4V7H3v14h18V7z" />
+                    </svg>
+                    GENERAR PDF
+                </a>
+                <a href="{{ route('progreso') }}" class="btn-action" style="text-decoration:none;">← VOLVER</a>
+            </div>
         </div>
 
         <div style="padding:0 6px 10px;">
@@ -92,6 +100,20 @@
         .btn-action:hover {
             transform: translateY(-1px);
             filter: brightness(1.08);
+        }
+
+        .btn-action.primary-gold {
+            background: radial-gradient(120% 160% at 30% 0%, rgba(190, 145, 85, .20), transparent 45%), rgba(0, 0, 0, .18);
+            border-color: rgba(190, 145, 85, .35);
+            color: #BE9155;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, .30);
+        }
+
+        .btn-action svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            margin-right: 8px;
         }
 
         .prog-card {

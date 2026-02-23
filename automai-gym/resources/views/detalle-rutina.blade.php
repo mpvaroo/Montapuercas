@@ -144,26 +144,29 @@
     <div class="modal-backdrop" id="modalEdit">
         <div class="modal">
             <div class="modal-head">
-                <h3>Editar datos de la rutina</h3>
-                <button class="close" onclick="toggleModal('modalEdit')">✕</button>
+                <div>
+                    <h3>Editar datos de la rutina</h3>
+                    <p>CONFIGURACIÓN GENERAL</p>
+                </div>
+                <button class="modal-close" onclick="toggleModal('modalEdit')">✕</button>
             </div>
-            <form action="{{ route('rutina.update', $routine->id_rutina_usuario) }}" method="POST">
+            <form action="{{ route('rutina.update', $routine->id_rutina_usuario) }}" method="POST" id="editRoutineForm">
                 @csrf
                 <div class="modal-body">
                     <div class="field">
-                        <span class="label">Nombre de la rutina</span>
-                        <input class="input" type="text" name="nombre_rutina_usuario"
+                        <label class="label">Nombre de la rutina</label>
+                        <input class="field-input" type="text" name="nombre_rutina_usuario"
                             value="{{ $routine->nombre_rutina_usuario }}" required>
                     </div>
-                    <div class="grid2">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div class="field">
-                            <span class="label">Objetivo</span>
-                            <input class="input" type="text" name="objetivo_rutina_usuario"
+                            <label class="label">Objetivo</label>
+                            <input class="field-input" type="text" name="objetivo_rutina_usuario"
                                 value="{{ $routine->objetivo_rutina_usuario }}">
                         </div>
                         <div class="field">
-                            <span class="label">Nivel</span>
-                            <select class="input" name="nivel_rutina_usuario">
+                            <label class="label">Nivel</label>
+                            <select class="field-input" name="nivel_rutina_usuario">
                                 <option value="principiante"
                                     {{ $routine->nivel_rutina_usuario == 'principiante' ? 'selected' : '' }}>Principiante
                                 </option>
@@ -175,15 +178,15 @@
                             </select>
                         </div>
                     </div>
-                    <div class="grid2">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div class="field">
-                            <span class="label">Duración (min)</span>
-                            <input class="input" type="number" name="duracion_estimada_minutos"
+                            <label class="label">Duración (min)</label>
+                            <input class="field-input" type="number" name="duracion_estimada_minutos"
                                 value="{{ $routine->duracion_estimada_minutos }}">
                         </div>
                         <div class="field">
-                            <span class="label">Día programado</span>
-                            <select class="input" name="dia_semana">
+                            <label class="label">Día programado</label>
+                            <select class="field-input" name="dia_semana">
                                 <option value="">Libre</option>
                                 @foreach (['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo', 'descanso'] as $day)
                                     <option value="{{ $day }}"
@@ -193,15 +196,15 @@
                         </div>
                     </div>
                     <div class="field">
-                        <span class="label">Instrucciones</span>
-                        <textarea class="input" name="instrucciones_rutina" style="height:80px;">{{ $routine->instrucciones_rutina }}</textarea>
+                        <label class="label">Instrucciones</label>
+                        <textarea class="field-input" name="instrucciones_rutina" style="height:80px;">{{ $routine->instrucciones_rutina }}</textarea>
                     </div>
                 </div>
-                <div class="modal-foot">
-                    <button type="button" class="btn-wide" onclick="toggleModal('modalEdit')">Cancelar</button>
-                    <button type="submit" class="btn-wide primary">Guardar cambios</button>
-                </div>
             </form>
+            <div class="modal-foot">
+                <button type="button" class="modal-btn secondary" onclick="toggleModal('modalEdit')">CANCELAR</button>
+                <button type="submit" form="editRoutineForm" class="modal-btn primary">GUARDAR CAMBIOS</button>
+            </div>
         </div>
     </div>
 
@@ -209,15 +212,19 @@
     <div class="modal-backdrop" id="modalAdd">
         <div class="modal">
             <div class="modal-head">
-                <h3>Añadir bloque a la rutina</h3>
-                <button class="close" onclick="toggleModal('modalAdd')">✕</button>
+                <div>
+                    <h3>Añadir bloque a la rutina</h3>
+                    <p>BIBLIOTECA DE EJERCICIOS</p>
+                </div>
+                <button class="modal-close" onclick="toggleModal('modalAdd')">✕</button>
             </div>
-            <form action="{{ route('rutina.add_exercise', $routine->id_rutina_usuario) }}" method="POST">
+            <form action="{{ route('rutina.add_exercise', $routine->id_rutina_usuario) }}" method="POST"
+                id="addExerciseForm">
                 @csrf
                 <div class="modal-body">
                     <div class="field">
-                        <span class="label">Buscar ejercicio</span>
-                        <select class="input" name="id_ejercicio" required>
+                        <label class="label">Buscar ejercicio</label>
+                        <select class="field-input" name="id_ejercicio" required>
                             <option value="">Selecciona un ejercicio...</option>
                             @foreach ($allExercises as $ex)
                                 <option value="{{ $ex->id_ejercicio }}">{{ $ex->nombre_ejercicio }}
@@ -226,36 +233,36 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="grid2">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div class="field">
-                            <span class="label">Series</span>
-                            <input class="input" type="number" name="series" value="3">
+                            <label class="label">Series</label>
+                            <input class="field-input" type="number" name="series" value="3">
                         </div>
                         <div class="field">
-                            <span class="label">Repeticiones</span>
-                            <input class="input" type="text" name="reps" placeholder="Ej: 10-12">
+                            <label class="label">Repeticiones</label>
+                            <input class="field-input" type="text" name="reps" placeholder="Ej: 10-12">
                         </div>
                     </div>
-                    <div class="grid2">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div class="field">
-                            <span class="label">Carga (kg)</span>
-                            <input class="input" type="number" name="peso" step="0.5" placeholder="0">
+                            <label class="label">Carga (kg)</label>
+                            <input class="field-input" type="number" name="peso" step="0.5" placeholder="0">
                         </div>
                         <div class="field">
-                            <span class="label">Descanso (s)</span>
-                            <input class="input" type="number" name="descanso" value="60">
+                            <label class="label">Descanso (s)</label>
+                            <input class="field-input" type="number" name="descanso" value="60">
                         </div>
                     </div>
                     <div class="field">
-                        <span class="label">Notas técnicas</span>
-                        <textarea class="input" name="notas" style="height:80px;" placeholder="Ej: Pausa arriba..."></textarea>
+                        <label class="label">Notas técnicas</label>
+                        <textarea class="field-input" name="notas" style="height:80px;" placeholder="Ej: Pausa arriba..."></textarea>
                     </div>
                 </div>
-                <div class="modal-foot">
-                    <button type="button" class="btn-wide" onclick="toggleModal('modalAdd')">Cancelar</button>
-                    <button type="submit" class="btn-wide primary">Confirmar bloque</button>
-                </div>
             </form>
+            <div class="modal-foot">
+                <button type="button" class="modal-btn secondary" onclick="toggleModal('modalAdd')">CANCELAR</button>
+                <button type="submit" form="addExerciseForm" class="modal-btn primary">CONFIRMAR BLOQUE</button>
+            </div>
         </div>
     </div>
 
@@ -263,42 +270,45 @@
     <div class="modal-backdrop" id="modalEditEx">
         <div class="modal">
             <div class="modal-head">
-                <h3 id="exEditTitle">Editar bloque</h3>
-                <button class="close" onclick="toggleModal('modalEditEx')">✕</button>
+                <div>
+                    <h3 id="exEditTitle">Editar bloque</h3>
+                    <p>AJUSTE DE PARÁMETROS</p>
+                </div>
+                <button class="modal-close" onclick="toggleModal('modalEditEx')">✕</button>
             </div>
             <form id="formEditEx" method="POST">
                 @csrf
                 <div class="modal-body">
-                    <div class="grid2">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div class="field">
-                            <span class="label">Series</span>
-                            <input class="input" type="number" name="series" id="editExSeries">
+                            <label class="label">Series</label>
+                            <input class="field-input" type="number" name="series" id="editExSeries">
                         </div>
                         <div class="field">
-                            <span class="label">Repeticiones</span>
-                            <input class="input" type="text" name="reps" id="editExReps">
+                            <label class="label">Repeticiones</label>
+                            <input class="field-input" type="text" name="reps" id="editExReps">
                         </div>
                     </div>
-                    <div class="grid2">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div class="field">
-                            <span class="label">Carga (kg)</span>
-                            <input class="input" type="number" name="peso" step="0.5" id="editExPeso">
+                            <label class="label">Carga (kg)</label>
+                            <input class="field-input" type="number" name="peso" step="0.5" id="editExPeso">
                         </div>
                         <div class="field">
-                            <span class="label">Descanso (s)</span>
-                            <input class="input" type="number" name="descanso" id="editExDescanso">
+                            <label class="label">Descanso (s)</label>
+                            <input class="field-input" type="number" name="descanso" id="editExDescanso">
                         </div>
                     </div>
                     <div class="field">
-                        <span class="label">Notas técnicas</span>
-                        <textarea class="input" name="notas" id="editExNotas" style="height:80px;"></textarea>
+                        <label class="label">Notas técnicas</label>
+                        <textarea class="field-input" name="notas" id="editExNotas" style="height:80px;"></textarea>
                     </div>
                 </div>
-                <div class="modal-foot">
-                    <button type="button" class="btn-wide" onclick="toggleModal('modalEditEx')">Cancelar</button>
-                    <button type="submit" class="btn-wide primary">Guardar cambios</button>
-                </div>
             </form>
+            <div class="modal-foot">
+                <button type="button" class="modal-btn secondary" onclick="toggleModal('modalEditEx')">CANCELAR</button>
+                <button type="submit" form="formEditEx" class="modal-btn primary">GUARDAR CAMBIOS</button>
+            </div>
         </div>
     </div>
 @endsection
@@ -598,130 +608,6 @@
             background: rgba(0, 0, 0, .15);
             border: 1px solid rgba(239, 231, 214, .14);
             backdrop-filter: blur(18px);
-        }
-
-        .modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, .4);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            backdrop-filter: blur(14px);
-            padding: 20px;
-        }
-
-        .modal {
-            width: min(500px, 100%);
-            border-radius: 24px;
-            background: rgba(15, 15, 15, .85);
-            border: 1px solid rgba(239, 231, 214, .15);
-            padding: 30px;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, .8);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .modal-head h3 {
-            font-family: var(--serif);
-            font-size: 22px;
-            color: var(--cream);
-            margin: 0;
-        }
-
-        .close {
-            background: transparent;
-            border: none;
-            color: var(--cream-3);
-            font-size: 22px;
-            cursor: pointer;
-            padding: 5px;
-            line-height: 1;
-        }
-
-        .modal-body {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .grid2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .field .label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            color: rgba(239, 231, 214, .5);
-            font-weight: 700;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .input {
-            width: 100%;
-            height: 46px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, .03);
-            border: 1px solid rgba(239, 231, 214, .1);
-            color: #fff;
-            padding: 0 14px;
-            font-family: inherit;
-            font-size: 14px;
-        }
-
-        .input:focus {
-            outline: none;
-            border-color: rgba(239, 231, 214, .3);
-            background: rgba(255, 255, 255, .05);
-        }
-
-        select.input option {
-            background: #111;
-            color: #fff;
-        }
-
-        .modal-foot {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .btn-wide {
-            flex: 1;
-            height: 46px;
-            border-radius: 999px;
-            border: 1px solid rgba(239, 231, 214, .12);
-            background: transparent;
-            color: var(--cream);
-            font-weight: 800;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .btn-wide:hover {
-            background: rgba(255, 255, 255, .05);
-        }
-
-        .btn-wide.primary {
-            background: var(--greenBtn1);
-            color: #fff;
-            border: none;
-        }
-
-        .btn-wide.primary:hover {
-            filter: brightness(1.1);
         }
 
         @media (max-width: 1100px) {

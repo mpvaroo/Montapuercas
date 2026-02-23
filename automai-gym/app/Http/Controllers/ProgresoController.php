@@ -6,9 +6,27 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\RegistroProgreso;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class ProgresoController extends Controller
 {
+    /**
+     * Genera y descarga el PDF con los últimos 10 registros.
+     */
+    public function downloadPdf()
+    {
+        $user = Auth::user();
+        $records = $user->registrosProgreso()
+            ->orderBy('fecha_registro', 'desc')
+            ->take(10)
+            ->get();
+
+        $pdf = Pdf::loadView('pdf.progress-pdf', compact('user', 'records'));
+
+        return $pdf->download('historial-progreso-' . now()->format('Y-m-d') . '.pdf');
+    }
+
     /**
      * Página principal de progreso.
      */
@@ -49,11 +67,11 @@ class ProgresoController extends Controller
         // Tomar las 10 semanas más recientes y ponerlas en orden cronológico
         $last10Weeks = $allByWeek->take(10)->reverse();
 
-        $chartLabels  = [];
+        $chartLabels = [];
         $chartWeights = [];
 
         foreach ($last10Weeks as $weekStart => $weekRecords) {
-            $chartLabels[]  = Carbon::parse($weekStart)->format('d/m');
+            $chartLabels[] = Carbon::parse($weekStart)->format('d/m');
             // El registro con mayor fecha dentro de esa semana
             $best = $weekRecords->sortByDesc('fecha_registro')->first();
             $chartWeights[] = $best && $best->peso_kg_registro !== null
@@ -81,31 +99,31 @@ class ProgresoController extends Controller
         $minDate = Carbon::parse($user->fecha_creacion_usuario)->format('Y-m-d');
 
         $validated = $request->validate([
-            'fecha_registro'       => ['required', 'date', 'after_or_equal:' . $minDate],
-            'peso_kg_registro'     => 'nullable|numeric|min:0.01|max:999.99',
-            'cintura_cm_registro'  => 'nullable|numeric|min:0.01|max:999.99',
-            'pecho_cm_registro'    => 'nullable|numeric|min:0.01|max:999.99',
-            'cadera_cm_registro'   => 'nullable|numeric|min:0.01|max:999.99',
-            'notas_progreso'       => 'nullable|string|max:220',
+            'fecha_registro' => ['required', 'date', 'after_or_equal:' . $minDate],
+            'peso_kg_registro' => 'nullable|numeric|min:0.01|max:999.99',
+            'cintura_cm_registro' => 'nullable|numeric|min:0.01|max:999.99',
+            'pecho_cm_registro' => 'nullable|numeric|min:0.01|max:999.99',
+            'cadera_cm_registro' => 'nullable|numeric|min:0.01|max:999.99',
+            'notas_progreso' => 'nullable|string|max:220',
         ], [
             'fecha_registro.after_or_equal' => 'La fecha no puede ser anterior a cuando creaste tu cuenta (' . $minDate . ').',
-            'peso_kg_registro.min'          => 'El peso debe ser mayor que 0.',
-            'cintura_cm_registro.min'       => 'La cintura debe ser mayor que 0.',
-            'pecho_cm_registro.min'         => 'El pecho debe ser mayor que 0.',
-            'cadera_cm_registro.min'        => 'La cadera debe ser mayor que 0.',
+            'peso_kg_registro.min' => 'El peso debe ser mayor que 0.',
+            'cintura_cm_registro.min' => 'La cintura debe ser mayor que 0.',
+            'pecho_cm_registro.min' => 'El pecho debe ser mayor que 0.',
+            'cadera_cm_registro.min' => 'La cadera debe ser mayor que 0.',
         ]);
 
         RegistroProgreso::updateOrCreate(
             [
-                'id_usuario'     => $user->id_usuario,
+                'id_usuario' => $user->id_usuario,
                 'fecha_registro' => $validated['fecha_registro'],
             ],
             [
-                'peso_kg_registro'    => $validated['peso_kg_registro']    ?? null,
-                'cintura_cm_registro' => $validated['cintura_cm_registro']  ?? null,
-                'pecho_cm_registro'   => $validated['pecho_cm_registro']    ?? null,
-                'cadera_cm_registro'  => $validated['cadera_cm_registro']   ?? null,
-                'notas_progreso'      => $validated['notas_progreso']        ?? null,
+                'peso_kg_registro' => $validated['peso_kg_registro'] ?? null,
+                'cintura_cm_registro' => $validated['cintura_cm_registro'] ?? null,
+                'pecho_cm_registro' => $validated['pecho_cm_registro'] ?? null,
+                'cadera_cm_registro' => $validated['cadera_cm_registro'] ?? null,
+                'notas_progreso' => $validated['notas_progreso'] ?? null,
             ]
         );
 
@@ -126,7 +144,7 @@ class ProgresoController extends Controller
      */
     public function detalle($id)
     {
-        $user   = Auth::user();
+        $user = Auth::user();
         $record = $user->registrosProgreso()
             ->where('id_registro_progreso', $id)
             ->firstOrFail();

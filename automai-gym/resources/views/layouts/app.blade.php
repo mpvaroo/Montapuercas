@@ -144,6 +144,217 @@
             /* 240px sidebar + 10px left + 22px gap */
         }
 
+        /* --------------------------------------------------------------------------
+      STANDARDIZED MODALS (Based on "Añadir registro")
+    -------------------------------------------------------------------------- */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .62);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 20px;
+        }
+
+        .modal {
+            width: min(720px, 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(239, 231, 214, .16);
+            background: radial-gradient(140% 120% at 18% 10%, rgba(190, 145, 85, .18), transparent 60%), linear-gradient(180deg, rgba(0, 0, 0, .22), rgba(0, 0, 0, .16)), rgba(0, 0, 0, .22);
+            box-shadow: 0 34px 110px rgba(56, 52, 32, .72);
+            overflow: hidden;
+            max-height: 90vh;
+            /* Prevents overflow on short screens */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-head {
+            padding: 14px 14px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            border-bottom: 1px solid rgba(239, 231, 214, .10);
+            flex-shrink: 0;
+        }
+
+        .modal-head h3 {
+            margin: 0;
+            font-family: var(--serif);
+            font-weight: 500;
+            color: rgba(239, 231, 214, .92);
+            letter-spacing: .01em;
+            font-size: 22px;
+        }
+
+        .modal-head p {
+            margin: 2px 0 0;
+            color: rgba(239, 231, 214, .56);
+            font-size: 12px;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .modal-close,
+        .modal-head .close {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(0, 0, 0, .12);
+            color: rgba(239, 231, 214, .74);
+            cursor: pointer;
+            transition: transform .18s, border-color .18s;
+            display: grid;
+            place-items: center;
+            user-select: none;
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .modal-close:hover,
+        .modal-head .close:hover {
+            transform: translateY(-1px);
+            border-color: rgba(239, 231, 214, .18);
+        }
+
+        .modal-body {
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+        }
+
+        .modal-foot {
+            padding: 14px;
+            border-top: 1px solid rgba(239, 231, 214, .10);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        /* Form fields standard */
+        .field {
+            display: grid;
+            gap: 8px;
+        }
+
+        .field label,
+        .field .label {
+            font-size: 11px;
+            color: rgba(239, 231, 214, .58);
+            text-transform: uppercase;
+            letter-spacing: .10em;
+            font-weight: 700;
+        }
+
+        .field-input,
+        .input-modal,
+        .input {
+            height: 44px;
+            border-radius: 14px;
+            border: 1px solid rgba(239, 231, 214, .12);
+            background: rgba(0, 0, 0, .12);
+            color: rgba(239, 231, 214, .92);
+            padding: 0 12px;
+            outline: none;
+            font-family: var(--sans);
+            font-size: 13px;
+            transition: border-color .18s, box-shadow .18s;
+            width: 100%;
+        }
+
+        textarea.field-input,
+        textarea.input-modal,
+        textarea.input {
+            height: 96px;
+            padding: 10px 12px;
+            resize: vertical;
+        }
+
+        .field-input::placeholder,
+        .input-modal::placeholder,
+        .input::placeholder {
+            color: rgba(239, 231, 214, .52) !important;
+        }
+
+        .field-input:focus,
+        .input-modal:focus,
+        .input:focus {
+            border-color: rgba(239, 231, 214, .20);
+            box-shadow: 0 0 0 4px rgba(190, 145, 85, .10);
+        }
+
+        /* Select styling fix */
+        select.field-input,
+        select.input-modal,
+        select.input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(239, 231, 214, 0.5)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        select.field-input option,
+        select.input-modal option,
+        select.input option {
+            background-color: #1c1917;
+            color: rgba(239, 231, 214, .92);
+        }
+
+        /* Date input picker icon fix */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.85) sepia(0.2) saturate(0.5);
+            opacity: .75;
+            cursor: pointer;
+        }
+
+        /* Modal buttons */
+        .modal-btn,
+        .btn-wide {
+            height: 44px;
+            border-radius: 999px;
+            border: 1px solid rgba(239, 231, 214, .16);
+            cursor: pointer;
+            font-family: var(--sans);
+            font-weight: 900;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            font-size: 12px;
+            display: inline-grid;
+            place-items: center;
+            transition: transform .18s, filter .18s, border-color .18s;
+            user-select: none;
+            background: rgba(0, 0, 0, .16);
+            color: rgba(239, 231, 214, .82);
+            width: 100%;
+            text-decoration: none;
+        }
+
+        .modal-btn.primary,
+        .btn-wide.primary {
+            background: radial-gradient(120% 160% at 30% 0%, rgba(22, 250, 22, .18), transparent 35%), linear-gradient(180deg, rgba(70, 98, 72, .92), rgba(43, 70, 43, .98));
+            color: rgba(239, 231, 214, .95);
+            box-shadow: 0 18px 52px rgba(0, 0, 0, .50);
+            border: 1px solid rgba(239, 231, 214, .16);
+        }
+
+        .modal-btn:hover,
+        .btn-wide:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.06);
+            border-color: rgba(239, 231, 214, .22);
+        }
+
         @media (max-width: 900px) {
             .app {
                 padding: 18px;

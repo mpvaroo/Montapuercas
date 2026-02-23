@@ -37,13 +37,15 @@ class Perfil extends Model
 
     /**
      * Get the URL for the user's avatar.
+     * Paths are stored as 'avatars/filename.ext' relative to public/.
+     * Returns empty string if no avatar is set (view handles fallback with initials).
      */
     public function getAvatarUrlAttribute(): string
     {
         if ($this->ruta_foto_perfil_usuario) {
-            return asset('storage/' . $this->ruta_foto_perfil_usuario);
+            return asset($this->ruta_foto_perfil_usuario);
         }
 
-        return asset('storage/avatars/nada.png');
+        return '';
     }
 }
