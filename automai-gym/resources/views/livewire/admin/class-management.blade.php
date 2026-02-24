@@ -99,12 +99,14 @@ new class extends Component {
         }
 
         $this->editingClass = null;
+        $this->resetPage();
         $this->dispatch('notify', 'Clase guardada correctamente.');
     }
 
     public function deleteClass($id)
     {
         ClaseGimnasio::findOrFail($id)->delete();
+        $this->resetPage();
         $this->dispatch('notify', 'Clase eliminada.');
     }
 
@@ -164,9 +166,9 @@ new class extends Component {
                     Nueva</button>
             </div>
         </div>
-        <div class="table-wrap">
+        <div class="table-wrap" style="max-height: 460px; overflow-y: auto;">
             <table>
-                <thead>
+                <thead style="position: sticky; top: 0; background: #000; z-index: 1;">
                     <tr>
                         <th wire:click="sortBy('titulo_clase')" style="cursor:pointer; user-select:none;">
                             Clase / Instructor

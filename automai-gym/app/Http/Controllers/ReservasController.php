@@ -21,19 +21,27 @@ class ReservasController extends Controller
         $user = Auth::user();
         $now = Carbon::now();
 
-        // Obtener clases futuras (o en curso si se permite unirse tarde)
+        // Clases futuras disponibles para reservar
         $clases = ClaseGimnasio::with('tipoClase')
             ->where('fecha_inicio_clase', '>=', $now)
             ->orderBy('fecha_inicio_clase', 'asc')
             ->get();
 
-        // Obtener IDs de clases donde el usuario ya tiene reserva activa
+        // IDs de clases donde el usuario ya tiene reserva activa (para marcar en lista futura)
         $reservasUsuarioIds = $user->reservas()
             ->whereIn('estado_reserva', ['reservada'])
             ->pluck('id_clase_gimnasio')
             ->toArray();
 
-        return view('reservas', compact('clases', 'reservasUsuarioIds'));
+        // Reservas propias del usuario (TODAS, incluyendo clases pasadas o reservadas por IA)
+        $misReservas = $user->reservas()
+            ->with('clase')
+            ->whereIn('estado_reserva', ['reservada'])
+            ->orderBy('fecha_reserva', 'desc')
+            ->get()
+            ->filter(fn($r) => $r->clase !== null); // solo las que tienen clase asociada
+
+        return view('reservas', compact('clases', 'reservasUsuarioIds', 'misReservas'));
     }
 
     /**

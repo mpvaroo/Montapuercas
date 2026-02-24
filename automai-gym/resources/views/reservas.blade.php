@@ -15,9 +15,57 @@
                 
             </div>
 
+            <!-- MIS RESERVAS ACTIVAS (incluyendo las hechas por IA) -->
+            @if($misReservas->isNotEmpty())
+            <div class="reservation-container" style="margin-bottom: 20px;">
+                <h2 class="section-title">Mis Reservas Activas</h2>
+                <div class="res-list">
+                    @foreach($misReservas as $reserva)
+                        @php
+                            $clase = $reserva->clase;
+                            $imgIndex = ($clase->id_clase_gimnasio % 3) + 1;
+                            $esPasada = \Carbon\Carbon::parse($clase->fecha_inicio_clase)->isPast();
+                        @endphp
+                        <div class="res-card" style="{{ $esPasada ? 'opacity:.65;' : '' }}">
+                            <div class="res-img-box">
+                                <div class="res-tag"><svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg></div>
+                                <img src="{{ asset('img/reserva-' . $imgIndex . '.png') }}" class="res-img" alt="{{ $clase->titulo_clase }}">
+                                <div class="res-time">{{ \Carbon\Carbon::parse($clase->fecha_inicio_clase)->format('h:i A') }}</div>
+                            </div>
+                            <div class="res-info">
+                                <h3 class="res-title">{{ $clase->titulo_clase }}</h3>
+                                <span class="res-detail">Instructor: {{ $clase->instructor_clase }}</span>
+                                @if($reserva->origen_reserva === 'ia_coach')
+                                    <span class="res-detail" style="color:rgba(107,140,110,.9); font-size:11px; text-transform:uppercase; letter-spacing:.08em;">✦ Reservado por IA Coach</span>
+                                @endif
+                                <div class="res-meta">
+                                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                    {{ $esPasada ? 'Clase finalizada' : 'Confirmado' }}
+                                </div>
+                            </div>
+                            <div class="res-actions">
+                                <span class="res-date">{{ \Carbon\Carbon::parse($clase->fecha_inicio_clase)->translatedFormat('l j \d\e F Y') }}</span>
+                                <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+                                    <a href="{{ route('detalle-reserva', ['id' => $clase->id_clase_gimnasio]) }}" class="btn-action-sm">Ver Detalles ›</a>
+                                    @if(!$esPasada)
+                                    <form action="{{ route('reservas.cancelar', $clase->id_clase_gimnasio) }}" method="POST"
+                                        onsubmit="return confirm('¿Cancelar esta reserva?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-action-sm" style="border-color:rgba(255,100,100,.30); color:rgba(255,160,160,.92);">Cancelar</button>
+                                    </form>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
             <!-- LISTA RESERVAS -->
             <div class="reservation-container">
-                <h2 class="section-title">Tu Próxima Reserva</h2>
+                <h2 class="section-title">Clases Disponibles</h2>
 
                 <div class="res-list">
                     @forelse($clases as $clase)

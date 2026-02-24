@@ -182,7 +182,7 @@ new class extends Component {
                             <div class="detail"><span class="check-ico">✓</span> Nivel:
                                 {{ ucfirst($rutina->nivel_rutina_usuario) }}</div>
                             <div class="detail"><span class="check-ico">👤</span> Origen:
-                                <b>{{ $rutina->origen_rutina === 'plantilla' ? 'Plantilla' : $rutina->user->nombre_mostrado_usuario ?? 'Usuario' }}</b>
+                                <b>{{ $rutina->origen_rutina === 'plantilla' ? 'Plantilla' : ($rutina->origen_rutina === 'ia_coach' ? 'IA Coach' : 'Usuario') }}</b>
                             </div>
                         </div>
                         <div class="card-actions"

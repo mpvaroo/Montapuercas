@@ -73,8 +73,15 @@
                     <article class="item">
                         <div class="num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</div>
                         <div class="info">
-                            <div class="name">{{ $ejercicio->nombre_ejercicio }}</div>
-                            <div class="muscle">{{ $ejercicio->grupo_muscular_principal }}</div>
+                            <div class="name">
+                                {{-- Siempre mostramos el nombre real del ejercicio como título --}}
+                                {{ $ejercicio->nombre_ejercicio }}
+                            </div>
+                            <div class="muscle">
+                                {{ $ejercicio->grupo_muscular_principal
+                                    ? ucfirst($ejercicio->grupo_muscular_principal)
+                                    : ($routine->origen_rutina === 'ia_coach' ? 'Generado por IA' : 'Sin grupo') }}
+                            </div>
                         </div>
                         <div class="params">
                             <div class="p">
@@ -108,36 +115,6 @@
             </div>
         </div>
 
-        <!-- IA COACH -->
-        <aside class="chat" aria-label="IA Coach">
-            <div class="chat-head">
-                <div class="left">
-                    <div class="chip">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M12 2a6 6 0 0 0-6 6v3H5a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1h1a3 3 0 0 0 3-3v-2a3 3 0 0 0-3-3h-1V8a6 6 0 0 0-6-6Zm-4 6a4 4 0 1 1 8 0v3H8V8Zm10 5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-1v-4h1ZM6 17H5a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h1v4Zm2 3v-7h8v7H8Z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h2>IA Coach</h2>
-                        <p>Foco técnico hoy.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="chat-body">
-                <div class="bubble ai">Marcelo, en las dominadas de hoy prioriza el descenso controlado. Queremos estirar
-                    el dorsal bajo carga.</div>
-                <div class="bubble ai">Si notas que el agarre falla, usa los straps que reservamos.</div>
-                <div class="bubble user">Oído. ¿Puedo cambiar el Pendlay por Remo con mancuerna?</div>
-                <div class="bubble ai">Poder puedes, pero el Pendlay nos da esa explosividad que buscamos hoy. Si no hay
-                    barra libre, adelante con la mancuerna.</div>
-            </div>
-            <div class="chat-foot">
-                <button class="iconbtn">＋</button>
-                <input class="chat-input" type="text" placeholder="Duda sobre el ejercicio..." />
-                <button class="iconbtn">➤</button>
-            </div>
-        </aside>
     </div>
 
     <!-- Modal para editar rutina -->
@@ -317,7 +294,7 @@
     <style>
         .main {
             display: grid;
-            grid-template-columns: 1fr 380px;
+            grid-template-columns: 1fr;
             gap: 10px;
             align-content: start;
             min-width: 0;
