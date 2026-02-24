@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Olvidé mi contraseña')
+@section('title', 'Restablecer contraseña')
 
 @push('styles')
     <style>
@@ -29,7 +29,7 @@
             margin: 22px 0 10px;
             font-family: var(--serif);
             font-weight: 500;
-            font-size: 42px;
+            font-size: 38px;
             line-height: 1.03;
             letter-spacing: .006em;
             color: var(--cream);
@@ -43,15 +43,6 @@
             letter-spacing: .10em;
             text-transform: uppercase;
             color: rgba(239, 231, 214, .60);
-        }
-
-        .hint {
-            position: relative;
-            z-index: 2;
-            margin: 0 0 18px;
-            color: rgba(239, 231, 214, .66);
-            font-size: 13px;
-            line-height: 1.45;
         }
 
         .field {
@@ -89,48 +80,11 @@
             transform: translateY(-1px);
         }
 
-        .row {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            margin-top: 8px;
-        }
-
-        .link {
-            color: rgba(239, 231, 214, .65);
-            text-decoration: none;
-            font-size: 13px;
-            transition: transform .2s ease, color .2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-
-        .link:hover {
-            color: rgba(239, 231, 214, .95);
-            transform: translateX(2px);
-        }
-
-        .msg {
-            position: relative;
-            z-index: 2;
-            border-radius: 14px;
-            border: 1px solid rgba(239, 231, 214, .12);
-            background: rgba(0, 0, 0, .14);
-            padding: 12px 12px;
-            color: rgba(239, 231, 214, .80);
-            font-size: 13px;
-            line-height: 1.35;
-            display: none;
-            margin-top: 12px;
-        }
-
-        .msg.show {
-            display: block;
+        .msg-error {
+            color: #ff6b6b;
+            font-size: 12px;
+            margin-top: 2px;
+            margin-bottom: 4px;
         }
 
         .btn {
@@ -150,6 +104,7 @@
             letter-spacing: .06em;
             box-shadow: var(--shadow-lg);
             transition: transform .18s ease, filter .18s ease, border-color .18s ease;
+            margin-top: 10px;
         }
 
         .btn:hover {
@@ -179,66 +134,47 @@
             .right {
                 max-width: 720px;
             }
-
-            .card {
-                min-height: auto;
-            }
-        }
-
-        @media (max-width: 520px) {
-            .headline {
-                font-size: 38px;
-            }
-
-            .card {
-                padding: 28px 20px 24px;
-            }
         }
     </style>
 @endpush
 
 @section('content')
-    <form class="card" id="formReset" method="POST" action="{{ route('password.email') }}">
+    <form class="card" method="POST" action="{{ route('password.update') }}">
         @csrf
+        
+        <!-- Token oculto necesario para la verificación -->
+        <input type="hidden" name="token" value="{{ current(request()->route()->parameters()) }}">
+
         <div class="brand">
             <b>AUTOMAI</b>
             GYM
         </div>
 
         <div>
-            <h1 class="headline">Recuperar acceso.</h1>
+            <h1 class="headline">Introduce tu nueva clave.</h1>
             <p class="sub">restablecer contraseña</p>
 
-            <p class="hint">
-                Introduce tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
-            </p>
-
-            <div class="field" id="stepEmail">
-                <input class="input" id="correo_usuario" type="email" name="correo_usuario" placeholder="Correo" required />
-                @error('correo_usuario') <span class="msg-error" style="color:#ff6b6b;font-size:12px;margin-top:2px;">{{ $message }}</span> @enderror
+            <div class="field">
+                <input class="input" id="correo_usuario" type="email" name="correo_usuario" value="{{ request()->email }}" readonly required />
+                @error('correo_usuario') <span class="msg-error">{{ $message }}</span> @enderror
             </div>
 
-            <div class="row">
-                <a class="link" href="{{ route('login') }}">← Volver a Login</a>
-                <a class="link" href="{{ route('register') }}">Crear cuenta →</a>
+            <div class="field">
+                <input class="input" id="password" type="password" name="password" placeholder="Nueva contraseña" required autofocus />
+                @error('password') <span class="msg-error">{{ $message }}</span> @enderror
             </div>
 
-            @if (session('status'))
-                <div class="msg show" style="background: rgba(30, 255, 30, 0.1); border-color: rgba(30, 255, 30, 0.2); color: rgba(200, 255, 200, 0.9);">
-                    Revisa tu correo electrónico. Te hemos enviado un enlace para crear una nueva contraseña.
-                </div>
-            @endif
-
-            <div class="msg" id="uiMsg"></div>
+            <div class="field">
+                <input class="input" id="password_confirmation" type="password" name="password_confirmation" placeholder="Repite la contraseña" required />
+            </div>
         </div>
 
-        <button class="btn" type="submit" id="btnMain">Enviar enlace →</button>
+        <button class="btn" type="submit">Actualizar contraseña →</button>
     </form>
 @endsection
 
 @section('right-content')
     <div class="right">
-        <p class="quote">Volver no es retroceder.<span style="display:block;margin-top:40px;">Es retomar el control.</span>
-        </p>
+        <p class="quote">Una nueva etapa.<span style="display:block;margin-top:40px;">Un nuevo comienzo.</span></p>
     </div>
 @endsection

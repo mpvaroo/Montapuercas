@@ -105,6 +105,11 @@
             background-repeat: no-repeat;
         }
 
+        .select option {
+            background-color: #1a1a1a;
+            color: rgba(239, 231, 214, .90);
+        }
+
         .line {
             position: relative;
             z-index: 2;
@@ -237,73 +242,61 @@
 
             <div class="grid one">
                 <input class="input" id="correo_usuario" type="email" name="correo_usuario" placeholder="Correo" required
-                    old="{{ old('correo_usuario') }}" />
+                    value="{{ old('correo_usuario') }}" />
             </div>
 
             <div class="grid">
                 <input class="input" id="nombre_mostrado_usuario" type="text" name="nombre_mostrado_usuario"
-                    placeholder="Nombre mostrado" required old="{{ old('nombre_mostrado_usuario') }}" />
+                    placeholder="Nombre mostrado" required value="{{ old('nombre_mostrado_usuario') }}" />
                 <input class="input" id="nombre_real_usuario" type="text" name="nombre_real_usuario"
-                    placeholder="Nombre real" required old="{{ old('nombre_real_usuario') }}" />
+                    placeholder="Nombre real" required value="{{ old('nombre_real_usuario') }}" />
             </div>
 
             <div class="grid">
                 <input class="input" id="contrasena_usuario" type="password" name="password" placeholder="Contraseña"
-                    required old="{{ old('password') }}" />
+                    required />
                 <input class="input" id="contrasena_repetir" type="password" name="password_confirmation"
-                    placeholder="Repetir contraseña" required old="{{ old('password_confirmation') }}" />
+                    placeholder="Repetir contraseña" required />
             </div>
 
             <div class="grid">
                 <select class="select" id="objetivo_principal_usuario" name="objetivo_principal_usuario" required>
-                    <option value="salud">Objetivo (salud)</option>
-                    <option value="definir">Objetivo (definir)</option>
-                    <option value="volumen">Objetivo (volumen)</option>
-                    <option value="rendimiento">Objetivo (rendimiento)</option>
+                    <option value="salud" {{ old('objetivo_principal_usuario') == 'salud' ? 'selected' : '' }}>Objetivo (salud)</option>
+                    <option value="definir" {{ old('objetivo_principal_usuario') == 'definir' ? 'selected' : '' }}>Objetivo (definir)</option>
+                    <option value="volumen" {{ old('objetivo_principal_usuario') == 'volumen' ? 'selected' : '' }}>Objetivo (volumen)</option>
+                    <option value="rendimiento" {{ old('objetivo_principal_usuario') == 'rendimiento' ? 'selected' : '' }}>Objetivo (rendimiento)</option>
                 </select>
 
                 <select class="select" id="nivel_usuario" name="nivel_usuario" required>
-                    <option value="principiante">Nivel (principiante)</option>
-                    <option value="intermedio">Nivel (intermedio)</option>
-                    <option value="avanzado">Nivel (avanzado)</option>
+                    <option value="principiante" {{ old('nivel_usuario') == 'principiante' ? 'selected' : '' }}>Nivel (principiante)</option>
+                    <option value="intermedio" {{ old('nivel_usuario') == 'intermedio' ? 'selected' : '' }}>Nivel (intermedio)</option>
+                    <option value="avanzado" {{ old('nivel_usuario') == 'avanzado' ? 'selected' : '' }}>Nivel (avanzado)</option>
                 </select>
             </div>
 
             <div class="grid">
                 <select class="select" id="dias_entrenamiento_semana_usuario" name="dias_entrenamiento_semana_usuario"
                     required>
-                    <option value="3">Días/semana (3)</option>
-                    <option value="4">Días/semana (4)</option>
-                    <option value="5">Días/semana (5)</option>
-                    <option value="6">Días/semana (6)</option>
+                    <option value="3" {{ old('dias_entrenamiento_semana_usuario') == '3' ? 'selected' : '' }}>Días/semana (3)</option>
+                    <option value="4" {{ old('dias_entrenamiento_semana_usuario') == '4' ? 'selected' : '' }}>Días/semana (4)</option>
+                    <option value="5" {{ old('dias_entrenamiento_semana_usuario') == '5' ? 'selected' : '' }}>Días/semana (5)</option>
+                    <option value="6" {{ old('dias_entrenamiento_semana_usuario') == '6' ? 'selected' : '' }}>Días/semana (6)</option>
                 </select>
 
-                <input class="input" id="telefono_usuario" type="tel" name="telefono_usuario" placeholder="Teléfono" />
+                <input class="input" id="telefono_usuario" type="tel" name="telefono_usuario" placeholder="Teléfono" value="{{ old('telefono_usuario') }}" required />
             </div>
 
             <div class="grid">
-                <input class="input" id="peso_kg_usuario" type="number" step="0.01" min="0"
-                    name="peso_kg_usuario" placeholder="Peso kg" />
-                <input class="input" id="altura_cm_usuario" type="number" step="1" min="0"
-                    name="altura_cm_usuario" placeholder="Altura cm" />
+                <input class="input" id="peso_kg_usuario" type="number" step="0.01" min="30" max="300"
+                    name="peso_kg_usuario" placeholder="Peso kg" value="{{ old('peso_kg_usuario') }}" required />
+                <input class="input" id="altura_cm_usuario" type="number" step="1" min="100" max="250"
+                    name="altura_cm_usuario" placeholder="Altura cm" value="{{ old('altura_cm_usuario') }}" required />
             </div>
 
-            <div class="grid">
-                <select class="select" id="tono_ia_coach" name="tono_ia_coach" required>
-                    <option value="directo">Tono IA (directo)</option>
-                    <option value="motivador">Tono IA (motivador)</option>
-                </select>
-
-                <select class="select" id="idioma_preferido" name="idioma_preferido" required>
-                    <option value="es">Idioma (es)</option>
-                    <option value="en">Idioma (en)</option>
-                </select>
-            </div>
 
             <div class="line">
                 <a class="link" href="{{ route('login') }}">← Volver a Login</a>
                 <a class="link" href="{{ route('welcome') }}">Volver al inicio</a>
-                <span class="note">Se crea como rol: usuario</span>
             </div>
 
             @if ($errors->any())

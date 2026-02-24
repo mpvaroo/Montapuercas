@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-02-2026 a las 09:29:39
+-- Tiempo de generación: 24-02-2026 a las 15:57:40
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -44,7 +44,8 @@ CREATE TABLE `ajustes_usuario` (
 INSERT INTO `ajustes_usuario` (`id_ajustes_usuario`, `id_usuario`, `notificaciones_entrenamiento_activas`, `notificaciones_clases_activas`, `tono_ia_coach`, `idioma_preferido`, `semana_empieza_en`) VALUES
 (1, 3, 1, 1, 'directo', 'es', 'lunes'),
 (2, 4, 1, 1, 'directo', 'es', 'lunes'),
-(3, 5, 1, 1, 'directo', 'es', 'lunes');
+(3, 5, 1, 1, 'directo', 'es', 'lunes'),
+(4, 6, 1, 1, 'motivador', 'es', 'lunes');
 
 -- --------------------------------------------------------
 
@@ -63,8 +64,10 @@ CREATE TABLE `cache` (
 --
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('laravel-cache-45b427b416163d86a662c88d685aaeb6', 'i:1;', 1771486696),
-('laravel-cache-45b427b416163d86a662c88d685aaeb6:timer', 'i:1771486696;', 1771486696);
+('laravel-cache-45b427b416163d86a662c88d685aaeb6', 'i:1;', 1771938595),
+('laravel-cache-45b427b416163d86a662c88d685aaeb6:timer', 'i:1771938595;', 1771938595),
+('laravel-cache-c1dfd96eea8cc2b62785275bca38ac261256e278', 'i:1;', 1771944811),
+('laravel-cache-c1dfd96eea8cc2b62785275bca38ac261256e278:timer', 'i:1771944811;', 1771944811);
 
 -- --------------------------------------------------------
 
@@ -102,16 +105,16 @@ CREATE TABLE `clases_gimnasio` (
 --
 
 INSERT INTO `clases_gimnasio` (`id_clase_gimnasio`, `id_tipo_clase`, `titulo_clase`, `descripcion_clase`, `instructor_clase`, `fecha_inicio_clase`, `fecha_fin_clase`, `cupo_maximo_clase`, `estado_clase`, `fecha_creacion_clase`) VALUES
-(1, 4, 'Explicabo voluptatem dolorum.', 'Pariatur repellendus nemo adipisci sed. Accusantium ut magnam neque est. Magni blanditiis iste nisi autem voluptas at ut.', 'Malinda Sawayn', '2026-02-27 00:22:30', '2026-02-27 01:22:30', 26, 'publicada', '2026-02-18 12:51:04'),
-(2, 4, 'Placeat omnis ut molestiae.', 'Cum velit ducimus illo. Repellendus temporibus optio tempora ea et. Eveniet corporis veniam aspernatur aut perspiciatis minima autem. Eos voluptatibus minima molestias deleniti in dolores eos.', 'Ashlynn Harvey', '2026-03-01 17:55:56', '2026-03-01 18:55:56', 26, 'publicada', '2026-02-18 12:51:04'),
-(3, 4, 'Omnis et eaque.', 'Asperiores quidem quam minus aliquid aliquid reprehenderit possimus. Non quod dolor et vel aut recusandae. Adipisci aut deserunt facilis. Ut est ipsam consequuntur voluptas ratione.', 'Dr. Zack Grady', '2026-03-06 20:00:18', '2026-03-06 21:00:18', 24, 'publicada', '2026-02-18 12:51:04'),
-(4, 2, 'Et est et.', 'In sed deleniti architecto ut consequatur. Dolorem accusamus totam quas autem occaecati est. Quis delectus rerum eius sed odio. Laboriosam deleniti dicta non a sit et minima.', 'Kaley Reilly', '2026-02-21 09:29:12', '2026-02-21 10:29:12', 23, 'publicada', '2026-02-18 12:51:04'),
-(5, 3, 'Exercitationem qui consectetur.', 'Repellendus eveniet eum omnis dolor fuga quisquam. Autem qui sit repellendus incidunt iusto. Aut est quis cumque cumque aperiam ut.', 'Dr. Nyah Corkery', '2026-02-24 10:54:25', '2026-02-24 11:54:25', 12, 'publicada', '2026-02-18 12:51:04'),
-(6, 3, 'Et non optio.', 'Sed accusantium quis id itaque sed eius. Et repellendus eos amet possimus. Saepe dignissimos eveniet nesciunt debitis quisquam quis.', 'Geo Beatty', '2026-03-06 00:29:45', '2026-03-06 01:29:45', 12, 'publicada', '2026-02-18 12:51:04'),
-(7, 3, 'Ipsa ea voluptatum nesciunt.', 'Magnam facilis quasi blanditiis dolorem labore tempore. Dicta et rem quo pariatur dicta. Blanditiis ut quis et veniam sapiente.', 'Laney VonRueden V', '2026-02-28 18:44:48', '2026-02-28 19:44:48', 12, 'publicada', '2026-02-18 12:51:04'),
-(8, 3, 'Aperiam quis voluptas et.', 'Aut voluptatem consequatur dolorem quisquam. Et veniam est eius sit et qui minima. Corrupti dolores eum nostrum.', 'Audie Runte', '2026-03-07 21:00:18', '2026-03-07 22:00:18', 17, 'publicada', '2026-02-18 12:51:04'),
-(9, 4, 'Asperiores eveniet deleniti sit.', 'Aut vero harum dignissimos sit odit vero ducimus odio. Ut distinctio ducimus tempore earum qui est odit. Nisi ipsam voluptates dolor et. Qui error laborum occaecati sit est.', 'Arthur Lynch', '2026-03-10 16:17:49', '2026-03-10 17:17:49', 19, 'publicada', '2026-02-18 12:51:04'),
-(10, 4, 'Aut est consequatur.', 'Assumenda non similique eum ut dolor consequatur qui praesentium. Omnis hic et et voluptas saepe eos. Fuga quidem ratione recusandae nisi sequi.', 'Juvenal Gutkowski', '2026-02-20 21:16:03', '2026-02-20 22:16:03', 21, 'publicada', '2026-02-18 12:51:04');
+(1, 3, 'Excepturi voluptas sapiente.', 'Rerum omnis eos quod inventore aliquam. Animi saepe sapiente molestiae dolorem vero aliquam culpa. Provident tempora adipisci itaque non ea. Vero neque provident qui quia.', 'Franz Rau', '2026-03-03 00:44:17', '2026-03-03 01:44:17', 26, 'publicada', '2026-02-24 13:03:46'),
+(2, 1, 'Aut qui ab cupiditate laudantium.', 'Debitis at molestiae repellat consequuntur quam. Facilis corporis aut nobis mollitia. Qui saepe tempora non molestiae ipsa animi aspernatur.', 'Clare Kassulke', '2026-03-01 08:28:23', '2026-03-01 09:28:23', 27, 'publicada', '2026-02-24 13:03:46'),
+(3, 2, 'Id repellat error sed.', 'Consequatur libero voluptatem voluptatem aut. Impedit magni voluptatem consequatur. Voluptas voluptatum amet molestias.', 'Lottie Larson', '2026-03-19 01:10:34', '2026-03-19 02:10:34', 23, 'publicada', '2026-02-24 13:03:46'),
+(4, 2, 'Molestiae asperiores est.', 'Explicabo quia et nesciunt dicta modi debitis aliquid. Voluptate molestiae ut ex ullam et voluptatem non culpa. At laborum corporis quia eos.', 'Yazmin Brekke', '2026-03-23 05:13:45', '2026-03-23 06:13:45', 10, 'publicada', '2026-02-24 13:03:46'),
+(5, 3, 'Repudiandae eum reiciendis aut reiciendis.', 'Labore maiores sed molestias animi quasi praesentium libero. Officiis sint sint quis quis et animi. Et dolores et esse culpa repellendus ut totam. Velit nesciunt unde esse officia temporibus facere.', 'Christiana Gaylord DVM', '2026-03-02 16:46:44', '2026-03-02 17:46:44', 27, 'publicada', '2026-02-24 13:03:46'),
+(6, 2, 'Velit ipsum dolore saepe.', 'Recusandae nostrum eveniet commodi quis. Omnis minima incidunt et aperiam ipsam.', 'Elinore Hartmann', '2026-03-03 19:33:34', '2026-03-03 20:33:34', 15, 'publicada', '2026-02-24 13:03:46'),
+(7, 3, 'Eum a delectus natus.', 'Incidunt cum eligendi eveniet repellendus eaque perspiciatis. Dolores est cum sunt. Nihil fugiat ducimus aliquid praesentium laborum ad. Sunt porro placeat ipsum aperiam.', 'Sadye Harris', '2026-03-22 09:41:06', '2026-03-22 10:41:06', 26, 'publicada', '2026-02-24 13:03:46'),
+(8, 4, 'Dolorem quam vel.', 'Nobis placeat delectus aliquam omnis earum. Fuga unde aliquid nihil exercitationem quos quas porro. Quo illum ea ex dolores dignissimos unde rerum.', 'Prof. Isaiah Connelly II', '2026-03-12 15:42:24', '2026-03-12 16:42:24', 19, 'publicada', '2026-02-24 13:03:46'),
+(9, 1, 'Officia saepe eaque doloribus qui.', 'Delectus odit quibusdam et voluptate rerum consequatur maiores aut. Velit recusandae dignissimos eos deserunt iste maiores et. Error reiciendis repellat enim ducimus temporibus exercitationem.', 'Dr. Cooper Herzog', '2026-03-14 19:01:36', '2026-03-14 20:01:36', 30, 'publicada', '2026-02-24 13:03:46'),
+(10, 1, 'Dicta incidunt quaerat unde.', 'Quae harum doloribus ut qui repudiandae. Delectus recusandae porro impedit inventore. Tempora quos quis iusto alias quo natus cumque. Sed impedit doloribus quod quod eius veritatis velit.', 'Miss Makenzie Jacobs', '2026-02-26 08:16:48', '2026-02-26 09:16:48', 14, 'publicada', '2026-02-24 13:03:46');
 
 -- --------------------------------------------------------
 
@@ -239,7 +242,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (3, '2025_02_11_150000_create_custom_gym_schema', 1),
 (4, '2026_02_17_180000_update_origen_reserva_enum', 1),
 (5, '2026_02_17_182000_drop_checkin_reserva_table', 1),
-(6, '2026_02_19_100000_add_dia_semana_to_rutinas_usuario_table', 2);
+(6, '2026_02_19_100000_add_dia_semana_to_rutinas_usuario_table', 1),
+(7, '2026_02_23_000000_add_email_verified_at_to_usuarios_table', 1),
+(8, '2026_02_24_082125_create_personal_access_tokens_table', 1);
 
 -- --------------------------------------------------------
 
@@ -266,9 +271,29 @@ CREATE TABLE `perfiles_usuario` (
 --
 
 INSERT INTO `perfiles_usuario` (`id_perfil_usuario`, `id_usuario`, `nombre_real_usuario`, `telefono_usuario`, `ruta_foto_perfil_usuario`, `objetivo_principal_usuario`, `dias_entrenamiento_semana_usuario`, `nivel_usuario`, `peso_kg_usuario`, `altura_cm_usuario`, `fecha_inicio_usuario`) VALUES
-(1, 3, 'Dr. Deon Tillman', '440-743-6289', NULL, 'volumen', 4, 'intermedio', 50.12, 195, '1980-04-01'),
-(2, 4, 'Loren Mitchell', '1-707-484-5618', NULL, 'definir', 1, 'avanzado', 82.13, 207, '1970-12-25'),
-(3, 5, 'Chelsey Kunde Jr.', '+1.214.842.2489', NULL, 'volumen', 2, 'intermedio', 116.68, 156, '1978-07-10');
+(1, 3, 'Rebeka Wuckert', '+1 (678) 546-1565', NULL, 'volumen', 2, 'intermedio', 99.99, 195, '1994-09-07'),
+(2, 4, 'Dr. Travis Denesik', '341.867.7104', NULL, 'volumen', 2, 'intermedio', 52.85, 203, '1999-03-10'),
+(3, 5, 'Prof. Cory Jakubowski', '386-466-2068', NULL, 'rendimiento', 6, 'intermedio', 119.45, 202, '2011-12-21'),
+(4, 6, 'Manuel', NULL, NULL, 'definir', 5, 'avanzado', NULL, NULL, '2026-02-24');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `personal_access_tokens`
+--
+
+CREATE TABLE `personal_access_tokens` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `tokenable_type` varchar(255) NOT NULL,
+  `tokenable_id` bigint(20) UNSIGNED NOT NULL,
+  `name` text NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `abilities` text DEFAULT NULL,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -286,6 +311,23 @@ CREATE TABLE `registros_progreso` (
   `cadera_cm_registro` decimal(5,2) DEFAULT NULL,
   `notas_progreso` varchar(220) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `registros_progreso`
+--
+
+INSERT INTO `registros_progreso` (`id_registro_progreso`, `id_usuario`, `fecha_registro`, `peso_kg_registro`, `cintura_cm_registro`, `pecho_cm_registro`, `cadera_cm_registro`, `notas_progreso`) VALUES
+(1, 2, '2025-11-24', 93.00, 89.50, 105.00, 103.00, 'Inicio. A por ello.'),
+(2, 2, '2025-12-01', 92.20, 89.00, 104.50, 102.50, NULL),
+(3, 2, '2025-12-08', 91.50, 88.50, 104.00, 102.00, 'Primera bajada visible.'),
+(4, 2, '2025-12-15', 90.80, 88.00, 103.50, 101.50, NULL),
+(5, 2, '2025-12-22', 90.20, 87.50, 103.00, 101.00, 'Navidades complicadas.'),
+(6, 2, '2025-12-29', 90.00, 87.20, 102.80, 100.80, NULL),
+(7, 2, '2026-01-05', 89.30, 86.80, 102.50, 100.50, 'Vuelta al ritmo.'),
+(8, 2, '2026-01-12', 88.60, 86.20, 102.00, 100.00, NULL),
+(9, 2, '2026-01-19', 87.90, 85.80, 101.50, 99.50, 'Gran semana. Duermo mejor.'),
+(10, 2, '2026-01-26', 87.20, 85.40, 101.00, 99.00, NULL),
+(11, 2, '2026-02-02', 86.50, 85.00, 100.50, 98.50, 'Progreso visible. Cintura bajando.');
 
 -- --------------------------------------------------------
 
@@ -348,11 +390,11 @@ CREATE TABLE `rutinas_ejercicios` (
 
 INSERT INTO `rutinas_ejercicios` (`id_rutina_ejercicio`, `id_rutina_usuario`, `id_ejercicio`, `orden_en_rutina`, `series_objetivo`, `repeticiones_objetivo`, `peso_objetivo_kg`, `rpe_objetivo`, `descanso_segundos`, `notas_ejercicio`) VALUES
 (1, 1, 1, 1, 3, '12', 20.00, NULL, NULL, NULL),
-(2, 1, 3, 1, 3, '12', 20.00, NULL, NULL, NULL),
-(3, 1, 4, 1, 3, '12', 20.00, NULL, NULL, NULL),
-(4, 2, 3, 1, 3, '12', 20.00, NULL, NULL, NULL),
-(5, 2, 4, 1, 3, '12', 20.00, NULL, NULL, NULL),
-(6, 2, 5, 1, 3, '12', 20.00, NULL, NULL, NULL);
+(2, 1, 2, 1, 3, '12', 20.00, NULL, NULL, NULL),
+(3, 1, 5, 1, 3, '12', 20.00, NULL, NULL, NULL),
+(4, 2, 2, 1, 3, '12', 20.00, NULL, NULL, NULL),
+(5, 2, 3, 1, 3, '12', 20.00, NULL, NULL, NULL),
+(6, 2, 4, 1, 3, '12', 20.00, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -379,8 +421,8 @@ CREATE TABLE `rutinas_usuario` (
 --
 
 INSERT INTO `rutinas_usuario` (`id_rutina_usuario`, `id_usuario`, `nombre_rutina_usuario`, `objetivo_rutina_usuario`, `nivel_rutina_usuario`, `duracion_estimada_minutos`, `origen_rutina`, `instrucciones_rutina`, `fecha_creacion_rutina`, `rutina_activa`, `dia_semana`) VALUES
-(1, 2, 'Nemo doloremque.', 'volumen', 'intermedio', 58, 'usuario', 'Temporibus odit earum quia suscipit id. Qui quidem eveniet quis asperiores vero ab enim pariatur. Esse ullam aut earum atque. Non hic et fugit voluptates quasi ut.', '2026-02-18 12:51:04', 1, NULL),
-(2, 2, 'Qui vero.', 'rendimiento', 'avanzado', 59, 'usuario', 'Voluptatibus molestiae sed molestias ut. Quia recusandae voluptas non nam nulla architecto aliquid. Et consequatur eum et quia perspiciatis voluptatum laborum.', '2026-02-18 12:51:04', 1, NULL);
+(1, 2, 'Qui explicabo eos.', 'rendimiento', 'avanzado', 77, 'usuario', 'Est nemo ex est ullam molestiae saepe ipsum. Odio amet et sed enim quisquam accusamus. Porro aut exercitationem ex et qui.', '2026-02-24 13:03:46', 1, NULL),
+(2, 2, 'Ea dolores dolores.', 'volumen', 'intermedio', 86, 'usuario', 'Rerum repudiandae assumenda est iste repudiandae itaque. In magnam ducimus cum voluptatum neque sunt voluptas. Rerum eum neque natus harum velit.', '2026-02-24 13:03:46', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -404,7 +446,8 @@ CREATE TABLE `seguridad_usuario` (
 INSERT INTO `seguridad_usuario` (`id_seguridad_usuario`, `id_usuario`, `requiere_cambio_contrasena`, `fecha_ultimo_cambio_contrasena`, `intentos_fallidos_login`, `fecha_ultimo_intento_fallido`) VALUES
 (1, 3, 0, NULL, 0, NULL),
 (2, 4, 0, NULL, 0, NULL),
-(3, 5, 0, NULL, 0, NULL);
+(3, 5, 0, NULL, 0, NULL),
+(4, 6, 0, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -426,7 +469,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('9NLkGi35XhKZTgTbMXVZLf1dyDtkGPxEO9B4yEQy', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiMVBMMTNzcHlTeXFZVVZUZkRQeDhtc3Q1TkV6Vjkwc0ZIdU5TWlBKVyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjM2OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvZGV0YWxsZS1ydXRpbmEiO3M6NToicm91dGUiO3M6MTQ6ImRldGFsbGUtcnV0aW5hIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1771488696);
+('bX6hWrTaZLnHHjKvD58pWUa35IpbxIhXZbZt9vBU', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiYmoyWDZDWWN1ZEt3dFowS0RsOHlKaEx3MENSRTJTRHpYN3FNWmtsZiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9yZWdpc3RlciI7czo1OiJyb3V0ZSI7czo4OiJyZWdpc3RlciI7fX0=', 1771944838);
 
 -- --------------------------------------------------------
 
@@ -459,6 +502,7 @@ INSERT INTO `tipos_clase` (`id_tipo_clase`, `nombre_tipo_clase`, `descripcion_ti
 CREATE TABLE `usuarios` (
   `id_usuario` int(10) UNSIGNED NOT NULL,
   `correo_usuario` varchar(120) NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
   `hash_contrasena_usuario` varchar(255) NOT NULL,
   `nombre_mostrado_usuario` varchar(80) NOT NULL,
   `estado_usuario` enum('activo','bloqueado','pendiente') NOT NULL DEFAULT 'activo',
@@ -474,12 +518,13 @@ CREATE TABLE `usuarios` (
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id_usuario`, `correo_usuario`, `hash_contrasena_usuario`, `nombre_mostrado_usuario`, `estado_usuario`, `fecha_creacion_usuario`, `fecha_ultimo_acceso_usuario`, `remember_token`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`) VALUES
-(1, 'admin@automai.com', '$2y$12$CEwkwskKw5PI6XIEK9e3i.vDJxg/l9McPOc7OPGboI6M1umCEeQfq', 'Administrador', 'activo', '2026-02-18 12:51:03', NULL, NULL, NULL, NULL, NULL),
-(2, 'mario@gmail.com', '$2y$12$Qt4mFvP.hqiDZxAOy7d4nO1iVvJnh0wXq89bzQHc9G5Rct1OQRfky', 'Mario User', 'activo', '2026-02-18 12:51:03', NULL, NULL, NULL, NULL, NULL),
-(3, 'graciela.rohan@example.net', '$2y$12$MuKUJlwLBjuAvVR7NCddYeAoXQfiIHQ7pI5tZAgeWrniBXYy2Z/e2', 'Charles Haley', 'activo', '2026-02-18 12:51:04', NULL, 'cbX2aWWKFS', NULL, NULL, NULL),
-(4, 'haylie.bahringer@example.com', '$2y$12$MuKUJlwLBjuAvVR7NCddYeAoXQfiIHQ7pI5tZAgeWrniBXYy2Z/e2', 'Deshaun Cole I', 'activo', '2026-02-18 12:51:04', NULL, 'bzTLzhQUdW', NULL, NULL, NULL),
-(5, 'mccullough.lance@example.com', '$2y$12$MuKUJlwLBjuAvVR7NCddYeAoXQfiIHQ7pI5tZAgeWrniBXYy2Z/e2', 'Dean Leffler', 'activo', '2026-02-18 12:51:04', NULL, 'KLd1SCMOC4', NULL, NULL, NULL);
+INSERT INTO `usuarios` (`id_usuario`, `correo_usuario`, `email_verified_at`, `hash_contrasena_usuario`, `nombre_mostrado_usuario`, `estado_usuario`, `fecha_creacion_usuario`, `fecha_ultimo_acceso_usuario`, `remember_token`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`) VALUES
+(1, 'admin@automai.com', '2026-02-24 13:08:27', '$2y$12$KaTdJnnjDyd8oycCLZgDR.G5WoEVOBQ83EmbnEwtSeDj5TBwntMdW', 'Administrador', 'activo', '2026-02-24 13:03:45', NULL, NULL, NULL, NULL, NULL),
+(2, 'mario@gmail.com', NULL, '$2y$12$A9sv4twnjivyAiD/ba8Qj.KWOI7LaqOiGL2xad9PYhnv9hbNEi2Xm', 'Mario User', 'activo', '2026-02-24 13:03:45', NULL, NULL, NULL, NULL, NULL),
+(3, 'lukas.lowe@example.org', NULL, '$2y$12$adEi6hqZDowm.ZV5ebuPGuyZYfbHLpimHBxrnxY7krFQZKo6xU1rO', 'Talon Mueller', 'activo', '2026-02-24 13:03:46', NULL, 'Vp4nLWPC83', NULL, NULL, NULL),
+(4, 'jhill@example.org', NULL, '$2y$12$adEi6hqZDowm.ZV5ebuPGuyZYfbHLpimHBxrnxY7krFQZKo6xU1rO', 'Ansley Metz', 'activo', '2026-02-24 13:03:46', NULL, '42oxSHGtS3', NULL, NULL, NULL),
+(5, 'ceasar.keeling@example.net', NULL, '$2y$12$adEi6hqZDowm.ZV5ebuPGuyZYfbHLpimHBxrnxY7krFQZKo6xU1rO', 'Gladys Hessel', 'activo', '2026-02-24 13:03:46', NULL, 'iD5UKF7neZ', NULL, NULL, NULL),
+(6, 'manuelmvp2004@gmail.com', NULL, '$2y$12$e0FdhWAfeeehhWJLjDeJ9esc6mmTykJx0qKqE2Gf.LSDcjQwTvwWm', 'mpvaroo', 'activo', '2026-02-24 15:51:01', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -499,11 +544,11 @@ CREATE TABLE `usuarios_roles` (
 --
 
 INSERT INTO `usuarios_roles` (`id_usuario_rol`, `id_usuario`, `id_rol`, `fecha_asignacion_rol`) VALUES
-(1, 1, 2, '2026-02-18 13:51:03'),
-(2, 2, 1, '2026-02-18 13:51:03'),
-(3, 3, 1, '2026-02-18 13:51:04'),
-(4, 4, 1, '2026-02-18 13:51:04'),
-(5, 5, 1, '2026-02-18 13:51:04');
+(1, 1, 2, '2026-02-24 14:03:45'),
+(2, 2, 1, '2026-02-24 14:03:45'),
+(3, 3, 1, '2026-02-24 14:03:46'),
+(4, 4, 1, '2026-02-24 14:03:46'),
+(5, 5, 1, '2026-02-24 14:03:46');
 
 --
 -- Índices para tablas volcadas
@@ -592,6 +637,15 @@ ALTER TABLE `perfiles_usuario`
   ADD UNIQUE KEY `perfiles_usuario_id_usuario_unique` (`id_usuario`);
 
 --
+-- Indices de la tabla `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
+  ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`),
+  ADD KEY `personal_access_tokens_expires_at_index` (`expires_at`);
+
+--
 -- Indices de la tabla `registros_progreso`
 --
 ALTER TABLE `registros_progreso`
@@ -673,7 +727,7 @@ ALTER TABLE `usuarios_roles`
 -- AUTO_INCREMENT de la tabla `ajustes_usuario`
 --
 ALTER TABLE `ajustes_usuario`
-  MODIFY `id_ajustes_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_ajustes_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `clases_gimnasio`
@@ -715,19 +769,25 @@ ALTER TABLE `mensajes_ia`
 -- AUTO_INCREMENT de la tabla `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `perfiles_usuario`
 --
 ALTER TABLE `perfiles_usuario`
-  MODIFY `id_perfil_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_perfil_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `registros_progreso`
 --
 ALTER TABLE `registros_progreso`
-  MODIFY `id_registro_progreso` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_registro_progreso` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `reservas_clase`
@@ -757,7 +817,7 @@ ALTER TABLE `rutinas_usuario`
 -- AUTO_INCREMENT de la tabla `seguridad_usuario`
 --
 ALTER TABLE `seguridad_usuario`
-  MODIFY `id_seguridad_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_seguridad_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_clase`
@@ -769,7 +829,7 @@ ALTER TABLE `tipos_clase`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios_roles`

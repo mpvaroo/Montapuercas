@@ -12,10 +12,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class User extends Authenticatable implements MustVerifyEmail
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Auth\Passwords\CanResetPassword;
+
+class User extends Authenticatable implements MustVerifyEmail, CanResetPasswordContract
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable, TwoFactorAuthenticatable, CanResetPassword;
 
     /**
      * The table associated with the model.
@@ -223,5 +226,26 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getAvatarUrlAttribute(): string
     {
         return $this->perfil?->avatar_url ?? asset('avatars/nada.png');
+    }
+
+    /**
+     * Get the e-mail address where password reset links are sent.
+     *
+     * @return string
+     */
+    public function getEmailForPasswordReset()
+    {
+        return $this->correo_usuario;
+    }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\ResetPasswordSpanish($token));
     }
 }
