@@ -149,15 +149,12 @@
         <aside class="chat" aria-label="IA Coach">
             <div class="chat-head">
                 <div class="chat-head-left">
-                    <div class="chip" aria-hidden="true">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                            <path
-                                d="M12 2a6 6 0 0 0-6 6v3H5a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1h1a3 3 0 0 0 3-3v-2a3 3 0 0 0-3-3h-1V8a6 6 0 0 0-6-6Zm-4 6a4 4 0 1 1 8 0v3H8V8Zm10 5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-1v-4h1ZM6 17H5a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h1v4Zm2 3v-7h8v7H8Z" />
-                        </svg>
+                    <div class="chip" aria-hidden="true" style="overflow:hidden; padding:0; border-radius:50%; width:38px; height:38px; border: 1.5px solid rgba(190,145,85,.4);">
+                        <img src="{{ asset('img/ia-coach.jpg') }}" alt="IA Coach" style="width:100%; height:100%; object-fit:cover; display:block;">
                     </div>
                     <div style="min-width:0;">
                         <h2>IA Coach</h2>
-                        <p>Rutinas y reservas, sin fricción.</p>
+                        <p style="color:#16fa16;">En línea · listo para ayudarte</p>
                     </div>
                 </div>
                 <button class="kebab" type="button" aria-label="Opciones">···</button>
@@ -768,9 +765,9 @@
             max-width: 92%;
             padding: 12px 12px;
             border-radius: 16px;
-            border: 1px solid rgba(239, 231, 214, .12);
-            background: rgba(0, 0, 0, .14);
-            color: rgba(239, 231, 214, .82);
+            border: 1px solid rgba(239, 231, 214, .18);
+            background: rgba(30, 30, 30, .70);
+            color: rgba(239, 231, 214, .95);
             font-size: 13px;
             line-height: 1.4;
             letter-spacing: .01em;
@@ -780,16 +777,18 @@
         .bubble.ai {
             border-top-left-radius: 10px;
             background:
-                radial-gradient(120% 140% at 20% 0%, rgba(190, 145, 85, .12), transparent 45%),
-                rgba(0, 0, 0, .14);
+                radial-gradient(120% 140% at 20% 0%, rgba(190, 145, 85, .22), transparent 55%),
+                rgba(20, 18, 15, .85);
+            border-color: rgba(190, 145, 85, .22);
         }
 
         .bubble.user {
             align-self: flex-end;
             border-top-right-radius: 10px;
             background:
-                radial-gradient(120% 140% at 20% 0%, rgba(22, 250, 22, .10), transparent 45%),
-                rgba(0, 0, 0, .16);
+                radial-gradient(120% 140% at 20% 0%, rgba(22, 250, 22, .18), transparent 55%),
+                rgba(15, 30, 15, .85);
+            border-color: rgba(22, 250, 22, .20);
         }
 
         .chat-foot {

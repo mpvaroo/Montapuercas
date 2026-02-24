@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-02-2026 a las 15:57:40
+-- Tiempo de generación: 24-02-2026 a las 17:57:11
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -45,7 +45,7 @@ INSERT INTO `ajustes_usuario` (`id_ajustes_usuario`, `id_usuario`, `notificacion
 (1, 3, 1, 1, 'directo', 'es', 'lunes'),
 (2, 4, 1, 1, 'directo', 'es', 'lunes'),
 (3, 5, 1, 1, 'directo', 'es', 'lunes'),
-(4, 6, 1, 1, 'motivador', 'es', 'lunes');
+(6, 8, 1, 1, 'directo', 'es', 'lunes');
 
 -- --------------------------------------------------------
 
@@ -64,10 +64,18 @@ CREATE TABLE `cache` (
 --
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('laravel-cache-45b427b416163d86a662c88d685aaeb6', 'i:1;', 1771938595),
-('laravel-cache-45b427b416163d86a662c88d685aaeb6:timer', 'i:1771938595;', 1771938595),
-('laravel-cache-c1dfd96eea8cc2b62785275bca38ac261256e278', 'i:1;', 1771944811),
-('laravel-cache-c1dfd96eea8cc2b62785275bca38ac261256e278:timer', 'i:1771944811;', 1771944811);
+('laravel-cache-45b427b416163d86a662c88d685aaeb6', 'i:1;', 1771951086),
+('laravel-cache-45b427b416163d86a662c88d685aaeb6:timer', 'i:1771951086;', 1771951086),
+('laravel-cache-6a75b1464724f04a7f7d1f2b0eedca2d', 'i:1;', 1771949655),
+('laravel-cache-6a75b1464724f04a7f7d1f2b0eedca2d:timer', 'i:1771949655;', 1771949655),
+('laravel-cache-automai@admin123|127.0.0.1', 'i:1;', 1771949958),
+('laravel-cache-automai@admin123|127.0.0.1:timer', 'i:1771949958;', 1771949958),
+('laravel-cache-b727aa1631763e305685ff01e5dff72e', 'i:1;', 1771949958),
+('laravel-cache-b727aa1631763e305685ff01e5dff72e:timer', 'i:1771949958;', 1771949958),
+('laravel-cache-f02a03807cdb0735ad9edbdfc3e478e2', 'i:1;', 1771949671),
+('laravel-cache-f02a03807cdb0735ad9edbdfc3e478e2:timer', 'i:1771949671;', 1771949671),
+('laravel-cache-manuelmvp2004@gmail.co|127.0.0.1', 'i:1;', 1771949655),
+('laravel-cache-manuelmvp2004@gmail.co|127.0.0.1:timer', 'i:1771949655;', 1771949655);
 
 -- --------------------------------------------------------
 
@@ -244,7 +252,21 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (5, '2026_02_17_182000_drop_checkin_reserva_table', 1),
 (6, '2026_02_19_100000_add_dia_semana_to_rutinas_usuario_table', 1),
 (7, '2026_02_23_000000_add_email_verified_at_to_usuarios_table', 1),
-(8, '2026_02_24_082125_create_personal_access_tokens_table', 1);
+(8, '2026_02_24_082125_create_personal_access_tokens_table', 1),
+(9, '2026_02_24_153449_create_password_reset_tokens_table', 2),
+(10, '2026_02_24_154107_modify_password_reset_tokens_table_for_correo_usuario', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `password_reset_tokens`
+--
+
+CREATE TABLE `password_reset_tokens` (
+  `correo_usuario` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -274,7 +296,7 @@ INSERT INTO `perfiles_usuario` (`id_perfil_usuario`, `id_usuario`, `nombre_real_
 (1, 3, 'Rebeka Wuckert', '+1 (678) 546-1565', NULL, 'volumen', 2, 'intermedio', 99.99, 195, '1994-09-07'),
 (2, 4, 'Dr. Travis Denesik', '341.867.7104', NULL, 'volumen', 2, 'intermedio', 52.85, 203, '1999-03-10'),
 (3, 5, 'Prof. Cory Jakubowski', '386-466-2068', NULL, 'rendimiento', 6, 'intermedio', 119.45, 202, '2011-12-21'),
-(4, 6, 'Manuel', NULL, NULL, 'definir', 5, 'avanzado', NULL, NULL, '2026-02-24');
+(6, 8, 'Manuel', '633633633', NULL, 'salud', 3, 'principiante', 85.00, 185, '2026-02-24');
 
 -- --------------------------------------------------------
 
@@ -447,7 +469,7 @@ INSERT INTO `seguridad_usuario` (`id_seguridad_usuario`, `id_usuario`, `requiere
 (1, 3, 0, NULL, 0, NULL),
 (2, 4, 0, NULL, 0, NULL),
 (3, 5, 0, NULL, 0, NULL),
-(4, 6, 0, NULL, 0, NULL);
+(6, 8, 0, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -469,7 +491,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('bX6hWrTaZLnHHjKvD58pWUa35IpbxIhXZbZt9vBU', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiYmoyWDZDWWN1ZEt3dFowS0RsOHlKaEx3MENSRTJTRHpYN3FNWmtsZiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9yZWdpc3RlciI7czo1OiJyb3V0ZSI7czo4OiJyZWdpc3RlciI7fX0=', 1771944838);
+('BjKMJYfLsSPvMhTeq9Hofc1D7cpeWm5QtM5yWclh', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYjBjbWl3OTVYSkg1Y0VGOTAwSkdBYTdkYXVYNHdub29IT2FIV09ncyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6OToiZGFzaGJvYXJkIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1771951942),
+('fahHPKlWDtppcTtBfhlK7EKrm4NIppdqiWWDFndk', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiWkVaVkdwNWszY2x1RDQxeDRhMk5oa0pWSmZEcWJ3N0ZPVEt0bUpTUSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1771946626);
 
 -- --------------------------------------------------------
 
@@ -524,7 +547,7 @@ INSERT INTO `usuarios` (`id_usuario`, `correo_usuario`, `email_verified_at`, `ha
 (3, 'lukas.lowe@example.org', NULL, '$2y$12$adEi6hqZDowm.ZV5ebuPGuyZYfbHLpimHBxrnxY7krFQZKo6xU1rO', 'Talon Mueller', 'activo', '2026-02-24 13:03:46', NULL, 'Vp4nLWPC83', NULL, NULL, NULL),
 (4, 'jhill@example.org', NULL, '$2y$12$adEi6hqZDowm.ZV5ebuPGuyZYfbHLpimHBxrnxY7krFQZKo6xU1rO', 'Ansley Metz', 'activo', '2026-02-24 13:03:46', NULL, '42oxSHGtS3', NULL, NULL, NULL),
 (5, 'ceasar.keeling@example.net', NULL, '$2y$12$adEi6hqZDowm.ZV5ebuPGuyZYfbHLpimHBxrnxY7krFQZKo6xU1rO', 'Gladys Hessel', 'activo', '2026-02-24 13:03:46', NULL, 'iD5UKF7neZ', NULL, NULL, NULL),
-(6, 'manuelmvp2004@gmail.com', NULL, '$2y$12$e0FdhWAfeeehhWJLjDeJ9esc6mmTykJx0qKqE2Gf.LSDcjQwTvwWm', 'mpvaroo', 'activo', '2026-02-24 15:51:01', NULL, NULL, NULL, NULL, NULL);
+(8, 'manuelmvp2004@gmail.com', '2026-02-24 14:26:10', '$2y$12$.y9/TcluraCLdbBUQWXAQuJwQzXVBXi0vRK6LHWP9gJtoAEFoG.Ky', 'mpvaroo', 'activo', '2026-02-24 16:25:46', NULL, 'UIqWRbAComYcWvg6V4ZqdRxHLe3RWdDxq5VqGnBBJUiR0nJGUZAbkSUyDYfY', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -630,6 +653,12 @@ ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `password_reset_tokens`
+--
+ALTER TABLE `password_reset_tokens`
+  ADD PRIMARY KEY (`correo_usuario`);
+
+--
 -- Indices de la tabla `perfiles_usuario`
 --
 ALTER TABLE `perfiles_usuario`
@@ -727,7 +756,7 @@ ALTER TABLE `usuarios_roles`
 -- AUTO_INCREMENT de la tabla `ajustes_usuario`
 --
 ALTER TABLE `ajustes_usuario`
-  MODIFY `id_ajustes_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_ajustes_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `clases_gimnasio`
@@ -769,13 +798,13 @@ ALTER TABLE `mensajes_ia`
 -- AUTO_INCREMENT de la tabla `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `perfiles_usuario`
 --
 ALTER TABLE `perfiles_usuario`
-  MODIFY `id_perfil_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_perfil_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `personal_access_tokens`
@@ -817,7 +846,7 @@ ALTER TABLE `rutinas_usuario`
 -- AUTO_INCREMENT de la tabla `seguridad_usuario`
 --
 ALTER TABLE `seguridad_usuario`
-  MODIFY `id_seguridad_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_seguridad_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_clase`
@@ -829,7 +858,7 @@ ALTER TABLE `tipos_clase`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios_roles`

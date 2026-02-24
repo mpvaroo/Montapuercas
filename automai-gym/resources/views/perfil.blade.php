@@ -233,37 +233,6 @@
             </section>
         </div>
 
-        <!-- IA COACH -->
-        <aside class="chat" aria-label="IA Coach">
-            <div class="chat-head">
-                <div class="left">
-                    <div class="chip" aria-hidden="true">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                            <path
-                                d="M12 2a6 6 0 0 0-6 6v3H5a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1h1a3 3 0 0 0 3-3v-2a3 3 0 0 0-3-3h-1V8a6 6 0 0 0-6-6Zm-4 6a4 4 0 1 1 8 0v3H8V8Zm10 5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-1v-4h1ZM6 17H5a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h1v4Zm2 3v-7h8v7H8Z" />
-                        </svg>
-                    </div>
-                    <div style="min-width:0;">
-                        <h2>IA Coach</h2>
-                        <p>Tu perfil guía las rutinas.</p>
-                    </div>
-                </div>
-                <button class="kebab" type="button" aria-label="Opciones">···</button>
-            </div>
-
-            <div class="chat-body">
-                <div class="bubble ai">Veo tu objetivo en “salud” y 3 días/semana. ¿Quieres que lo adapte a 4
-                    días?</div>
-                <div class="bubble user">Aún no, prefiero 3.</div>
-                <div class="bubble ai">Perfecto. Con 3 días, priorizamos básicos + progresión suave.</div>
-            </div>
-
-            <div class="chat-foot">
-                <button class="iconbtn" type="button" aria-label="Adjuntar">＋</button>
-                <input class="chat-input" type="text" placeholder="Escribe un mensaje…" />
-                <button class="iconbtn" type="button" aria-label="Enviar">➤</button>
-            </div>
-        </aside>
     </div>
 @endsection
 
@@ -272,7 +241,9 @@
         .main {
             min-width: 0;
             display: grid;
-            grid-template-columns: 1fr 380px;
+            grid-template-columns: 1fr;
+            max-width: 800px;
+            margin: 0 auto;
             gap: 10px;
             align-content: start;
         }
