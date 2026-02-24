@@ -7,9 +7,12 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProgresoController;
 
 
+// Página pública de bienvenida (sin autenticación)
+Route::view('/', 'welcome')->name('welcome');
+
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::get('/', function () {
+    Route::get('/home', function () {
         return redirect()->route('dashboard');
     })->name('home');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -82,5 +85,3 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 require __DIR__ . '/settings.php';
-
-

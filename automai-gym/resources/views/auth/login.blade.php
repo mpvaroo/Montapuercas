@@ -219,10 +219,10 @@
 @section('content')
     <form class="card" id="formLogin" method="POST" action="{{ route('login') }}">
         @csrf
-        <div class="brand">
+        <a href="{{ route('welcome') }}" class="brand" style="text-decoration: none;">
             <b>AUTOMAI</b>
             GYM
-        </div>
+        </a>
 
         <div class="header-group">
             <h1 class="headline">Entrena<br>con intención.</h1>
@@ -253,6 +253,7 @@
 
         <div class="row" style="margin-top:10px">
             <a class="link" href="{{ route('register') }}" id="linkRegistro">¿No tienes cuenta? Regístrate</a>
+            <a class="link" href="{{ route('welcome') }}">Volver al inicio</a>
         </div>
 
         <button class="btn" type="submit">Entrar →</button>

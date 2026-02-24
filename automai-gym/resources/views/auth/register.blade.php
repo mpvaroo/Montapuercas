@@ -226,10 +226,10 @@
 @section('content')
     <form class="card" id="formRegistro" autocomplete="on" method="POST" action="{{ route('register') }}">
         @csrf
-        <div class="brand">
+        <a href="{{ route('welcome') }}" class="brand" style="text-decoration: none; display: block;">
             <b>AUTOMAI</b>
             GYM
-        </div>
+        </a>
 
         <div>
             <h1 class="headline">Crea tu cuenta.</h1>
@@ -242,20 +242,16 @@
 
             <div class="grid">
                 <input class="input" id="nombre_mostrado_usuario" type="text" name="nombre_mostrado_usuario"
-                    placeholder="Nombre mostrado" required
-                    old="{{ old('nombre_mostrado_usuario') }}" />
+                    placeholder="Nombre mostrado" required old="{{ old('nombre_mostrado_usuario') }}" />
                 <input class="input" id="nombre_real_usuario" type="text" name="nombre_real_usuario"
-                    placeholder="Nombre real" required
-                    old="{{ old('nombre_real_usuario') }}" />
+                    placeholder="Nombre real" required old="{{ old('nombre_real_usuario') }}" />
             </div>
 
             <div class="grid">
                 <input class="input" id="contrasena_usuario" type="password" name="password" placeholder="Contraseña"
-                    required
-                    old="{{ old('password') }}" />
+                    required old="{{ old('password') }}" />
                 <input class="input" id="contrasena_repetir" type="password" name="password_confirmation"
-                    placeholder="Repetir contraseña" required
-                    old="{{ old('password_confirmation') }}" />
+                    placeholder="Repetir contraseña" required old="{{ old('password_confirmation') }}" />
             </div>
 
             <div class="grid">
@@ -286,10 +282,10 @@
             </div>
 
             <div class="grid">
-                <input class="input" id="peso_kg_usuario" type="number" step="0.01" min="0" name="peso_kg_usuario"
-                    placeholder="Peso kg" />
-                <input class="input" id="altura_cm_usuario" type="number" step="1" min="0" name="altura_cm_usuario"
-                    placeholder="Altura cm" />
+                <input class="input" id="peso_kg_usuario" type="number" step="0.01" min="0"
+                    name="peso_kg_usuario" placeholder="Peso kg" />
+                <input class="input" id="altura_cm_usuario" type="number" step="1" min="0"
+                    name="altura_cm_usuario" placeholder="Altura cm" />
             </div>
 
             <div class="grid">
@@ -306,6 +302,7 @@
 
             <div class="line">
                 <a class="link" href="{{ route('login') }}">← Volver a Login</a>
+                <a class="link" href="{{ route('welcome') }}">Volver al inicio</a>
                 <span class="note">Se crea como rol: usuario</span>
             </div>
 
