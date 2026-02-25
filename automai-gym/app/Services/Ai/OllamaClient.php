@@ -25,7 +25,7 @@ class OllamaClient
     public function chat(array $messages): string
     {
         try {
-            $response = Http::timeout(120)->post("{$this->baseUrl}/api/chat", [
+            $response = Http::timeout(300)->post("{$this->baseUrl}/api/chat", [
                 'model'    => $this->model,
                 'messages' => $messages,
                 'stream'   => false,
