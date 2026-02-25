@@ -1,0 +1,198 @@
+Total paginas: 16
+================================================================================
+
+--- PAGINA 1 ---
+ProyectoIntegradoDAW
+TGPersonalCloud
+AdriánPinoHidalgo15demarzodel 2024
+
+
+--- PAGINA 2 ---
+Índice
+Índice 1Presentacióndel proyecto 2Funcionalidadesdelaapp 3Gestióndelasesión 3Gestióndecanales 3Gestióndetopics 3Personalizacióndelainterfaz 4Chatbot 4Herramientasutilizadas 4Tecnologíasdedesarrollo 4●Backend 4●Frontend 4●Basededatos 4Entornodedesarrollo 5●Visual StudioCode 5Herramientasdediseño 5●Figma 5●Draw.io 5Guíadeestilos 6Paletadecolores 6●ModoOscuro 6●ModoClaro 6Tipografía 6Iconos 6Diseñodelapágina 7●Splash 7●Login 8●OTP 8●Crear contraseña 9●Enviar contraseña 9●Inicio, Topics, UsuariosyPermisos 10●ConﬁguraciónyPermisos 11Diseño 12Diseñobasededatos 12TablaUser 13TablaChannel 13TablaTopic 13
+1
+
+
+--- PAGINA 3 ---
+TablaRight 14TablaContact 14Conclusiones 15Diﬁcultadesencontradas 15Conocimientosadquiridos 15Futurasimplementaciones 15Reﬂexionesadicionales 15
+Presentacióndel proyecto
+¿Necesitas más espacio en tu móvil y proteger tus archivos? TGPersonalCloud es la soluciónperfecta.
+TGPersonalCloudteofrece:
+● EspacioilimitadoenlanubedeTelegramparaalmacenar todotipodearchivos.● Organizaciónperfectapor temasgraciasalagestióndecanalesdeTelegram.● Accesodesdecualquier lugar ydispositivoconconexiónainternet.
+2
+
+
+--- PAGINA 4 ---
+Funcionalidadesdelaapp
+Gestióndelasesión
+Inicio de sesión seguro ➜Inicia sesión en TGPersonalCloud utilizando tu cuenta de Telegram.La aplicación te solicitará tu número de teléfono y un código OTP(contraseña de un solo uso)enviadopor Telegramparaveriﬁcar tuidentidad.
+Almacenamiento seguro del token ➜ Una vez que inicias sesión por primera vez,TGPersonalCloud almacena un token de forma segura para evitar la necesidad de introducir elcódigoOTPcadavezqueaccedes.
+Cierre y eliminación de sesión ➜Si necesitas cerrar sesión en la aplicación, puedes hacerlofácilmente desde el menú de conﬁguración. También puedes eliminar tu sesión por completo sidecidesdejar deusar TGPersonalCloud.
+Gestióndecanales
+Creación ilimitada de canales ➜ Crea tantos canales como necesites para organizar tusarchivos en la nube. Cada canal puede tener un nombre y una descripción personalizadosparaquepuedasidentiﬁcarlosfácilmente.
+Gestión de permisos ➜ Decide quién puede acceder a tus canales y qué permisos tienen.Puedespermitir queotrosusuariosvean, descarguenoinclusomodiﬁquentusarchivos.
+Eliminación de canales ➜Si ya no necesitas un canal, puedes eliminarlo fácilmente desde laaplicación.
+Gestióndetopics
+Creación de subcanales ➜ Organiza tus archivos dentro de cada canal creando topics. Lostopics son como subcarpetas que te permiten agrupar tus archivos por tema, tipo o cualquierotracategoríaqueteseaútil.
+Asignaciónde nombres ➜Dale a cada topic unnombredescriptivoparaquepuedasencontrarrápidamentelosarchivosquenecesitas.
+Eliminaciónde topics ➜Elimina los topicsqueyanonecesitesparamantener unaorganizaciónóptima.
+3
+
+
+--- PAGINA 5 ---
+Personalizacióndelainterfaz
+Modoclaroy oscuro➜ Elige el modo de visualización quemejor seadapteatuspreferencias.El modo oscuro es ideal para usar la aplicación en entornosconpocaluz, mientrasqueel modoclaroteofreceunaexperienciamásluminosayvibrante.
+Selección del color principal ➜ Personaliza la apariencia de la aplicación seleccionando tucolor favoritocomocolor principal.
+Chatbot
+Aunque el chatbot de TGPersonalCloud no integra inteligencia artiﬁcial, aprovechar el continuocrecimiento de la IApuede inspirar la creación de un bot que responda a preguntas frecuentescon respuestas preprogramadas. Aunque noesIAensí misma, estaaproximaciónpuedeofreceruna experiencia útil y eﬁciente para los usuarios al proporcionar respuestas instantáneas a susconsultascomunes.
+Herramientasutilizadas
+Tecnologíasdedesarrollo
+● Backend
+Python➜Lenguajedeprogramaciónversátil yrobusto.
+Quart ➜Libreríaparacrear API'sRESTful conPythondeformarápidaysencilla.
+Telethon➜LibreríaquefacilitalainteracciónconlaAPI deTelegram.
+● Frontend
+Dart ➜Lenguajedeprogramaciónquepermitecrear aplicacionesmultiplataformaconFlutter.
+● Basededatos
+SQLite3➜ Basededatosligerayeﬁcienteparael almacenamientodedatoslocal.
+En resumen, TGPersonalCloud se ha desarrollado con una combinación de tecnologíasmodernasyeﬁcientesquegarantizansurendimiento, ﬂexibilidadyescalabilidad.
+4
+
+
+--- PAGINA 6 ---
+Entornodedesarrollo
+● Visual StudioCode
+Desarrollo completo ➜ El desarrollo de TGPersonalCloud se ha realizado en su totalidad enVisual StudioCode.
+Extensiones útiles ➜ VS Code ofrece una amplia gama de extensiones que facilitan eldesarrollo. Lasextensionesutilizadasparaesteproyectoincluyen:
+● ExtensionesdePythonparalaejecucióndescripts.● ExtensionesdeFlutter yDart parael desarrollodel frontend.● ExtensiónSQLite3Editor paralavisualizaciónygestióndelabasededatos.● AndroidStudio
+Emulación y pruebas ➜ Android Studio se ha utilizado para crear emuladores de diferentesdispositivosAndroid.
+Pruebas en diferentes versiones ➜Se han realizado pruebas en dos emuladores: uno con laúltima versión de Android y otro con una versión anterior, para asegurar la compatibilidad de laaplicaciónendiferentesentornos.
+Herramientasdediseño
+● Figma
+Diseñode interfaz ➜Se ha utilizado Figma para crear el diseño de la interfaz de usuario de laaplicación.
+Inspiracióny colaboración➜La comunidad de Figma ha sido una fuentevaliosadeideasparacrear undiseñointuitivoyatractivo.
+● Draw.io
+Diseño de la base de datos ➜Se ha utilizado Draw.io para crear un diagrama de la base dedatosdelaaplicación.
+Compartibilidad ➜ Draw.io permite compartir fácilmente el diagrama con otros miembros delequipodedesarrollo.
+5
+
+
+--- PAGINA 7 ---
+Guíadeestilos
+Paletadecolores
+● ModoOscuro
+● ModoClaro
+6
+
+
+--- PAGINA 8 ---
+Tipografía
+SehautilizadolafuentePoppinsdeGoogleFontsparatodalaaplicación.
+Iconos
+Se han utilizado los iconos proporcionados por la librería de Flutter, se hanaquellosiconosquemejor representanlasdiferentesfuncionalidadesdelaaplicación.
+Diseñodelapágina
+Antes de comenzar a programar, se ha realizado un diseño completo de la aplicación parafacilitar el proceso de desarrollo y garantizar una experiencia de usuario consistente. Laaplicación está diseñada para ser responsive, adaptándose a diferentes tamaños de pantalla,desdesmartphoneshastadesktops.
+● Splash
+Lapáginadeiniciodelaaplicaciónpresentaresumidamenteel proyecto, esloqueel usuarioveráal entrar alaaplicación.
+7
+
+
+--- PAGINA 9 ---
+● Login
+Esta es la vista Inicio de sesión de la aplicación, para iniciar sesión el usuario debe introducir elnúmerodeteléfonodesucuentadeTelegram.
+● OTP
+En esta vista cuando el usuario introduce su número de teléfono Telegramenvía un código deveriﬁcaciónquedeberáintroducir parainiciar sesión.
+8
+
+
+--- PAGINA 10 ---
+● Crear contraseña
+La primera vez que el usuario inicia sesión en la aplicación debe crear una contraseña paraacceder la próxima vez que inicie sesión, así se evita tener que volver a solicitar el código deveriﬁcaciónaTelegram.
+● Enviar contraseña
+Enestavistael usuariopodráiniciar sesiónconsucontraseñatrashaberlacreadolaprimeravez.
+9
+
+
+--- PAGINA 11 ---
+● Inicio, Topics, UsuariosyPermisos
+Tras iniciar sesión el usuario se encontrará con la página principal delaaplicación, dondepodrácrear nuevos canales (imagen central), una vez creadoel usuariopuedeentrar dentrodel propiocanal para crear topics (imagen derecha) y también puede gestionar los permisos de loscontactos(imagenizquierda).
+10
+
+
+--- PAGINA 12 ---
+● ConﬁguraciónyPermisos
+En la ventana de conﬁguración (imagen izquierda) el usuario puede alternar entre el modooscuroyel modoclaro, cambiar el color primariodelaaplicaciónycerrar lasesión. Enlavistadelbot (imagen derecha) el usuario puede hacer diferentespreguntasquerespondenalasposiblespreguntasmásfrecuentessobrelaaplicación.
+11
+
+
+--- PAGINA 13 ---
+Diseño
+Diseñobasededatos
+12
+
+
+--- PAGINA 14 ---
+TablaUser
+id➜Identiﬁcador únicoparacadausuario, eslaclaveprimariayaumentaautomáticamente.
+string_session➜Cadenaúnicaqueidentiﬁcalasesióndeunusuario, probablementeusadaparaautenticación.
+phone_number ➜Númerodeteléfonodel usuario, debeser único.
+password➜Contraseñadel usuario, peroesimportantedestacar quesealmacenaencriptada.Estoescrucial por seguridadparaevitar el accesonoautorizadoalascuentasdeusuario.
+TablaChannel
+id➜Identiﬁcador únicoparacadacanal, eslaclaveprimaria.
+user_id➜Referenciaal iddel usuarioquecreóel canal. Estableceunarelacióndeclaveexternaentrelastablasusuarioycanal.
+title➜Títulodel canal.
+description➜Descripciónopcional del canal.
+users➜Númerodeusuariossuscritosal canal.
+TablaTopic
+Estatablaalmacenainformaciónsobrelostemasdentrodecadacanal.
+id➜Identiﬁcador únicoparacadatema.
+channel_id➜Referenciaal iddel canal al queperteneceel tema. Estableceunarelacióndeclaveexternaentrelastablascanal ytema.
+title➜Títulodel tema.
+color ➜Color asociadoal tema, probablementeusadopararepresentaciónvisual.
+13
+
+
+--- PAGINA 15 ---
+TablaRight
+channel_id➜Referenciaal iddel canal dondeseaplicanlospermisos.
+contact_id➜Referenciaal iddel usuario(contacto) aquienseasignanlospermisos.
+send_messages➜Banderabooleanaqueindicasi el usuariopuedeenviar mensajesenelcanal.
+send_media➜Banderabooleanaqueindicasi el usuariopuedeenviar medios(por ejemplo,imágenes, videos) enel canal.
+send_stickers➜Banderabooleanaqueindicasi el usuariopuedeenviar stickersenel canal.
+send_gifs➜Banderabooleanaqueindicasi el usuariopuedeenviar GIFsenel canal.
+send_games➜Banderabooleanaqueindicasi el usuariopuedeenviar juegosenel canal.
+send_inline➜Banderabooleanaqueindicasi el usuariopuedeenviar contenidoenlínea(porejemplo, bots, teclados) enel canal.
+embed_link➜Banderabooleanaqueindicasi el usuariopuedeincrustar enlacesenel canal.
+send_polls➜Banderabooleanaqueindicasi el usuariopuedeenviar encuestasenel canal.
+change_info➜Banderabooleanaqueindicasi el usuariopuedecambiar lainformacióndelcanal.
+invite_users➜Banderabooleanaqueindicasi el usuariopuedeinvitar aotrosusuariosal canal.
+pin_messages➜Banderabooleanaqueindicasi el usuariopuedeﬁjar mensajesenel canal.
+TablaContact
+id➜Identiﬁcador únicoparacadacontacto, eslaclaveprimaria.
+user_id➜Referenciaal iddel usuarioqueposeeel contacto.
+ﬁrst_name➜Nombredel contacto.
+last_name➜Apellidodel contacto.
+user_name➜Nombredeusuariodel contacto, debeser único.
+phone_number ➜Númerodeteléfonodel contacto, debeser único.
+14
+
+
+--- PAGINA 16 ---
+Conclusiones
+Diﬁcultadesencontradas
+Cambiodelenguaje➜Laideainicial erausar JavaScript conlalibreríaGramJS, perolaeliminacióndelagestióndearchivoslocalesenel navegador obligóamigrar aDart.
+Backendasíncrono➜SecomenzóconFlaskparael backend, peronosoportabalaspeticionesasíncronasalaAPI deTelegram, loquerequiriómigrar aQuart.
+Entornodetrabajo➜LaconﬁguracióndeAndroidStudioylosemuladorespresentódiﬁcultadesal inicio.
+Conexiónadispositivos➜Lacomunicaciónconel backenddesdediferentesdispositivos(webvs. emuladores) requiriósolucionesespecíﬁcas.
+Conocimientosadquiridos
+Dart ➜Dominiodel lenguajeparael desarrollodelaaplicación.
+Python➜Aprendizajebásicoparalagestióndel backendconlalibreríaQuart.
+API deTelegram➜ImplementacióndellamadasalaAPI paralasfuncionalidadesdelaaplicación.
+Futurasimplementaciones
+Integracióndebackend➜Sebuscaintegrar el backendenlaaplicaciónFlutter mediantelalibreríaFlet (endesarrollo) parasimpliﬁcar lainstalaciónyel uso.
+CompilaciónAPK➜Flet aúnnopermitecompilar aplicacionesAPK, loquelimitalaimplementaciónactual.
+Reﬂexionesadicionales
+Laexperienciahasidodesaﬁanteperogratiﬁcante, conunaprendizajesigniﬁcativoendiferentesáreas. Laaplicaciónseencuentraenunestadofuncional ycompleto, perolaintegracióndelbackendenFlutter esunobjetivoclaveparamejorar laexperienciadel usuario.
+Seesperaqueel desarrollodeFlet ylaposibilidaddecompilar APKsfacilitenlaimplementaciónyel usodelaaplicaciónenel futuro.
+15
+

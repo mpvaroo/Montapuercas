@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="btn-row">
-                    <button class="btn">Empezar ahora</button>
+                    
                     <button class="btn-ghost" onclick="toggleModal('modalEdit')">Editar rutina</button>
                     <button class="btn-ghost" onclick="toggleModal('modalAdd')">Añadir ejercicio</button>
                 </div>

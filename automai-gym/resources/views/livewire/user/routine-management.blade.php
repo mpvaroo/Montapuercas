@@ -144,7 +144,7 @@ new class extends Component {
         <button wire:click="toggleModal" class="btn-action btn-primary" style="border:none; outline:none;">
             <span>+</span> Crear Nueva Rutina
         </button>
-        <a href="#" class="btn-action btn-secondary">
+        <a href="{{ route('calendario') }}" class="btn-action btn-secondary">
             <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                 <path
                     d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z" />
@@ -166,8 +166,7 @@ new class extends Component {
     <!-- Routine Cards Grid -->
     <div class="routines-grid">
         @forelse($routines as $index => $rutina)
-            <div
-                class="routine-card {{ $index % 3 == 0 ? 'focus-top' : ($index % 3 == 2 ? 'full-width focus-low' : '') }}">
+            <div class="routine-card {{ $index % 3 == 0 ? 'focus-top' : ($index % 3 == 2 ? 'full-width focus-low' : '') }}">
                 <img class="routine-img" src="{{ asset('img/rutina-' . (($index % 3) + 1) . '.png') }}"
                     alt="{{ $rutina->nombre_rutina_usuario }}">
                 <div class="routine-frame"></div>
@@ -178,9 +177,11 @@ new class extends Component {
                             <div class="detail"><span class="check-ico">✓</span>
                                 {{ $rutina->dia_semana ? ucfirst($rutina->dia_semana) : 'Libre' }}</div>
                             <div class="detail"><span class="check-ico">✓</span> Duración:
-                                {{ $rutina->duracion_estimada_minutos }} min</div>
+                                {{ $rutina->duracion_estimada_minutos }} min
+                            </div>
                             <div class="detail"><span class="check-ico">✓</span> Nivel:
-                                {{ ucfirst($rutina->nivel_rutina_usuario) }}</div>
+                                {{ ucfirst($rutina->nivel_rutina_usuario) }}
+                            </div>
                             <div class="detail"><span class="check-ico">👤</span> Origen:
                                 <b>{{ $rutina->origen_rutina === 'plantilla' ? 'Plantilla' : ($rutina->origen_rutina === 'ia_coach' ? 'IA Coach' : 'Usuario') }}</b>
                             </div>
@@ -190,7 +191,7 @@ new class extends Component {
                             <a href="{{ route('detalle-rutina', $rutina->id_rutina_usuario) }}" class="btn-card"
                                 style="text-decoration:none; display:flex; align-items:center; justify-content:center;">Ver
                                 Rutina</a>
-                            <button class="btn-card highlight">Iniciar Rutina</button>
+
                             @if ($rutina->origen_rutina !== 'plantilla')
                                 <button wire:click="deleteRoutine({{ $rutina->id_rutina_usuario }})"
                                     wire:confirm="¿Estás seguro de que quieres eliminar esta rutina?" class="btn-card"
@@ -225,8 +226,8 @@ new class extends Component {
                     <div class="modal-body">
                         <div class="field">
                             <label class="label">Nombre de la rutina</label>
-                            <input class="input-modal" type="text" wire:model="nombre"
-                                placeholder="Ej: Empuje Hipertrofia" required>
+                            <input class="input-modal" type="text" wire:model="nombre" placeholder="Ej: Empuje Hipertrofia"
+                                required>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                             <div class="field">
@@ -274,8 +275,7 @@ new class extends Component {
                             <div style="display:flex; gap:10px; margin-bottom:10px;">
                                 <input type="text" class="input-modal" placeholder="Filtrar ejercicios..."
                                     wire:model.live="exerciseSearch" style="height:38px;">
-                                <select wire:model.live="muscleGroup" class="input-modal"
-                                    style="width:140px; height:38px;">
+                                <select wire:model.live="muscleGroup" class="input-modal" style="width:140px; height:38px;">
                                     <option value="">Todos</option>
                                     @foreach ($muscleGroups as $mg)
                                         <option value="{{ $mg }}">{{ ucfirst($mg) }}</option>
