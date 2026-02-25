@@ -4,9 +4,12 @@ namespace App\Services\Ai;
 
 use App\Models\ChatConversacion;
 use App\Models\ChatMensajeIA;
+use App\Models\ReservaClase;
 use App\Models\User;
+use App\Mail\ReservationConfirmed;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class AiCoachService
 {
@@ -551,8 +554,12 @@ PROMPT;
             ->where('id_clase_gimnasio', $idClase)->where('estado_clase', 'publicada')->first();
         if (!$clase) return ['exito' => false, 'error' => "Clase {$idClase} no encontrada."];
 
+        // Bloquear reservas en clases pasadas
+        if ($clase->fecha_inicio_clase <= now()) {
+            return ['exito' => false, 'pasada' => true, 'error' => "La clase \"{$clase->titulo_clase}\" ya ha tenido lugar. No es posible reservar clases pasadas."];
+        }
+
         // Comprobar si ya existe CUALQUIER registro para este usuario+clase
-        // (la tabla tiene UNIQUE KEY uq_usuario_clase en id_usuario, id_clase_gimnasio)
         $existeRegistro = DB::table('reservas_clase')
             ->where('id_usuario', $user->id_usuario)
             ->where('id_clase_gimnasio', $idClase)
@@ -562,15 +569,20 @@ PROMPT;
             if ($existeRegistro->estado_reserva === 'reservada') {
                 return ['exito' => false, 'ya_reservada' => true, 'error' => 'Ya estás reservado en esta clase.'];
             }
-            // Si estaba cancelada, reactivar la reserva existente (UPDATE en lugar de INSERT)
+            // Si estaba cancelada, reactivar
             DB::table('reservas_clase')
                 ->where('id_usuario', $user->id_usuario)
                 ->where('id_clase_gimnasio', $idClase)
-                ->update([
-                    'estado_reserva' => 'reservada',
-                    'fecha_reserva'  => now(),
-                    'origen_reserva' => 'ia_coach',
-                ]);
+                ->update(['estado_reserva' => 'reservada', 'fecha_reserva' => now(), 'origen_reserva' => 'ia_coach']);
+
+            // Enviar email de confirmación
+            try {
+                $reservaModel = ReservaClase::find($existeRegistro->id_reserva_clase);
+                if ($reservaModel) Mail::to($user->correo_usuario ?? $user->email)->send(new ReservationConfirmed($reservaModel));
+            } catch (\Throwable $e) {
+                Log::warning('[AiCoachService] Email reserva (reactivada): ' . $e->getMessage());
+            }
+
             return ['exito' => true, 'id_reserva' => $existeRegistro->id_reserva_clase, 'clase' => $clase->titulo_clase, 'inicio' => $clase->fecha_inicio_clase, 'fin' => $clase->fecha_fin_clase, 'reactivada' => true];
         }
 
@@ -588,6 +600,15 @@ PROMPT;
                 'fecha_reserva'     => now(),
                 'origen_reserva'    => 'ia_coach',
             ]);
+
+            // Enviar email de confirmación (igual que reserva manual)
+            try {
+                $reservaModel = ReservaClase::find($idReserva);
+                if ($reservaModel) Mail::to($user->correo_usuario ?? $user->email)->send(new ReservationConfirmed($reservaModel));
+            } catch (\Throwable $e) {
+                Log::warning('[AiCoachService] Email reserva: ' . $e->getMessage());
+            }
+
             return ['exito' => true, 'id_reserva' => $idReserva, 'clase' => $clase->titulo_clase, 'inicio' => $clase->fecha_inicio_clase, 'fin' => $clase->fecha_fin_clase];
         } catch (\Throwable $e) {
             Log::error('[AiCoachService] book_class: ' . $e->getMessage());
