@@ -38,18 +38,25 @@ class AiCoachService
         $ajustes = DB::table('ajustes_usuario')->where('id_usuario', $user->id_usuario)->first();
         $systemPrompt = $this->buildSystemPrompt($user, $perfil, $ajustes);
 
+        // Solo los últimos 16 mensajes para no saturar el contexto del LLM
         $historial = ChatMensajeIA::where('id_conversacion', $conversationId)
             ->orderBy('id', 'desc')
-            ->limit(30)
+            ->limit(16)
             ->get()->reverse()->values();
 
+        // Contar cuántos mensajes de tipo 'tool' hay para limitar el ruido
+        $toolCount = 0;
         $messages = [['role' => 'system', 'content' => $systemPrompt]];
         foreach ($historial as $msg) {
             if ($msg->rol === 'assistant') {
                 $messages[] = ['role' => 'assistant', 'content' => $msg->contenido];
             } elseif ($msg->rol === 'tool') {
-                // Inyectar resultados de herramientas como contexto del usuario para que el LLM los recuerde
-                $messages[] = ['role' => 'user', 'content' => '[RESULTADO ' . strtoupper($msg->tool_name ?? 'TOOL') . ']: ' . $msg->contenido];
+                // Solo incluir los últimos 3 resultados de herramienta para reducir ruido
+                $toolCount++;
+                if ($toolCount <= 3) {
+                    $toolLabel = strtoupper($msg->tool_name ?? 'TOOL');
+                    $messages[] = ['role' => 'user', 'content' => "[RESULTADO {$toolLabel}]: {$msg->contenido}"];
+                }
             } else {
                 $messages[] = ['role' => 'user', 'content' => $msg->contenido];
             }
@@ -83,29 +90,8 @@ class AiCoachService
             'tool_payload'    => $parsed['params'] ?? [],
         ]);
 
-        // Construir mensaje final legible directamente desde el resultado
+        // Usar el mensaje legible determinista (sin segunda llamada al LLM para evitar timeouts)
         $finalMsg = $this->buildHumanReadableResult($action, $toolResult);
-
-        // Intentar mejorar con segunda llamada al LLM
-        try {
-            $msgs2 = $messages;
-            $msgs2[] = ['role' => 'assistant', 'content' => json_encode($parsed)];
-            $msgs2[] = [
-                'role'    => 'user',
-                'content' => 'RESULTADO: ' . json_encode($toolResult, JSON_UNESCAPED_UNICODE)
-                    . "\n\nRedacta SOLO: {\"action\":\"reply\",\"message\":\"respuesta amigable en español al usuario, sin mencionar JSON ni action ni params\"}",
-            ];
-
-            $finalRaw    = $this->ollama->chat($msgs2);
-            $finalParsed = $this->extractJson($finalRaw);
-
-            if ($finalParsed && ($finalParsed['action'] ?? '') === 'reply' && !empty($finalParsed['message'])) {
-                $finalMsg = $finalParsed['message'];
-            }
-        } catch (\Throwable $e) {
-            Log::warning('[AiCoachService] Segunda llamada falló, usando fallback: ' . $e->getMessage());
-        }
-
         $this->saveAssistantMessage($conversationId, $user->id_usuario, $finalMsg);
         return ['message' => $finalMsg, 'action' => $action, 'tool_result' => $toolResult];
     }
@@ -123,11 +109,13 @@ class AiCoachService
 
             'book_class' => isset($result['exito']) && $result['exito']
                 ? "✅ ¡Reserva confirmada! Te he apuntado a **\"{$result['clase']}\"** ({$result['inicio']} al {$result['fin']}). La verás en tu sección de Reservas."
-                : (isset($result['llena']) && $result['llena']
-                    ? "❌ Lo siento, esa clase está llena. ¿Quieres que te busque otra clase disponible?"
-                    : (isset($result['ya_reservada']) && $result['ya_reservada']
-                        ? "⚠️ Ya tienes una reserva activa en esa clase. No se puede hacer una reserva duplicada. ¿Quieres apuntarte a otra clase?"
-                        : "❌ No pude hacer la reserva. " . ($result['error'] ?? 'Inténtalo de nuevo.'))),
+                : (isset($result['pasada']) && $result['pasada']
+                    ? "❌ No es posible reservar esa clase porque ya ha tenido lugar. Solo puedes reservar clases futuras. ¿Quieres que te muestre las clases disponibles?"
+                    : (isset($result['llena']) && $result['llena']
+                        ? "❌ Lo siento, esa clase está llena. ¿Quieres que te busque otra clase disponible?"
+                        : (isset($result['ya_reservada']) && $result['ya_reservada']
+                            ? "⚠️ Ya tienes una reserva activa en esa clase. No se puede hacer una reserva duplicada. ¿Quieres apuntarte a otra clase?"
+                            : "❌ No pude hacer la reserva: " . ($result['error'] ?? 'Inténtalo de nuevo.')))),
 
             'list_classes' => empty($result)
                 ? "No hay clases publicadas en este momento."
@@ -155,6 +143,7 @@ class AiCoachService
 
             'edit_routine' => isset($result['exito']) && $result['exito']
                 ? "✅ Rutina **\"{$result['nombre']}\"** actualizada correctamente."
+                    . (isset($result['dia_semana']) ? " Día: **{$result['dia_semana']}**." : "")
                 : "❌ No pude actualizar la rutina: " . ($result['error'] ?? 'Inténtalo de nuevo.'),
 
             default => json_encode($result, JSON_UNESCAPED_UNICODE),
@@ -224,20 +213,10 @@ class AiCoachService
 
     private function formatClassList(array $clases): string
     {
-        $meses = [
-            1=>'enero',2=>'febrero',3=>'marzo',4=>'abril',5=>'mayo',6=>'junio',
-            7=>'julio',8=>'agosto',9=>'septiembre',10=>'octubre',11=>'noviembre',12=>'diciembre',
-        ];
         $lineas = ["Estas son las clases disponibles:\n"];
         foreach ($clases as $c) {
-            $ts = strtotime($c['fecha_inicio']);
-            $diaSemana = $c['dia_semana'];
-            $dia  = date('j', $ts);
-            $mes  = $meses[(int)date('n', $ts)] ?? '';
-            $anio = date('Y', $ts);
-            $fechaLegible = "{$diaSemana} {$dia} de {$mes} de {$anio}";
-            $estado = $c['estado'] === 'llena' ? '🔴 LLENA' : "🟢 {$c['cupo_disponible']} plazas";
-            $lineas[] = "**{$c['nombre']}** — {$fechaLegible}, {$c['hora']} (instructor: {$c['instructor']}) — {$estado}";
+            $estado = str_contains($c['plazas'], 'LLENA') ? '🔴 LLENA' : "🟢 {$c['plazas']}";
+            $lineas[] = "**{$c['nombre']}** — {$c['fecha']} (instructor: {$c['instructor']}) — {$estado}";
         }
         $lineas[] = "\n¿Quieres reservar alguna? Dime el nombre de la clase.";
         return implode("\n", $lineas);
@@ -281,7 +260,8 @@ class AiCoachService
             )->implode(' | ');
         }
 
-        $tonoDesc = $tono === 'motivador' ? 'Usa un tono motivador y entusiasta.' : 'Usa un tono directo y profesional.';
+        $tonoDesc  = $tono === 'motivador' ? 'Usa un tono motivador y entusiasta.' : 'Usa un tono directo y profesional.';
+        $fechaHoy  = now()->locale('es')->isoFormat('dddd D [de] MMMM [de] YYYY [—] HH:mm');
 
         // IMPORTANTE: usar variables para los ejemplos de JSON para evitar problemas con llaves en heredoc
         $jsonReply     = '{"action":"reply","message":"texto en espanol"}';
@@ -295,17 +275,26 @@ PERFIL DEL USUARIO ({$nombre}):
 - Objetivo: {$objetivo} | Nivel: {$nivel} | Dias/semana: {$dias}
 - Peso: {$peso} | Altura: {$altura}
 - Progreso reciente: {$progresoStr}
+- Fecha y hora actual: {$fechaHoy}
 
 HERRAMIENTAS DISPONIBLES - activarlas cuando el usuario lo pida:
 * progress_summary -> analiza progreso del usuario
 * create_routine -> crea rutina (solo tras recopilar todos los datos)
-* list_classes -> lista clases del gimnasio con fechas y horarios
-* book_class -> reserva una clase (usa id_clase del RESULTADO de list_classes)
+* list_classes -> lista SOLO clases FUTURAS del gimnasio (las pasadas no se muestran)
+* book_class -> reserva una clase por nombre (usa nombre_clase exacto del RESULTADO de list_classes)
 * my_reservations -> muestra las reservas del usuario (activas y pasadas)
-* cancel_reservation -> cancela una reserva por id_clase (pedir confirmacion antes)
+* cancel_reservation -> cancela una reserva por nombre de clase (pedir confirmacion antes)
 * my_routines -> lista las rutinas del usuario con sus IDs
 * delete_routine -> elimina una rutina por id_rutina (pedir confirmacion antes)
 * edit_routine -> edita datos de una rutina (nombre/objetivo/nivel/duracion/dia/instrucciones)
+
+REGLA CRITICA PARA RESERVAS:
+- list_classes solo devuelve clases FUTURAS. Si el usuario pide reservar una clase, llama SIEMPRE
+  a book_class con su id_clase. NUNCA respondas "ya ha tenido lugar" por tu cuenta sin llamar a book_class.
+- El backend ya valida si la clase es pasada, llena o ya reservada. Confia en el RESULTADO.
+- Si el RESULTADO de book_class contiene "exito":false, NUNCA digas que la reserva fue realizada.
+  Informa del error concreto (campo "error") y sugiere alternativas.
+- Para reservar, SIEMPRE usa el id_clase exacto del RESULTADO de list_classes.
 
 REGLA CRITICA PARA CREAR RUTINAS:
 Si el usuario quiere una rutina, NUNCA llames a create_routine directamente.
@@ -323,15 +312,16 @@ Primero recopila conversacionalmente, preguntando uno a uno si no los tienes:
 
 REGLA PARA EDITAR RUTINAS:
 Cuando el usuario pida editar una rutina:
-1. Llama a my_routines para obtener el ID si no lo tienes.
+1. Identifica el nombre de la rutina que el usuario quiere editar.
 2. Pregunta que desea cambiar: nombre, objetivo, nivel, duracion, dia de la semana o instrucciones.
 3. El usuario responde con el nuevo valor.
-4. SOLO entonces llama a edit_routine con id_rutina y los campos a cambiar.
+4. SOLO entonces llama a edit_routine con nombre_rutina y los campos a cambiar.
 NUNCA llames a edit_routine sin antes preguntar que desea cambiar.
+NUNCA llames a my_routines solo para obtener un ID — edit_routine resuelve el ID internamente por nombre.
 
 REGLA PARA CANCELAR O ELIMINAR:
 Pide siempre confirmacion antes de cancel_reservation o delete_routine.
-Si el usuario da nombre en vez de ID, llama primero a my_reservations o my_routines para obtener el ID correcto.
+Usa SIEMPRE el nombre de la rutina o clase, NUNCA el ID numericos.
 Para cancelar una clase PASADA, responde directamente con reply que no es posible cancelar clases ya realizadas.
 
 FORMATO DE RESPUESTA - JSON puro, SIN texto fuera del JSON:
@@ -339,10 +329,10 @@ Respuesta normal: {$jsonReply}
 Llamar herramienta: {$jsonTool}
 
 Parametros create_routine: {"nombre":"","objetivo":"","nivel":"","duracion":45,"dia_semana":"lunes","instrucciones":"","ejercicios":[{"nombre_ejercicio":"Sentadilla con barra","grupo_muscular":"pierna","series":3,"repeticiones":"8-12","notas":""}]}
-Parametros book_class: {$jsonBookClass}
-Parametros cancel_reservation: {"id_clase":1}
-Parametros delete_routine: {"id_rutina":5}
-Parametros edit_routine: {"id_rutina":5,"nombre":"","objetivo":"","nivel":"","duracion":60,"dia_semana":"lunes","instrucciones":""}
+Parametros book_class: {"nombre_clase":"Nombre exacto de la clase a reservar"}
+Parametros cancel_reservation: {"nombre_clase":"Nombre exacto de la clase"}
+Parametros delete_routine: {"nombre_rutina":"Nombre exacto de la rutina"}
+Parametros edit_routine: {"nombre_rutina":"Nombre actual de la rutina","nombre":"","objetivo":"","nivel":"","duracion":60,"dia_semana":"lunes","instrucciones":""}
 Parametros list_classes / my_reservations / my_routines / progress_summary: {}
 PROMPT;
     }
@@ -514,7 +504,12 @@ PROMPT;
 
     private function toolListClasses(): array
     {
-        $clases = DB::table('clases_gimnasio')->where('estado_clase', 'publicada')->get();
+        // Solo clases FUTURAS — no mostrar clases que ya han pasado
+        $clases = DB::table('clases_gimnasio')
+            ->where('estado_clase', 'publicada')
+            ->where('fecha_inicio_clase', '>', now())
+            ->orderBy('fecha_inicio_clase', 'asc')
+            ->get();
 
         return $clases->map(function ($c) {
             $reservasActivas = DB::table('reservas_clase')
@@ -522,21 +517,17 @@ PROMPT;
                 ->where('estado_reserva', 'reservada')->count();
 
             $cupoDisponible = max(0, $c->cupo_maximo_clase - $reservasActivas);
-            $ts     = strtotime($c->fecha_inicio_clase);
-            $diaSemana = self::$DIAS_ES[date('l', $ts)] ?? date('l', $ts);
-            $hora   = date('H:i', $ts);
+            $ts      = strtotime($c->fecha_inicio_clase);
+            $diaSem  = self::$DIAS_ES[date('l', $ts)] ?? date('l', $ts);
+            $hora    = date('H:i', $ts);
             $horaFin = date('H:i', strtotime($c->fecha_fin_clase));
 
+            // Formato COMPACTO para reducir tokens en el historial
             return [
-                'id_clase'        => $c->id_clase_gimnasio,
-                'nombre'          => $c->titulo_clase,
-                'instructor'      => $c->instructor_clase ?? 'N/A',
-                'dia_semana'      => $diaSemana,
-                'hora'            => "{$hora}–{$horaFin}",
-                'fecha_inicio'    => $c->fecha_inicio_clase,
-                'cupo_maximo'     => $c->cupo_maximo_clase,
-                'cupo_disponible' => $cupoDisponible,
-                'estado'          => $cupoDisponible > 0 ? 'disponible' : 'llena',
+                'nombre'     => $c->titulo_clase,
+                'instructor' => $c->instructor_clase ?? 'N/A',
+                'fecha'      => "{$diaSem} " . date('d/m/Y', $ts) . " {$hora}–{$horaFin}",
+                'plazas'     => $cupoDisponible > 0 ? $cupoDisponible . ' disponibles' : 'LLENA',
             ];
         })->values()->toArray();
     }
@@ -547,12 +538,32 @@ PROMPT;
 
     private function toolBookClass(array $params, User $user): array
     {
-        $idClase = (int)($params['id_clase'] ?? 0);
-        if (!$idClase) return ['exito' => false, 'error' => 'No se especificó id_clase.'];
+        // Aceptar nombre_clase o id_clase
+        $idClase     = isset($params['id_clase']) ? (int)$params['id_clase'] : 0;
+        $nombreClase = $params['nombre_clase'] ?? null;
+
+        if (!$idClase && !$nombreClase) {
+            return ['exito' => false, 'error' => 'Indica el nombre de la clase que deseas reservar.'];
+        }
+
+        // Resolver nombre → id buscando en clases futuras publicadas
+        if (!$idClase && $nombreClase) {
+            $claseEncontrada = DB::table('clases_gimnasio')
+                ->where('estado_clase', 'publicada')
+                ->where('fecha_inicio_clase', '>', now())
+                ->whereRaw('LOWER(titulo_clase) LIKE ?', ['%' . mb_strtolower($nombreClase) . '%'])
+                ->orderBy('fecha_inicio_clase', 'asc')
+                ->first();
+
+            if (!$claseEncontrada) {
+                return ['exito' => false, 'error' => "No se encontró ninguna clase futura llamada \"{$nombreClase}\". Usa list_classes para ver las clases disponibles."];
+            }
+            $idClase = $claseEncontrada->id_clase_gimnasio;
+        }
 
         $clase = DB::table('clases_gimnasio')
             ->where('id_clase_gimnasio', $idClase)->where('estado_clase', 'publicada')->first();
-        if (!$clase) return ['exito' => false, 'error' => "Clase {$idClase} no encontrada."];
+        if (!$clase) return ['exito' => false, 'error' => "Clase no encontrada o no publicada."];
 
         // Bloquear reservas en clases pasadas
         if ($clase->fecha_inicio_clase <= now()) {
@@ -597,9 +608,13 @@ PROMPT;
                 'id_usuario'        => $user->id_usuario,
                 'id_clase_gimnasio' => $idClase,
                 'estado_reserva'    => 'reservada',
-                'fecha_reserva'     => now(),
+                'fecha_reserva'     => now()->toDateTimeString(),
                 'origen_reserva'    => 'ia_coach',
             ]);
+
+            if (!$idReserva) {
+                return ['exito' => false, 'error' => 'Error al guardar la reserva en la base de datos.'];
+            }
 
             // Enviar email de confirmación (igual que reserva manual)
             try {
@@ -648,6 +663,8 @@ PROMPT;
             ->orderBy('clases_gimnasio.fecha_inicio_clase', 'desc')
             ->get();
 
+        Log::info('[my_reservations] id_usuario=' . $user->id_usuario . ' | filas=' . $reservas->count());
+
         if ($reservas->isEmpty()) return [];
 
         return $reservas->map(function ($r) use ($dias) {
@@ -671,11 +688,32 @@ PROMPT;
 
     private function toolCancelReservation(array $params, User $user): array
     {
-        $idClase = $params['id_clase'] ?? null;
-        if (!$idClase) return ['exito' => false, 'error' => 'Falta el parámetro id_clase.'];
+        // Aceptar tanto nombre_clase como id_clase para mayor flexibilidad
+        $idClase     = $params['id_clase'] ?? null;
+        $nombreClase = $params['nombre_clase'] ?? null;
+
+        if (!$idClase && !$nombreClase) {
+            return ['exito' => false, 'error' => 'Indica el nombre de la clase que deseas cancelar.'];
+        }
+
+        // Resolver nombre → id buscando en las reservas activas del usuario
+        if (!$idClase && $nombreClase) {
+            $reservaConNombre = DB::table('reservas_clase')
+                ->join('clases_gimnasio', 'reservas_clase.id_clase_gimnasio', '=', 'clases_gimnasio.id_clase_gimnasio')
+                ->where('reservas_clase.id_usuario', $user->id_usuario)
+                ->where('reservas_clase.estado_reserva', 'reservada')
+                ->whereRaw('LOWER(clases_gimnasio.titulo_clase) LIKE ?', ['%' . mb_strtolower($nombreClase) . '%'])
+                ->select('clases_gimnasio.id_clase_gimnasio', 'clases_gimnasio.titulo_clase', 'clases_gimnasio.fecha_inicio_clase')
+                ->first();
+
+            if (!$reservaConNombre) {
+                return ['exito' => false, 'error' => "No tienes ninguna reserva activa para una clase llamada \"{$nombreClase}\"."];
+            }
+            $idClase = $reservaConNombre->id_clase_gimnasio;
+        }
 
         $clase = DB::table('clases_gimnasio')->where('id_clase_gimnasio', $idClase)->first();
-        if (!$clase) return ['exito' => false, 'error' => "No existe ninguna clase con ID {$idClase}."];
+        if (!$clase) return ['exito' => false, 'error' => "No se encontró la clase."];
 
         $reserva = DB::table('reservas_clase')
             ->where('id_usuario', $user->id_usuario)
@@ -689,10 +727,24 @@ PROMPT;
             return ['exito' => false, 'error' => 'No es posible cancelar una clase que ya ha comenzado o finalizado.'];
         }
 
-        DB::table('reservas_clase')
+        Log::info('[cancel_reservation] Intentando cancelar', [
+            'id_usuario'    => $user->id_usuario,
+            'id_clase'      => $idClase,
+            'titulo_clase'  => $clase->titulo_clase,
+            'reserva_estado'=> $reserva->estado_reserva ?? 'NOT_FOUND',
+        ]);
+
+        $affected = DB::table('reservas_clase')
             ->where('id_usuario', $user->id_usuario)
             ->where('id_clase_gimnasio', $idClase)
+            ->where('estado_reserva', 'reservada')
             ->update(['estado_reserva' => 'cancelada']);
+
+        Log::info('[cancel_reservation] Filas afectadas: ' . $affected);
+
+        if ($affected === 0) {
+            return ['exito' => false, 'error' => 'No se encontró una reserva activa para cancelar. Es posible que ya estuviera cancelada.'];
+        }
 
         return ['exito' => true, 'clase' => $clase->titulo_clase];
     }
@@ -704,7 +756,10 @@ PROMPT;
     private function toolMyRoutines(User $user): array
     {
         $rutinas = DB::table('rutinas_usuario')
-            ->where('id_usuario', $user->id_usuario)
+            ->where(function ($q) use ($user) {
+                $q->where('id_usuario', $user->id_usuario)
+                  ->orWhere('origen_rutina', 'plantilla');
+            })
             ->where('rutina_activa', 1)
             ->orderBy('fecha_creacion_rutina', 'desc')
             ->get();
@@ -733,15 +788,33 @@ PROMPT;
 
     private function toolDeleteRoutine(array $params, User $user): array
     {
-        $idRutina = $params['id_rutina'] ?? null;
-        if (!$idRutina) return ['exito' => false, 'error' => 'Falta el parámetro id_rutina.'];
+        // Aceptar nombre_rutina o id_rutina
+        $idRutina    = $params['id_rutina']    ?? null;
+        $nombreBusca = $params['nombre_rutina'] ?? null;
+
+        if (!$idRutina && !$nombreBusca) {
+            return ['exito' => false, 'error' => 'Indica el nombre de la rutina que deseas eliminar.'];
+        }
+
+        // Resolver nombre → id (solo en rutinas del usuario, no plantillas de admin)
+        if (!$idRutina && $nombreBusca) {
+            $encontrada = DB::table('rutinas_usuario')
+                ->where('id_usuario', $user->id_usuario)
+                ->whereRaw('LOWER(nombre_rutina_usuario) LIKE ?', ['%' . mb_strtolower($nombreBusca) . '%'])
+                ->first();
+
+            if (!$encontrada) {
+                return ['exito' => false, 'error' => "No se encontró ninguna rutina propia llamada \"{$nombreBusca}\" en tu cuenta."];
+            }
+            $idRutina = $encontrada->id_rutina_usuario;
+        }
 
         $rutina = DB::table('rutinas_usuario')
             ->where('id_rutina_usuario', $idRutina)
             ->where('id_usuario', $user->id_usuario)
             ->first();
 
-        if (!$rutina) return ['exito' => false, 'error' => "No se encontró ninguna rutina con ID {$idRutina} en tu cuenta."];
+        if (!$rutina) return ['exito' => false, 'error' => 'No se encontró la rutina en tu cuenta.'];
 
         try {
             DB::transaction(function () use ($idRutina) {
@@ -761,31 +834,64 @@ PROMPT;
 
     private function toolEditRoutine(array $params, User $user): array
     {
-        $idRutina = $params['id_rutina'] ?? null;
-        if (!$idRutina) return ['exito' => false, 'error' => 'Falta el parámetro id_rutina.'];
+        // Normalizar dia_semana: quitar tildes y pasar a minúsculas
+        $mapaDias = [
+            'lunes'=>'lunes','martes'=>'martes','miércoles'=>'miercoles','miercoles'=>'miercoles',
+            'jueves'=>'jueves','viernes'=>'viernes','sábado'=>'sabado','sabado'=>'sabado',
+            'domingo'=>'domingo','descanso'=>'descanso',
+        ];
+
+        // Aceptar nombre_rutina o id_rutina
+        $idRutina    = $params['id_rutina']    ?? null;
+        $nombreBusca = $params['nombre_rutina'] ?? null;
+
+        if (!$idRutina && !$nombreBusca) {
+            return ['exito' => false, 'error' => 'Indica el nombre de la rutina que deseas editar.'];
+        }
+
+        // Resolver nombre → id buscando en rutinas del usuario
+        if (!$idRutina && $nombreBusca) {
+            $encontrada = DB::table('rutinas_usuario')
+                ->where('id_usuario', $user->id_usuario)
+                ->whereRaw('LOWER(nombre_rutina_usuario) LIKE ?', ['%' . mb_strtolower($nombreBusca) . '%'])
+                ->first();
+
+            if (!$encontrada) {
+                return ['exito' => false, 'error' => "No se encontró ninguna rutina propia llamada \"{$nombreBusca}\". Asegúrate de escribir el nombre correctamente."];
+            }
+            $idRutina = $encontrada->id_rutina_usuario;
+        }
 
         $rutina = DB::table('rutinas_usuario')
             ->where('id_rutina_usuario', $idRutina)
             ->where('id_usuario', $user->id_usuario)
             ->first();
 
-        if (!$rutina) return ['exito' => false, 'error' => "No se encontró ninguna rutina con ID {$idRutina} en tu cuenta."];
+        if (!$rutina) return ['exito' => false, 'error' => 'No se encontró la rutina en tu cuenta.'];
 
         $campos = [];
         if (!empty($params['nombre']))      $campos['nombre_rutina_usuario']     = $params['nombre'];
         if (!empty($params['objetivo']))    $campos['objetivo_rutina_usuario']   = $params['objetivo'];
         if (!empty($params['nivel']))       $campos['nivel_rutina_usuario']      = $params['nivel'];
         if (isset($params['duracion']))     $campos['duracion_estimada_minutos'] = (int)$params['duracion'];
-        if (!empty($params['dia_semana']))  $campos['dia_semana']                = $params['dia_semana'];
+        if (!empty($params['dia_semana'])) {
+            $diaRaw = mb_strtolower(trim($params['dia_semana']));
+            $campos['dia_semana'] = $mapaDias[$diaRaw] ?? $diaRaw;
+        }
         if (isset($params['instrucciones']))$campos['instrucciones_rutina']      = $params['instrucciones'];
 
         if (empty($campos)) return ['exito' => false, 'error' => 'No se proporcionaron campos para actualizar.'];
 
-        DB::table('rutinas_usuario')
+        $affected = DB::table('rutinas_usuario')
             ->where('id_rutina_usuario', $idRutina)
             ->update($campos);
 
+        if ($affected === false) {
+            return ['exito' => false, 'error' => 'No se pudo actualizar la rutina. Inténtalo de nuevo.'];
+        }
+
         $nombreFinal = $campos['nombre_rutina_usuario'] ?? $rutina->nombre_rutina_usuario;
-        return ['exito' => true, 'id_rutina' => $idRutina, 'nombre' => $nombreFinal];
+        $diaFinal    = $campos['dia_semana']            ?? $rutina->dia_semana;
+        return ['exito' => true, 'id_rutina' => $idRutina, 'nombre' => $nombreFinal, 'dia_semana' => $diaFinal];
     }
 }

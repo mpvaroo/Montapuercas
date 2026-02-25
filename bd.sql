@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-02-2026 a las 17:57:11
+-- Tiempo de generación: 25-02-2026 a las 18:58:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -64,16 +64,20 @@ CREATE TABLE `cache` (
 --
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('laravel-cache-45b427b416163d86a662c88d685aaeb6', 'i:1;', 1771951086),
-('laravel-cache-45b427b416163d86a662c88d685aaeb6:timer', 'i:1771951086;', 1771951086),
+('laravel-cache-45b427b416163d86a662c88d685aaeb6', 'i:1;', 1772024627),
+('laravel-cache-45b427b416163d86a662c88d685aaeb6:timer', 'i:1772024627;', 1772024627),
 ('laravel-cache-6a75b1464724f04a7f7d1f2b0eedca2d', 'i:1;', 1771949655),
 ('laravel-cache-6a75b1464724f04a7f7d1f2b0eedca2d:timer', 'i:1771949655;', 1771949655),
+('laravel-cache-9dad704ea73c73443d47cb074313535c', 'i:1;', 1771975594),
+('laravel-cache-9dad704ea73c73443d47cb074313535c:timer', 'i:1771975594;', 1771975594),
 ('laravel-cache-automai@admin123|127.0.0.1', 'i:1;', 1771949958),
 ('laravel-cache-automai@admin123|127.0.0.1:timer', 'i:1771949958;', 1771949958),
 ('laravel-cache-b727aa1631763e305685ff01e5dff72e', 'i:1;', 1771949958),
 ('laravel-cache-b727aa1631763e305685ff01e5dff72e:timer', 'i:1771949958;', 1771949958),
-('laravel-cache-f02a03807cdb0735ad9edbdfc3e478e2', 'i:1;', 1771949671),
-('laravel-cache-f02a03807cdb0735ad9edbdfc3e478e2:timer', 'i:1771949671;', 1771949671),
+('laravel-cache-f02a03807cdb0735ad9edbdfc3e478e2', 'i:1;', 1772035918),
+('laravel-cache-f02a03807cdb0735ad9edbdfc3e478e2:timer', 'i:1772035918;', 1772035918),
+('laravel-cache-manuelmvp20004@gmail.com|127.0.0.1', 'i:1;', 1771975594),
+('laravel-cache-manuelmvp20004@gmail.com|127.0.0.1:timer', 'i:1771975594;', 1771975594),
 ('laravel-cache-manuelmvp2004@gmail.co|127.0.0.1', 'i:1;', 1771949655),
 ('laravel-cache-manuelmvp2004@gmail.co|127.0.0.1:timer', 'i:1771949655;', 1771949655);
 
@@ -88,6 +92,62 @@ CREATE TABLE `cache_locks` (
   `owner` varchar(255) NOT NULL,
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `chat_conversaciones`
+--
+
+CREATE TABLE `chat_conversaciones` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `id_usuario` int(10) UNSIGNED NOT NULL,
+  `titulo` varchar(255) DEFAULT NULL,
+  `resumen` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `chat_conversaciones`
+--
+
+INSERT INTO `chat_conversaciones` (`id`, `id_usuario`, `titulo`, `resumen`, `created_at`, `updated_at`) VALUES
+(12, 1, 'hola', NULL, '2026-02-24 21:55:10', '2026-02-24 21:55:10'),
+(43, 8, 'hola perdona se me habia olvidado pedirtelo antes …', NULL, '2026-02-25 16:56:16', '2026-02-25 16:56:16');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `chat_mensajes_ia`
+--
+
+CREATE TABLE `chat_mensajes_ia` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `id_conversacion` bigint(20) UNSIGNED NOT NULL,
+  `id_usuario` int(10) UNSIGNED NOT NULL,
+  `rol` enum('user','assistant','tool') NOT NULL,
+  `contenido` longtext NOT NULL,
+  `tool_name` varchar(255) DEFAULT NULL,
+  `tool_payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`tool_payload`)),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `chat_mensajes_ia`
+--
+
+INSERT INTO `chat_mensajes_ia` (`id`, `id_conversacion`, `id_usuario`, `rol`, `contenido`, `tool_name`, `tool_payload`, `created_at`) VALUES
+(184, 12, 1, 'user', 'hola', NULL, NULL, '2026-02-24 22:55:10'),
+(774, 43, 8, 'user', 'hola perdona se me habia olvidado pedirtelo antes me puedes decir mis reservas??', NULL, NULL, '2026-02-25 17:56:16'),
+(775, 43, 8, 'tool', '[]', 'my_reservations', '[]', '2026-02-25 17:56:20'),
+(776, 43, 8, 'assistant', 'No tienes reservas activas en este momento.', NULL, NULL, '2026-02-25 17:56:22'),
+(777, 43, 8, 'user', 'pues quiero hacer una reserva', NULL, NULL, '2026-02-25 17:56:49'),
+(778, 43, 8, 'tool', '[{\"id_clase\":10,\"nombre\":\"Dicta incidunt quaerat unde.\",\"instructor\":\"Miss Makenzie Jacobs\",\"dia_semana\":\"jueves\",\"hora\":\"08:16\\u201309:16\",\"fecha_inicio\":\"2026-02-26 08:16:48\",\"cupo_maximo\":14,\"cupo_disponible\":14,\"estado\":\"disponible\"},{\"id_clase\":2,\"nombre\":\"Aut qui ab cupiditate laudantium.\",\"instructor\":\"Clare Kassulke\",\"dia_semana\":\"domingo\",\"hora\":\"08:28\\u201309:28\",\"fecha_inicio\":\"2026-03-01 08:28:23\",\"cupo_maximo\":27,\"cupo_disponible\":27,\"estado\":\"disponible\"},{\"id_clase\":5,\"nombre\":\"Repudiandae eum reiciendis aut reiciendis.\",\"instructor\":\"Christiana Gaylord DVM\",\"dia_semana\":\"lunes\",\"hora\":\"16:46\\u201317:46\",\"fecha_inicio\":\"2026-03-02 16:46:44\",\"cupo_maximo\":27,\"cupo_disponible\":27,\"estado\":\"disponible\"},{\"id_clase\":1,\"nombre\":\"Excepturi voluptas sapiente.\",\"instructor\":\"Franz Rau\",\"dia_semana\":\"martes\",\"hora\":\"00:44\\u201301:44\",\"fecha_inicio\":\"2026-03-03 00:44:17\",\"cupo_maximo\":26,\"cupo_disponible\":26,\"estado\":\"disponible\"},{\"id_clase\":6,\"nombre\":\"Velit ipsum dolore saepe.\",\"instructor\":\"Elinore Hartmann\",\"dia_semana\":\"martes\",\"hora\":\"19:33\\u201320:33\",\"fecha_inicio\":\"2026-03-03 19:33:34\",\"cupo_maximo\":15,\"cupo_disponible\":15,\"estado\":\"disponible\"},{\"id_clase\":23,\"nombre\":\"Spinning Ma\\u00f1ana\",\"instructor\":\"Carlos Ruiz\",\"dia_semana\":\"mi\\u00e9rcoles\",\"hora\":\"09:00\\u201310:00\",\"fecha_inicio\":\"2026-03-04 09:00:00\",\"cupo_maximo\":20,\"cupo_disponible\":20,\"estado\":\"disponible\"},{\"id_clase\":24,\"nombre\":\"Box Cardio\",\"instructor\":\"David Mart\\u00edn\",\"dia_semana\":\"martes\",\"hora\":\"20:00\\u201321:00\",\"fecha_inicio\":\"2026-03-10 20:00:00\",\"cupo_maximo\":18,\"cupo_disponible\":18,\"estado\":\"disponible\"},{\"id_clase\":8,\"nombre\":\"Dolorem quam vel.\",\"instructor\":\"Prof. Isaiah Connelly II\",\"dia_semana\":\"jueves\",\"hora\":\"15:42\\u201316:42\",\"fecha_inicio\":\"2026-03-12 15:42:24\",\"cupo_maximo\":19,\"cupo_disponible\":19,\"estado\":\"disponible\"},{\"id_clase\":9,\"nombre\":\"Officia saepe eaque doloribus qui.\",\"instructor\":\"Dr. Cooper Herzog\",\"dia_semana\":\"s\\u00e1bado\",\"hora\":\"19:01\\u201320:01\",\"fecha_inicio\":\"2026-03-14 19:01:36\",\"cupo_maximo\":30,\"cupo_disponible\":30,\"estado\":\"disponible\"},{\"id_clase\":25,\"nombre\":\"Yoga Nidra\",\"instructor\":\"Marta L\\u00f3pez\",\"dia_semana\":\"martes\",\"hora\":\"19:00\\u201320:00\",\"fecha_inicio\":\"2026-03-17 19:00:00\",\"cupo_maximo\":15,\"cupo_disponible\":15,\"estado\":\"disponible\"},{\"id_clase\":3,\"nombre\":\"Id repellat error sed.\",\"instructor\":\"Lottie Larson\",\"dia_semana\":\"jueves\",\"hora\":\"01:10\\u201302:10\",\"fecha_inicio\":\"2026-03-19 01:10:34\",\"cupo_maximo\":23,\"cupo_disponible\":23,\"estado\":\"disponible\"},{\"id_clase\":7,\"nombre\":\"Eum a delectus natus.\",\"instructor\":\"Sadye Harris\",\"dia_semana\":\"domingo\",\"hora\":\"09:41\\u201310:41\",\"fecha_inicio\":\"2026-03-22 09:41:06\",\"cupo_maximo\":26,\"cupo_disponible\":26,\"estado\":\"disponible\"},{\"id_clase\":4,\"nombre\":\"Molestiae asperiores est.\",\"instructor\":\"Yazmin Brekke\",\"dia_semana\":\"lunes\",\"hora\":\"05:13\\u201306:13\",\"fecha_inicio\":\"2026-03-23 05:13:45\",\"cupo_maximo\":10,\"cupo_disponible\":10,\"estado\":\"disponible\"}]', 'list_classes', '[]', '2026-02-25 17:56:51'),
+(779, 43, 8, 'assistant', 'Estas son las clases disponibles:\n\n**Dicta incidunt quaerat unde.** — jueves 26 de febrero de 2026, 08:16–09:16 (instructor: Miss Makenzie Jacobs) — 🟢 14 plazas\n**Aut qui ab cupiditate laudantium.** — domingo 1 de marzo de 2026, 08:28–09:28 (instructor: Clare Kassulke) — 🟢 27 plazas\n**Repudiandae eum reiciendis aut reiciendis.** — lunes 2 de marzo de 2026, 16:46–17:46 (instructor: Christiana Gaylord DVM) — 🟢 27 plazas\n**Excepturi voluptas sapiente.** — martes 3 de marzo de 2026, 00:44–01:44 (instructor: Franz Rau) — 🟢 26 plazas\n**Velit ipsum dolore saepe.** — martes 3 de marzo de 2026, 19:33–20:33 (instructor: Elinore Hartmann) — 🟢 15 plazas\n**Spinning Mañana** — miércoles 4 de marzo de 2026, 09:00–10:00 (instructor: Carlos Ruiz) — 🟢 20 plazas\n**Box Cardio** — martes 10 de marzo de 2026, 20:00–21:00 (instructor: David Martín) — 🟢 18 plazas\n**Dolorem quam vel.** — jueves 12 de marzo de 2026, 15:42–16:42 (instructor: Prof. Isaiah Connelly II) — 🟢 19 plazas\n**Officia saepe eaque doloribus qui.** — sábado 14 de marzo de 2026, 19:01–20:01 (instructor: Dr. Cooper Herzog) — 🟢 30 plazas\n**Yoga Nidra** — martes 17 de marzo de 2026, 19:00–20:00 (instructor: Marta López) — 🟢 15 plazas\n**Id repellat error sed.** — jueves 19 de marzo de 2026, 01:10–02:10 (instructor: Lottie Larson) — 🟢 23 plazas\n**Eum a delectus natus.** — domingo 22 de marzo de 2026, 09:41–10:41 (instructor: Sadye Harris) — 🟢 26 plazas\n**Molestiae asperiores est.** — lunes 23 de marzo de 2026, 05:13–06:13 (instructor: Yazmin Brekke) — 🟢 10 plazas\n\n¿Quieres reservar alguna? Dime el nombre de la clase.', NULL, NULL, '2026-02-25 17:57:02'),
+(780, 43, 8, 'user', 'quiero reservar Box Cardio', NULL, NULL, '2026-02-25 17:57:15'),
+(781, 43, 8, 'tool', '{\"exito\":false,\"pasada\":true,\"error\":\"La clase \\\"Spinning\\\" ya ha tenido lugar. No es posible reservar clases pasadas.\"}', 'book_class', '{\"id_clase\":11}', '2026-02-25 17:57:19'),
+(782, 43, 8, 'assistant', '❌ No es posible reservar esa clase porque ya ha tenido lugar. Solo puedes reservar clases futuras. ¿Quieres que te muestre las clases disponibles?', NULL, NULL, '2026-02-25 17:57:24');
 
 -- --------------------------------------------------------
 
@@ -122,7 +182,28 @@ INSERT INTO `clases_gimnasio` (`id_clase_gimnasio`, `id_tipo_clase`, `titulo_cla
 (7, 3, 'Eum a delectus natus.', 'Incidunt cum eligendi eveniet repellendus eaque perspiciatis. Dolores est cum sunt. Nihil fugiat ducimus aliquid praesentium laborum ad. Sunt porro placeat ipsum aperiam.', 'Sadye Harris', '2026-03-22 09:41:06', '2026-03-22 10:41:06', 26, 'publicada', '2026-02-24 13:03:46'),
 (8, 4, 'Dolorem quam vel.', 'Nobis placeat delectus aliquam omnis earum. Fuga unde aliquid nihil exercitationem quos quas porro. Quo illum ea ex dolores dignissimos unde rerum.', 'Prof. Isaiah Connelly II', '2026-03-12 15:42:24', '2026-03-12 16:42:24', 19, 'publicada', '2026-02-24 13:03:46'),
 (9, 1, 'Officia saepe eaque doloribus qui.', 'Delectus odit quibusdam et voluptate rerum consequatur maiores aut. Velit recusandae dignissimos eos deserunt iste maiores et. Error reiciendis repellat enim ducimus temporibus exercitationem.', 'Dr. Cooper Herzog', '2026-03-14 19:01:36', '2026-03-14 20:01:36', 30, 'publicada', '2026-02-24 13:03:46'),
-(10, 1, 'Dicta incidunt quaerat unde.', 'Quae harum doloribus ut qui repudiandae. Delectus recusandae porro impedit inventore. Tempora quos quis iusto alias quo natus cumque. Sed impedit doloribus quod quod eius veritatis velit.', 'Miss Makenzie Jacobs', '2026-02-26 08:16:48', '2026-02-26 09:16:48', 14, 'publicada', '2026-02-24 13:03:46');
+(10, 1, 'Dicta incidunt quaerat unde.', 'Quae harum doloribus ut qui repudiandae. Delectus recusandae porro impedit inventore. Tempora quos quis iusto alias quo natus cumque. Sed impedit doloribus quod quod eius veritatis velit.', 'Miss Makenzie Jacobs', '2026-02-26 08:16:48', '2026-02-26 09:16:48', 14, 'publicada', '2026-02-24 13:03:46'),
+(11, 4, 'Spinning', NULL, 'Manuel', '2025-02-10 12:15:00', '2025-02-10 13:15:00', 20, 'publicada', '2026-02-24 20:20:21'),
+(12, 2, 'WaterPolo', NULL, 'Mario', '2026-02-25 14:00:00', '2026-02-25 15:00:00', 20, 'publicada', '2026-02-24 23:30:00'),
+(13, 1, 'Spinning Mañana', 'Sesión intensa de ciclismo indoor', 'Carlos Ruiz', '2026-01-07 09:00:00', '2026-01-07 10:00:00', 20, 'publicada', '2026-02-25 14:12:56'),
+(14, 1, 'Yoga Restaurativo', 'Estiramiento profundo y relajación', 'Marta López', '2026-01-12 18:30:00', '2026-01-12 19:30:00', 15, 'publicada', '2026-02-25 14:12:56'),
+(15, 1, 'Zumba Fitness', 'Baile y cardio latino', 'Ana Blanco', '2026-01-15 19:00:00', '2026-01-15 20:00:00', 25, 'publicada', '2026-02-25 14:12:56'),
+(16, 1, 'Pilates Intermedio', 'Core y postura', 'Marta López', '2026-01-21 10:00:00', '2026-01-21 11:00:00', 12, 'publicada', '2026-02-25 14:12:56'),
+(17, 1, 'Box Cardio', 'Golpeo técnico y resistencia', 'David Martín', '2026-01-28 20:00:00', '2026-01-28 21:00:00', 18, 'publicada', '2026-02-25 14:12:56'),
+(18, 1, 'Spinning Tarde', 'Intervalos de alta intensidad', 'Carlos Ruiz', '2026-02-03 19:30:00', '2026-02-03 20:30:00', 20, 'publicada', '2026-02-25 14:12:56'),
+(19, 1, 'Yoga Vinyasa', 'Flujo dinámico y equilibrio', 'Marta López', '2026-02-10 09:00:00', '2026-02-10 10:00:00', 15, 'publicada', '2026-02-25 14:12:56'),
+(20, 1, 'Zumba Fitness', 'Baile y cardio latino', 'Ana Blanco', '2026-02-14 18:00:00', '2026-02-14 19:00:00', 25, 'publicada', '2026-02-25 14:12:56'),
+(21, 1, 'TRX Total Body', 'Entrenamiento en suspensión', 'David Martín', '2026-02-18 20:00:00', '2026-02-18 21:00:00', 14, 'publicada', '2026-02-25 14:12:56'),
+(22, 1, 'Pilates Avanzado', 'Core profundo y control', 'Marta López', '2026-02-24 10:30:00', '2026-02-24 11:30:00', 12, 'publicada', '2026-02-25 14:12:56'),
+(23, 1, 'Spinning Mañana', 'Sesión de resistencia aeróbica', 'Carlos Ruiz', '2026-03-04 09:00:00', '2026-03-04 10:00:00', 20, 'publicada', '2026-02-25 14:12:56'),
+(24, 1, 'Box Cardio', 'Técnica y potencia', 'David Martín', '2026-03-10 20:00:00', '2026-03-10 21:00:00', 18, 'publicada', '2026-02-25 14:12:56'),
+(25, 1, 'Yoga Nidra', 'Relajación profunda guiada', 'Marta López', '2026-03-17 19:00:00', '2026-03-17 20:00:00', 15, 'publicada', '2026-02-25 14:12:56'),
+(26, 1, 'Zumba Fitness', 'Baile y cardio latino', 'Ana Blanco', '2026-03-21 18:30:00', '2026-03-21 19:30:00', 25, '', '2026-02-25 14:12:56'),
+(27, 1, 'TRX Total Body', 'Funcional de cuerpo completo', 'David Martín', '2026-03-28 10:00:00', '2026-03-28 11:00:00', 14, '', '2026-02-25 14:12:56'),
+(28, 1, 'Spinning Tarde', 'Sprints y recuperación activa', 'Carlos Ruiz', '2026-04-07 19:30:00', '2026-04-07 20:30:00', 20, '', '2026-02-25 14:12:56'),
+(29, 1, 'Pilates Intermedio', 'Movilidad y fuerza de core', 'Marta López', '2026-04-14 10:00:00', '2026-04-14 11:00:00', 12, '', '2026-02-25 14:12:56'),
+(30, 1, 'Box Cardio', 'Combos y cardio explosivo', 'David Martín', '2026-04-22 20:00:00', '2026-04-22 21:00:00', 18, '', '2026-02-25 14:12:56'),
+(31, 1, 'Yoga Restaurativo', 'Descanso activo y flexibilidad', 'Marta López', '2026-04-29 18:00:00', '2026-04-29 19:00:00', 15, '', '2026-02-25 14:12:56');
 
 -- --------------------------------------------------------
 
@@ -160,7 +241,14 @@ INSERT INTO `ejercicios` (`id_ejercicio`, `nombre_ejercicio`, `grupo_muscular_pr
 (2, 'Dominadas', 'espalda', 'Tracción vertical con peso corporal'),
 (3, 'Sentadilla', 'pierna', 'Sentadilla con barra'),
 (4, 'Curl bíceps', 'biceps', 'Curl con mancuernas o barra'),
-(5, 'Plancha', 'core', 'Isométrico de core');
+(5, 'Plancha', 'core', 'Isométrico de core'),
+(6, 'Remo con barra', 'espalda', 'Creado por IA Coach'),
+(7, 'Peso muerto', 'pierna', 'Creado por IA Coach'),
+(8, 'Flyes con bandas elásticas', 'pecho', 'Creado por IA Coach'),
+(9, 'Pulley de pecho (cable)', 'pecho', 'Creado por IA Coach'),
+(10, 'Prensa de hombros con mancuernas', 'hombro', 'Creado por IA Coach'),
+(11, 'Pullover con cuerda', 'espalda', 'Creado por IA Coach'),
+(12, 'Flexiones', 'pecho', 'Creado por IA Coach');
 
 -- --------------------------------------------------------
 
@@ -253,8 +341,11 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (6, '2026_02_19_100000_add_dia_semana_to_rutinas_usuario_table', 1),
 (7, '2026_02_23_000000_add_email_verified_at_to_usuarios_table', 1),
 (8, '2026_02_24_082125_create_personal_access_tokens_table', 1),
-(9, '2026_02_24_153449_create_password_reset_tokens_table', 2),
-(10, '2026_02_24_154107_modify_password_reset_tokens_table_for_correo_usuario', 3);
+(11, '2026_02_24_153449_create_password_reset_tokens_table', 2),
+(12, '2026_02_24_154107_modify_password_reset_tokens_table_for_correo_usuario', 2),
+(13, '2026_02_24_174545_create_chat_conversaciones_table', 2),
+(14, '2026_02_24_174616_create_chat_mensajes_ia_table', 2),
+(15, '2026_02_25_115251_add_foreign_keys_to_chat_tables', 3);
 
 -- --------------------------------------------------------
 
@@ -267,6 +358,13 @@ CREATE TABLE `password_reset_tokens` (
   `token` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `password_reset_tokens`
+--
+
+INSERT INTO `password_reset_tokens` (`correo_usuario`, `token`, `created_at`) VALUES
+('manuelmvp2004@gmail.com', '$2y$12$P5EDwO2KcZtomDwP1sPRU.XvjfhEf87tU0G8AWCvXA1Rgs36kV70W', '2026-02-25 12:18:53');
 
 -- --------------------------------------------------------
 
@@ -339,17 +437,12 @@ CREATE TABLE `registros_progreso` (
 --
 
 INSERT INTO `registros_progreso` (`id_registro_progreso`, `id_usuario`, `fecha_registro`, `peso_kg_registro`, `cintura_cm_registro`, `pecho_cm_registro`, `cadera_cm_registro`, `notas_progreso`) VALUES
-(1, 2, '2025-11-24', 93.00, 89.50, 105.00, 103.00, 'Inicio. A por ello.'),
-(2, 2, '2025-12-01', 92.20, 89.00, 104.50, 102.50, NULL),
-(3, 2, '2025-12-08', 91.50, 88.50, 104.00, 102.00, 'Primera bajada visible.'),
-(4, 2, '2025-12-15', 90.80, 88.00, 103.50, 101.50, NULL),
-(5, 2, '2025-12-22', 90.20, 87.50, 103.00, 101.00, 'Navidades complicadas.'),
-(6, 2, '2025-12-29', 90.00, 87.20, 102.80, 100.80, NULL),
-(7, 2, '2026-01-05', 89.30, 86.80, 102.50, 100.50, 'Vuelta al ritmo.'),
-(8, 2, '2026-01-12', 88.60, 86.20, 102.00, 100.00, NULL),
-(9, 2, '2026-01-19', 87.90, 85.80, 101.50, 99.50, 'Gran semana. Duermo mejor.'),
-(10, 2, '2026-01-26', 87.20, 85.40, 101.00, 99.00, NULL),
-(11, 2, '2026-02-02', 86.50, 85.00, 100.50, 98.50, 'Progreso visible. Cintura bajando.');
+(33, 8, '2025-12-16', 94.50, 91.00, 106.00, 104.50, 'Inicio del plan. Motivación alta.'),
+(34, 8, '2025-12-30', 93.10, 90.20, 105.50, 103.80, 'Primera semana bien. Sin dulces navideños.'),
+(35, 8, '2026-01-13', 91.60, 89.40, 104.80, 103.00, 'Vuelta al ritmo tras Reyes. Cintura bajando.'),
+(36, 8, '2026-01-27', 90.00, 88.50, 104.00, 102.20, 'Gran semana. Duermo mejor y con más energía.'),
+(37, 8, '2026-02-10', 88.30, 87.60, 103.20, 101.40, 'Pantalones más holgados. Visible en el espejo.'),
+(38, 8, '2026-02-24', 86.80, 86.80, 102.50, 100.60, 'Objetivo del mes cumplido. -7.7 kg en total.');
 
 -- --------------------------------------------------------
 
@@ -411,12 +504,10 @@ CREATE TABLE `rutinas_ejercicios` (
 --
 
 INSERT INTO `rutinas_ejercicios` (`id_rutina_ejercicio`, `id_rutina_usuario`, `id_ejercicio`, `orden_en_rutina`, `series_objetivo`, `repeticiones_objetivo`, `peso_objetivo_kg`, `rpe_objetivo`, `descanso_segundos`, `notas_ejercicio`) VALUES
-(1, 1, 1, 1, 3, '12', 20.00, NULL, NULL, NULL),
-(2, 1, 2, 1, 3, '12', 20.00, NULL, NULL, NULL),
-(3, 1, 5, 1, 3, '12', 20.00, NULL, NULL, NULL),
-(4, 2, 2, 1, 3, '12', 20.00, NULL, NULL, NULL),
-(5, 2, 3, 1, 3, '12', 20.00, NULL, NULL, NULL),
-(6, 2, 4, 1, 3, '12', 20.00, NULL, NULL, NULL);
+(67, 25, 6, 1, 4, '6-8', NULL, NULL, NULL, 'Enfócate en la forma: mantén la espalda recta, baja la barra hasta las rodillas'),
+(68, 25, 6, 2, 3, '8-10', NULL, NULL, NULL, 'Usa agarre pronado. Enfócate en contraer los dorsales al levantar'),
+(69, 25, 10, 3, 4, '8-10', NULL, NULL, NULL, 'Mantén el torso inclinado a 45°. Controla el descenso para maximizar estiramiento'),
+(70, 25, 5, 4, 3, '10-12', NULL, NULL, NULL, 'Mantén el agarre ancho. Enfócate en contraer los dorsales al final de la contracción');
 
 -- --------------------------------------------------------
 
@@ -443,8 +534,7 @@ CREATE TABLE `rutinas_usuario` (
 --
 
 INSERT INTO `rutinas_usuario` (`id_rutina_usuario`, `id_usuario`, `nombre_rutina_usuario`, `objetivo_rutina_usuario`, `nivel_rutina_usuario`, `duracion_estimada_minutos`, `origen_rutina`, `instrucciones_rutina`, `fecha_creacion_rutina`, `rutina_activa`, `dia_semana`) VALUES
-(1, 2, 'Qui explicabo eos.', 'rendimiento', 'avanzado', 77, 'usuario', 'Est nemo ex est ullam molestiae saepe ipsum. Odio amet et sed enim quisquam accusamus. Porro aut exercitationem ex et qui.', '2026-02-24 13:03:46', 1, NULL),
-(2, 2, 'Ea dolores dolores.', 'volumen', 'intermedio', 86, 'usuario', 'Rerum repudiandae assumenda est iste repudiandae itaque. In magnam ducimus cum voluptatum neque sunt voluptas. Rerum eum neque natus harum velit.', '2026-02-24 13:03:46', 1, NULL);
+(25, 8, 'rutina espalda con ia coach', 'volumen', 'avanzado', 120, 'ia_coach', 'siempre al fallo. Prioriza técnica correcta para evitar lesiones. Usa peso adecuado para tu nivel.', '2026-02-25 17:45:04', 1, 'lunes');
 
 -- --------------------------------------------------------
 
@@ -491,8 +581,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('BjKMJYfLsSPvMhTeq9Hofc1D7cpeWm5QtM5yWclh', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYjBjbWl3OTVYSkg1Y0VGOTAwSkdBYTdkYXVYNHdub29IT2FIV09ncyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6OToiZGFzaGJvYXJkIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1771951942),
-('fahHPKlWDtppcTtBfhlK7EKrm4NIppdqiWWDFndk', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiWkVaVkdwNWszY2x1RDQxeDRhMk5oa0pWSmZEcWJ3N0ZPVEt0bUpTUSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1771946626);
+('Gxzts7P26Irdeb5YzV8z89kpImP7c7UvxOVSRydV', 8, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiRGwyOUVoeGxKdXE2eTlrMUk3aFFnaE9qNjhEdlYyaTJzSnBCR0VoQSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NjM6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hcGkvaWEvY29udmVyc2F0aW9ucy80My9tZXNzYWdlcz9saW1pdD0yMCI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6ODt9', 1772042254),
+('urgtUtiz2mKhmOp6QF91OpehFGpwSIkluAZ5XXz0', 8, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiRXdodk5UNzZsbExKTmRrazJxVjg1blg5amFQSk12VnRld3Fyd2ZqRSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDI6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hcGkvaWEvY29udmVyc2F0aW9ucyI7czo1OiJyb3V0ZSI7Tjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6ODt9', 1772035730);
 
 -- --------------------------------------------------------
 
@@ -547,7 +637,8 @@ INSERT INTO `usuarios` (`id_usuario`, `correo_usuario`, `email_verified_at`, `ha
 (3, 'lukas.lowe@example.org', NULL, '$2y$12$adEi6hqZDowm.ZV5ebuPGuyZYfbHLpimHBxrnxY7krFQZKo6xU1rO', 'Talon Mueller', 'activo', '2026-02-24 13:03:46', NULL, 'Vp4nLWPC83', NULL, NULL, NULL),
 (4, 'jhill@example.org', NULL, '$2y$12$adEi6hqZDowm.ZV5ebuPGuyZYfbHLpimHBxrnxY7krFQZKo6xU1rO', 'Ansley Metz', 'activo', '2026-02-24 13:03:46', NULL, '42oxSHGtS3', NULL, NULL, NULL),
 (5, 'ceasar.keeling@example.net', NULL, '$2y$12$adEi6hqZDowm.ZV5ebuPGuyZYfbHLpimHBxrnxY7krFQZKo6xU1rO', 'Gladys Hessel', 'activo', '2026-02-24 13:03:46', NULL, 'iD5UKF7neZ', NULL, NULL, NULL),
-(8, 'manuelmvp2004@gmail.com', '2026-02-24 14:26:10', '$2y$12$.y9/TcluraCLdbBUQWXAQuJwQzXVBXi0vRK6LHWP9gJtoAEFoG.Ky', 'mpvaroo', 'activo', '2026-02-24 16:25:46', NULL, 'UIqWRbAComYcWvg6V4ZqdRxHLe3RWdDxq5VqGnBBJUiR0nJGUZAbkSUyDYfY', NULL, NULL, NULL);
+(8, 'manuelmvp2004@gmail.com', '2026-02-24 14:26:10', '$2y$12$.y9/TcluraCLdbBUQWXAQuJwQzXVBXi0vRK6LHWP9gJtoAEFoG.Ky', 'mpvaroo', 'activo', '2026-02-24 16:25:46', NULL, 'eVtPtDJAgA8Mo5W3JGv19ubaLEcRAVtN5qmrF5MMutNIxWyg8Le5pcMw8nyV', NULL, NULL, NULL),
+(9, 'marioromeiro@gmail.com', NULL, '$2y$12$w2LVctLwXLa6pvJ3qytHou/93qIxZh2ZocGIDJ4LrhYeddtt.MmIS', 'mario', 'pendiente', '2026-02-24 23:34:14', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -571,7 +662,8 @@ INSERT INTO `usuarios_roles` (`id_usuario_rol`, `id_usuario`, `id_rol`, `fecha_a
 (2, 2, 1, '2026-02-24 14:03:45'),
 (3, 3, 1, '2026-02-24 14:03:46'),
 (4, 4, 1, '2026-02-24 14:03:46'),
-(5, 5, 1, '2026-02-24 14:03:46');
+(5, 5, 1, '2026-02-24 14:03:46'),
+(6, 9, 2, '2026-02-24 23:34:14');
 
 --
 -- Índices para tablas volcadas
@@ -597,6 +689,21 @@ ALTER TABLE `cache`
 ALTER TABLE `cache_locks`
   ADD PRIMARY KEY (`key`),
   ADD KEY `cache_locks_expiration_index` (`expiration`);
+
+--
+-- Indices de la tabla `chat_conversaciones`
+--
+ALTER TABLE `chat_conversaciones`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `chat_conversaciones_id_usuario_index` (`id_usuario`);
+
+--
+-- Indices de la tabla `chat_mensajes_ia`
+--
+ALTER TABLE `chat_mensajes_ia`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `chat_mensajes_ia_id_conversacion_id_index` (`id_conversacion`,`id`),
+  ADD KEY `chat_mensajes_ia_id_usuario_index` (`id_usuario`);
 
 --
 -- Indices de la tabla `clases_gimnasio`
@@ -759,10 +866,22 @@ ALTER TABLE `ajustes_usuario`
   MODIFY `id_ajustes_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT de la tabla `chat_conversaciones`
+--
+ALTER TABLE `chat_conversaciones`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+
+--
+-- AUTO_INCREMENT de la tabla `chat_mensajes_ia`
+--
+ALTER TABLE `chat_mensajes_ia`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=783;
+
+--
 -- AUTO_INCREMENT de la tabla `clases_gimnasio`
 --
 ALTER TABLE `clases_gimnasio`
-  MODIFY `id_clase_gimnasio` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_clase_gimnasio` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de la tabla `conversaciones_ia`
@@ -774,7 +893,7 @@ ALTER TABLE `conversaciones_ia`
 -- AUTO_INCREMENT de la tabla `ejercicios`
 --
 ALTER TABLE `ejercicios`
-  MODIFY `id_ejercicio` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_ejercicio` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `failed_jobs`
@@ -798,7 +917,7 @@ ALTER TABLE `mensajes_ia`
 -- AUTO_INCREMENT de la tabla `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `perfiles_usuario`
@@ -816,13 +935,13 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT de la tabla `registros_progreso`
 --
 ALTER TABLE `registros_progreso`
-  MODIFY `id_registro_progreso` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_registro_progreso` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de la tabla `reservas_clase`
 --
 ALTER TABLE `reservas_clase`
-  MODIFY `id_reserva_clase` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_reserva_clase` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -834,13 +953,13 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `rutinas_ejercicios`
 --
 ALTER TABLE `rutinas_ejercicios`
-  MODIFY `id_rutina_ejercicio` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_rutina_ejercicio` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT de la tabla `rutinas_usuario`
 --
 ALTER TABLE `rutinas_usuario`
-  MODIFY `id_rutina_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_rutina_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `seguridad_usuario`
@@ -858,13 +977,13 @@ ALTER TABLE `tipos_clase`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios_roles`
 --
 ALTER TABLE `usuarios_roles`
-  MODIFY `id_usuario_rol` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_usuario_rol` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Restricciones para tablas volcadas
@@ -875,6 +994,19 @@ ALTER TABLE `usuarios_roles`
 --
 ALTER TABLE `ajustes_usuario`
   ADD CONSTRAINT `ajustes_usuario_id_usuario_foreign` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `chat_conversaciones`
+--
+ALTER TABLE `chat_conversaciones`
+  ADD CONSTRAINT `chat_conversaciones_id_usuario_foreign` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `chat_mensajes_ia`
+--
+ALTER TABLE `chat_mensajes_ia`
+  ADD CONSTRAINT `chat_mensajes_ia_id_conversacion_foreign` FOREIGN KEY (`id_conversacion`) REFERENCES `chat_conversaciones` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `chat_mensajes_ia_id_usuario_foreign` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `clases_gimnasio`
