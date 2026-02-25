@@ -28,4 +28,9 @@ class ChatMensajeIA extends Model
     {
         return $this->belongsTo(ChatConversacion::class, 'id_conversacion', 'id');
     }
+
+    public function usuario(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'id_usuario', 'id_usuario');
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ChatConversacion extends Model
 {
@@ -18,5 +19,10 @@ class ChatConversacion extends Model
     public function mensajes(): HasMany
     {
         return $this->hasMany(ChatMensajeIA::class, 'id_conversacion', 'id');
+    }
+
+    public function usuario(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'id_usuario', 'id_usuario');
     }
 }

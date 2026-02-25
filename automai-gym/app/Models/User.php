@@ -156,6 +156,14 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPasswordC
     }
 
     /**
+     * Get the AI chat conversations for the user.
+     */
+    public function chatConversaciones(): HasMany
+    {
+        return $this->hasMany(ChatConversacion::class, 'id_usuario', 'id_usuario');
+    }
+
+    /**
      * Check if user has a specific role.
      */
     public function hasRole(string $role): bool

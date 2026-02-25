@@ -202,28 +202,6 @@ return new class extends Migration {
             $table->unique(['id_usuario', 'fecha_registro'], 'uq_usuario_fecha');
         });
 
-        // 15. CONVERSACIONES IA
-        Schema::create('conversaciones_ia', function (Blueprint $table) {
-            $table->increments('id_conversacion_ia');
-            $table->unsignedInteger('id_usuario');
-            $table->string('titulo_conversacion', 120)->nullable();
-            $table->dateTime('fecha_creacion_conversacion')->useCurrent();
-            $table->boolean('conversacion_activa')->default(true);
-
-            $table->foreign('id_usuario')->references('id_usuario')->on('usuarios')->onDelete('cascade')->onUpdate('cascade');
-        });
-
-        // 16. MENSAJES IA
-        Schema::create('mensajes_ia', function (Blueprint $table) {
-            $table->increments('id_mensaje_ia');
-            $table->unsignedInteger('id_conversacion_ia');
-            $table->enum('rol_mensaje', ['usuario', 'asistente', 'sistema']);
-            $table->text('contenido_mensaje');
-            $table->json('acciones_mensaje')->nullable();
-            $table->dateTime('fecha_mensaje')->useCurrent();
-
-            $table->foreign('id_conversacion_ia')->references('id_conversacion_ia')->on('conversaciones_ia')->onDelete('cascade')->onUpdate('cascade');
-        });
     }
 
     /**
