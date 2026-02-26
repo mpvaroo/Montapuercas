@@ -72,12 +72,34 @@ new class extends Component {
 
     public function saveClass()
     {
-        $this->validate([
-            'id_tipo_clase' => 'required',
-            'titulo' => 'required',
-            'inicio' => 'required',
-            'cupo' => 'required|numeric|min:1',
-        ]);
+        $this->validate(
+            [
+                'id_tipo_clase' => 'required|exists:tipos_clase,id_tipo_clase',
+                'titulo' => 'required|string|max:150',
+                'instructor' => 'required|string|max:100',
+                'inicio' => 'required|date',
+                'fin' => 'nullable|date|after:inicio',
+                'cupo' => 'required|numeric|min:1|max:100',
+                'estado' => 'required|in:publicada,borrador,cancelada',
+            ],
+            [
+                'id_tipo_clase.required' => 'Debes seleccionar un tipo de clase.',
+                'id_tipo_clase.exists' => 'El tipo de clase seleccionado no es válido.',
+                'titulo.required' => 'El título de la clase es obligatorio.',
+                'titulo.max' => 'El título no puede exceder los 150 caracteres.',
+                'instructor.required' => 'El nombre del instructor es obligatorio.',
+                'instructor.max' => 'El nombre del instructor no puede exceder los 100 caracteres.',
+                'inicio.required' => 'La fecha de inicio es obligatoria.',
+                'inicio.date' => 'La fecha de inicio no es válida.',
+                'fin.date' => 'La fecha de fin no es válida.',
+                'fin.after' => 'La fecha de fin debe ser posterior a la de inicio.',
+                'cupo.required' => 'El cupo máximo es obligatorio.',
+                'cupo.min' => 'El cupo debe ser al menos de 1 persona.',
+                'cupo.max' => 'El cupo no puede superar las 100 personas.',
+                'estado.required' => 'El estado es obligatorio.',
+                'estado.in' => 'El estado seleccionado no es válido.',
+            ],
+        );
 
         $inicioDate = new \DateTime($this->inicio);
         $finDate = $this->fin ? new \DateTime($this->fin) : (clone $inicioDate)->modify('+1 hour');
@@ -253,6 +275,10 @@ new class extends Component {
                 <div class="field">
                     <label>Título de la Clase</label>
                     <input type="text" class="input" wire:model="titulo" required>
+                    @error('titulo')
+                        <span
+                            style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="field">
                     <label>Tipo de Clase</label>
@@ -262,25 +288,45 @@ new class extends Component {
                             <option value="{{ $tipo->id_tipo_clase }}">{{ $tipo->nombre_tipo_clase }}</option>
                         @endforeach
                     </select>
+                    @error('id_tipo_clase')
+                        <span
+                            style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="field">
                     <label>Instructor</label>
                     <input type="text" class="input" wire:model="instructor" required>
+                    @error('instructor')
+                        <span
+                            style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="row">
                     <div class="field">
                         <label>Fecha Inicio</label>
                         <input type="datetime-local" class="input" wire:model="inicio" required>
+                        @error('inicio')
+                            <span
+                                style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="field">
                         <label>Fecha Fin</label>
                         <input type="datetime-local" class="input" wire:model="fin">
+                        @error('fin')
+                            <span
+                                style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="row">
                     <div class="field">
                         <label>Cupo Máximo</label>
                         <input type="number" class="input" wire:model="cupo" required>
+                        @error('cupo')
+                            <span
+                                style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="field">
                         <label>Estado</label>
@@ -289,6 +335,10 @@ new class extends Component {
                             <option value="borrador">Borrador</option>
                             <option value="cancelada">Cancelada</option>
                         </select>
+                        @error('estado')
+                            <span
+                                style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="divider"></div>

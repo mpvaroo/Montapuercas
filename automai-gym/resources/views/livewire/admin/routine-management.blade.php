@@ -81,6 +81,29 @@ new class extends Component {
 
     public function saveRoutine()
     {
+        $this->validate(
+            [
+                'nombre' => 'required|string|max:140',
+                'objetivo' => 'required|string|in:salud,definir,volumen,rendimiento',
+                'nivel' => 'required|string|in:principiante,intermedio,avanzado',
+                'duracion' => 'nullable|integer|min:1|max:480',
+                'dia_semana' => 'nullable|string|in:lunes,martes,miercoles,jueves,viernes,sabado,domingo,descanso',
+                'instrucciones' => 'nullable|string|max:1000',
+            ],
+            [
+                'nombre.required' => 'El nombre de la rutina es obligatorio.',
+                'nombre.max' => 'El nombre no puede exceder los 140 caracteres.',
+                'objetivo.required' => 'Selecciona un objetivo principal.',
+                'objetivo.in' => 'El objetivo seleccionado no es válido.',
+                'nivel.required' => 'Selecciona un nivel de dificultad.',
+                'nivel.in' => 'El nivel seleccionado no es válido.',
+                'duracion.min' => 'La duración debe ser al menos 1 minuto.',
+                'duracion.max' => 'La duración máxima permitida es de 480 minutos.',
+                'dia_semana.in' => 'El día de la semana no es válido.',
+                'instrucciones.max' => 'Las instrucciones son demasiado largas.',
+            ],
+        );
+
         $data = [
             'id_usuario' => Auth::id(),
             'nombre_rutina_usuario' => $this->nombre,
@@ -246,6 +269,10 @@ new class extends Component {
                     <div class="field">
                         <label>Nombre de la Rutina</label>
                         <input type="text" class="field-input" wire:model="nombre" required>
+                        @error('nombre')
+                            <span
+                                style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="field">
                         <label>Objetivo Principal</label>
@@ -256,6 +283,10 @@ new class extends Component {
                             <option value="rendimiento">Rendimiento</option>
                             <option value="salud">Salud</option>
                         </select>
+                        @error('objetivo')
+                            <span
+                                style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
                         <div class="field">
@@ -265,6 +296,10 @@ new class extends Component {
                                 <option value="intermedio">Intermedio</option>
                                 <option value="avanzado">Avanzado</option>
                             </select>
+                            @error('nivel')
+                                <span
+                                    style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="field">
                             <label>Día Programado</label>
@@ -274,15 +309,27 @@ new class extends Component {
                                     <option value="{{ $day }}">{{ ucfirst($day) }}</option>
                                 @endforeach
                             </select>
+                            @error('dia_semana')
+                                <span
+                                    style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="field">
                             <label>Duración (min)</label>
                             <input type="number" class="field-input" wire:model="duracion">
+                            @error('duracion')
+                                <span
+                                    style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                     <div class="field">
                         <label>Instrucciones Generales</label>
                         <textarea class="field-input" wire:model="instrucciones" style="height: 60px;"></textarea>
+                        @error('instrucciones')
+                            <span
+                                style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="divider" style="height: 1px; background: rgba(239, 231, 214, 0.1); margin: 10px 0;">

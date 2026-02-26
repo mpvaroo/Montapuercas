@@ -52,11 +52,28 @@ new class extends Component {
 
     public function saveRoutine()
     {
-        $this->validate([
-            'nombre' => 'required|string|max:140',
-            'objetivo' => 'required',
-            'nivel' => 'required',
-        ]);
+        $this->validate(
+            [
+                'nombre' => 'required|string|max:140',
+                'objetivo' => 'required|string|in:salud,definir,volumen,rendimiento',
+                'nivel' => 'required|string|in:principiante,intermedio,avanzado',
+                'duracion' => 'nullable|integer|min:1|max:480',
+                'dia_semana' => 'nullable|string|in:lunes,martes,miercoles,jueves,viernes,sabado,domingo,descanso',
+                'instrucciones' => 'nullable|string|max:1000',
+            ],
+            [
+                'nombre.required' => 'El nombre de la rutina es obligatorio.',
+                'nombre.max' => 'El nombre no puede exceder los 140 caracteres.',
+                'objetivo.required' => 'Selecciona un objetivo principal.',
+                'objetivo.in' => 'El objetivo principal no es válido.',
+                'nivel.required' => 'Selecciona un nivel de dificultad.',
+                'nivel.in' => 'El nivel de dificultad no es válido.',
+                'duracion.min' => 'La duración debe ser al menos 1 minuto.',
+                'duracion.max' => 'La duración máxima permitida es de 480 minutos.',
+                'dia_semana.in' => 'El día programado no es válido.',
+                'instrucciones.max' => 'Las instrucciones son demasiado largas.',
+            ],
+        );
 
         $routine = RutinaUsuario::create([
             'id_usuario' => Auth::id(),
@@ -166,7 +183,8 @@ new class extends Component {
     <!-- Routine Cards Grid -->
     <div class="routines-grid">
         @forelse($routines as $index => $rutina)
-            <div class="routine-card {{ $index % 3 == 0 ? 'focus-top' : ($index % 3 == 2 ? 'full-width focus-low' : '') }}">
+            <div
+                class="routine-card {{ $index % 3 == 0 ? 'focus-top' : ($index % 3 == 2 ? 'full-width focus-low' : '') }}">
                 <img class="routine-img" src="{{ asset('img/rutina-' . (($index % 3) + 1) . '.png') }}"
                     alt="{{ $rutina->nombre_rutina_usuario }}">
                 <div class="routine-frame"></div>
@@ -226,8 +244,12 @@ new class extends Component {
                     <div class="modal-body">
                         <div class="field">
                             <label class="label">Nombre de la rutina</label>
-                            <input class="input-modal" type="text" wire:model="nombre" placeholder="Ej: Empuje Hipertrofia"
-                                required>
+                            <input class="input-modal" type="text" wire:model="nombre"
+                                placeholder="Ej: Empuje Hipertrofia" required>
+                            @error('nombre')
+                                <span
+                                    style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                             <div class="field">
@@ -238,6 +260,10 @@ new class extends Component {
                                     <option value="definir">Resistencia / Definir</option>
                                     <option value="salud">Salud General</option>
                                 </select>
+                                @error('objetivo')
+                                    <span
+                                        style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="field">
                                 <label class="label">Nivel</label>
@@ -246,12 +272,20 @@ new class extends Component {
                                     <option value="intermedio">Intermedio</option>
                                     <option value="avanzado">Avanzado</option>
                                 </select>
+                                @error('nivel')
+                                    <span
+                                        style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                             <div class="field">
                                 <label class="label">Duración (min)</label>
                                 <input class="input-modal" type="number" wire:model="duracion">
+                                @error('duracion')
+                                    <span
+                                        style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="field">
                                 <label class="label">Día programado</label>
@@ -261,11 +295,19 @@ new class extends Component {
                                         <option value="{{ $day }}">{{ ucfirst($day) }}</option>
                                     @endforeach
                                 </select>
+                                @error('dia_semana')
+                                    <span
+                                        style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Instrucciones</label>
                             <textarea class="input-modal" wire:model="instrucciones" style="height:60px;"></textarea>
+                            @error('instrucciones')
+                                <span
+                                    style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="divider"></div>
@@ -275,7 +317,8 @@ new class extends Component {
                             <div style="display:flex; gap:10px; margin-bottom:10px;">
                                 <input type="text" class="input-modal" placeholder="Filtrar ejercicios..."
                                     wire:model.live="exerciseSearch" style="height:38px;">
-                                <select wire:model.live="muscleGroup" class="input-modal" style="width:140px; height:38px;">
+                                <select wire:model.live="muscleGroup" class="input-modal"
+                                    style="width:140px; height:38px;">
                                     <option value="">Todos</option>
                                     @foreach ($muscleGroups as $mg)
                                         <option value="{{ $mg }}">{{ ucfirst($mg) }}</option>

@@ -71,6 +71,26 @@ new class extends Component {
 
     public function saveUser()
     {
+        $rules = [
+            'nombre' => 'required|string|max:255',
+            'correo' => 'required|email|max:255|unique:usuarios,correo_usuario' . ($this->editingUser !== 'new' ? ',' . $this->editingUser . ',id_usuario' : ''),
+            'estado' => 'required|in:activo,bloqueado,pendiente',
+            'id_rol' => 'nullable|exists:roles,id_rol',
+        ];
+
+        $messages = [
+            'nombre.required' => 'El nombre completo es obligatorio.',
+            'nombre.max' => 'El nombre no puede exceder los 255 caracteres.',
+            'correo.required' => 'El correo electrónico es obligatorio.',
+            'correo.email' => 'Debes introducir un correo electrónico válido.',
+            'correo.unique' => 'Este correo electrónico ya está registrado.',
+            'estado.required' => 'El estado es obligatorio.',
+            'estado.in' => 'El estado seleccionado no es válido.',
+            'id_rol.exists' => 'El rol seleccionado no existe.',
+        ];
+
+        $this->validate($rules, $messages);
+
         if ($this->editingUser === 'new') {
             $user = User::create([
                 'nombre_mostrado_usuario' => $this->nombre,
@@ -211,10 +231,18 @@ new class extends Component {
                 <div class="field">
                     <label>Nombre Completo</label>
                     <input type="text" class="input" wire:model="nombre">
+                    @error('nombre')
+                        <span
+                            style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="field">
                     <label>Correo Electrónico</label>
                     <input type="email" class="input" wire:model="correo">
+                    @error('correo')
+                        <span
+                            style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="row">
                     <div class="field">
@@ -225,6 +253,10 @@ new class extends Component {
                                 <option value="{{ $rol->id_rol }}">{{ ucfirst($rol->nombre_rol) }}</option>
                             @endforeach
                         </select>
+                        @error('id_rol')
+                            <span
+                                style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="field">
                         <label>Estado</label>
@@ -233,6 +265,10 @@ new class extends Component {
                             <option value="bloqueado">Bloqueado</option>
                             <option value="pendiente">Pendiente</option>
                         </select>
+                        @error('estado')
+                            <span
+                                style="color:#ef4444; font-size:11px; margin-top:4px; display:block;">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="divider"></div>
