@@ -13,17 +13,17 @@ class Profile extends Component
 {
     use ProfileValidationRules;
 
-    public string $name = '';
+    public string $nombre_mostrado_usuario = '';
 
-    public string $email = '';
+    public string $correo_usuario = '';
 
     /**
      * Mount the component.
      */
     public function mount(): void
     {
-        $this->name = Auth::user()->name;
-        $this->email = Auth::user()->email;
+        $this->nombre_mostrado_usuario = Auth::user()->nombre_mostrado_usuario;
+        $this->correo_usuario = Auth::user()->correo_usuario;
     }
 
     /**
@@ -33,17 +33,20 @@ class Profile extends Component
     {
         $user = Auth::user();
 
-        $validated = $this->validate($this->profileRules($user->id));
+        $validated = $this->validate(
+            $this->profileRules($user->id_usuario),
+            $this->profileMessages()
+        );
 
         $user->fill($validated);
 
-        if ($user->isDirty('email')) {
+        if ($user->isDirty('correo_usuario')) {
             $user->email_verified_at = null;
         }
 
         $user->save();
 
-        $this->dispatch('profile-updated', name: $user->name);
+        $this->dispatch('profile-updated', name: $user->nombre_mostrado_usuario);
     }
 
     /**
@@ -67,13 +70,13 @@ class Profile extends Component
     #[Computed]
     public function hasUnverifiedEmail(): bool
     {
-        return Auth::user() instanceof MustVerifyEmail && ! Auth::user()->hasVerifiedEmail();
+        return Auth::user() instanceof MustVerifyEmail && !Auth::user()->hasVerifiedEmail();
     }
 
     #[Computed]
     public function showDeleteUser(): bool
     {
-        return ! Auth::user() instanceof MustVerifyEmail
+        return !Auth::user() instanceof MustVerifyEmail
             || (Auth::user() instanceof MustVerifyEmail && Auth::user()->hasVerifiedEmail());
     }
 }

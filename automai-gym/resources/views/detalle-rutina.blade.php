@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="btn-row">
-                    
+
                     <button class="btn-ghost" onclick="toggleModal('modalEdit')">Editar rutina</button>
                     <button class="btn-ghost" onclick="toggleModal('modalAdd')">Añadir ejercicio</button>
                 </div>
@@ -80,7 +80,9 @@
                             <div class="muscle">
                                 {{ $ejercicio->grupo_muscular_principal
                                     ? ucfirst($ejercicio->grupo_muscular_principal)
-                                    : ($routine->origen_rutina === 'ia_coach' ? 'Generado por IA' : 'Sin grupo') }}
+                                    : ($routine->origen_rutina === 'ia_coach'
+                                        ? 'Generado por IA'
+                                        : 'Sin grupo') }}
                             </div>
                         </div>
                         <div class="params">
@@ -130,6 +132,16 @@
             <form action="{{ route('rutina.update', $routine->id_rutina_usuario) }}" method="POST" id="editRoutineForm">
                 @csrf
                 <div class="modal-body">
+                    @if ($errors->updateRoutine->any())
+                        <div
+                            style="background:rgba(255,0,0,0.1); border:1px solid rgba(255,0,0,0.2); padding:10px; border-radius:8px; margin-bottom:15px; color:#ff4d4d; font-size:12px;">
+                            <ul>
+                                @foreach ($errors->updateRoutine->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <div class="field">
                         <label class="label">Nombre de la rutina</label>
                         <input class="field-input" type="text" name="nombre_rutina_usuario"
@@ -138,8 +150,17 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div class="field">
                             <label class="label">Objetivo</label>
-                            <input class="field-input" type="text" name="objetivo_rutina_usuario"
-                                value="{{ $routine->objetivo_rutina_usuario }}">
+                            <select class="field-input" name="objetivo_rutina_usuario" required>
+                                <option value="salud"
+                                    {{ $routine->objetivo_rutina_usuario == 'salud' ? 'selected' : '' }}>Salud</option>
+                                <option value="definir"
+                                    {{ $routine->objetivo_rutina_usuario == 'definir' ? 'selected' : '' }}>Definir</option>
+                                <option value="volumen"
+                                    {{ $routine->objetivo_rutina_usuario == 'volumen' ? 'selected' : '' }}>Volumen</option>
+                                <option value="rendimiento"
+                                    {{ $routine->objetivo_rutina_usuario == 'rendimiento' ? 'selected' : '' }}>Rendimiento
+                                </option>
+                            </select>
                         </div>
                         <div class="field">
                             <label class="label">Nivel</label>
@@ -159,7 +180,7 @@
                         <div class="field">
                             <label class="label">Duración (min)</label>
                             <input class="field-input" type="number" name="duracion_estimada_minutos"
-                                value="{{ $routine->duracion_estimada_minutos }}">
+                                value="{{ $routine->duracion_estimada_minutos }}" min="1" max="480">
                         </div>
                         <div class="field">
                             <label class="label">Día programado</label>
@@ -199,6 +220,16 @@
                 id="addExerciseForm">
                 @csrf
                 <div class="modal-body">
+                    @if ($errors->addExercise->any())
+                        <div
+                            style="background:rgba(255,0,0,0.1); border:1px solid rgba(255,0,0,0.2); padding:10px; border-radius:8px; margin-bottom:15px; color:#ff4d4d; font-size:12px;">
+                            <ul>
+                                @foreach ($errors->addExercise->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <div class="field">
                         <label class="label">Buscar ejercicio</label>
                         <select class="field-input" name="id_ejercicio" required>
@@ -213,21 +244,24 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div class="field">
                             <label class="label">Series</label>
-                            <input class="field-input" type="number" name="series" value="3">
+                            <input class="field-input" type="number" name="series" value="3" min="1"
+                                max="50" required>
                         </div>
                         <div class="field">
                             <label class="label">Repeticiones</label>
-                            <input class="field-input" type="text" name="reps" placeholder="Ej: 10-12">
+                            <input class="field-input" type="text" name="reps" placeholder="Ej: 10-12" required>
                         </div>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div class="field">
                             <label class="label">Carga (kg)</label>
-                            <input class="field-input" type="number" name="peso" step="0.5" placeholder="0">
+                            <input class="field-input" type="number" name="peso" step="0.5" placeholder="0"
+                                min="0" max="1000">
                         </div>
                         <div class="field">
                             <label class="label">Descanso (s)</label>
-                            <input class="field-input" type="number" name="descanso" value="60">
+                            <input class="field-input" type="number" name="descanso" value="60" min="0"
+                                max="3600">
                         </div>
                     </div>
                     <div class="field">
@@ -256,24 +290,37 @@
             <form id="formEditEx" method="POST">
                 @csrf
                 <div class="modal-body">
+                    @if ($errors->updateExercise->any())
+                        <div
+                            style="background:rgba(255,0,0,0.1); border:1px solid rgba(255,0,0,0.2); padding:10px; border-radius:8px; margin-bottom:15px; color:#ff4d4d; font-size:12px;">
+                            <ul>
+                                @foreach ($errors->updateExercise->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div class="field">
                             <label class="label">Series</label>
-                            <input class="field-input" type="number" name="series" id="editExSeries">
+                            <input class="field-input" type="number" name="series" id="editExSeries" min="1"
+                                max="50" required>
                         </div>
                         <div class="field">
                             <label class="label">Repeticiones</label>
-                            <input class="field-input" type="text" name="reps" id="editExReps">
+                            <input class="field-input" type="text" name="reps" id="editExReps" required>
                         </div>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div class="field">
                             <label class="label">Carga (kg)</label>
-                            <input class="field-input" type="number" name="peso" step="0.5" id="editExPeso">
+                            <input class="field-input" type="number" name="peso" step="0.5" id="editExPeso"
+                                min="0" max="1000">
                         </div>
                         <div class="field">
                             <label class="label">Descanso (s)</label>
-                            <input class="field-input" type="number" name="descanso" id="editExDescanso">
+                            <input class="field-input" type="number" name="descanso" id="editExDescanso"
+                                min="0" max="3600">
                         </div>
                     </div>
                     <div class="field">
@@ -601,6 +648,18 @@
 
 @push('scripts')
     <script>
+        @if ($errors->updateRoutine->any())
+            toggleModal('modalEdit');
+        @elseif ($errors->addExercise->any())
+            toggleModal('modalAdd');
+        @elseif ($errors->updateExercise->any())
+            // Para editar ejercicio necesitamos que el form sepa el ID,
+            // pero si hay error, el modal se cerró. Como no tenemos el ID fácilmente aquí post-reload
+            // a menos que lo pasemos en la sesión, por ahora abrimos el modal de añadir como fallback
+            // o simplemente el de editar si logramos identificar el flujo.
+            toggleModal('modalEditEx');
+        @endif
+
         function toggleModal(id) {
             const m = document.getElementById(id);
             if (!m) return;

@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservasController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProgresoController;
+use App\Http\Controllers\RutinaController;
 
 
 // Página pública de bienvenida (sin autenticación)
@@ -35,44 +36,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('detalle-rutina', compact('routine', 'allExercises'));
     })->name('detalle-rutina');
 
-    Route::post('detalle-rutina/{id}/update', function (\Illuminate\Http\Request $request, $id) {
-        $routine = \App\Models\RutinaUsuario::findOrFail($id);
-        $routine->update($request->only([
-            'nombre_rutina_usuario',
-            'objetivo_rutina_usuario',
-            'nivel_rutina_usuario',
-            'duracion_estimada_minutos',
-            'instrucciones_rutina',
-            'dia_semana'
-        ]));
-        return back()->with('success', 'Rutina actualizada correctamente.');
-    })->name('rutina.update');
-
-    Route::post('detalle-rutina/{id}/add-exercise', function (\Illuminate\Http\Request $request, $id) {
-        $routine = \App\Models\RutinaUsuario::findOrFail($id);
-        $routine->ejercicios()->attach($request->id_ejercicio, [
-            'series_objetivo' => $request->series,
-            'repeticiones_objetivo' => $request->reps,
-            'peso_objetivo_kg' => $request->peso,
-            'descanso_segundos' => $request->descanso,
-            'notas_ejercicio' => $request->notas,
-            'orden_en_rutina' => $routine->ejercicios()->count() + 1
-        ]);
-        return back()->with('success', 'Ejercicio añadido.');
-    })->name('rutina.add_exercise');
-
-    Route::post('detalle-rutina/{id}/exercise/{exercise_id}/update', function (\Illuminate\Http\Request $request, $id, $exercise_id) {
-        $routine = \App\Models\RutinaUsuario::findOrFail($id);
-        $routine->ejercicios()->updateExistingPivot($exercise_id, [
-            'series_objetivo' => $request->series,
-            'repeticiones_objetivo' => $request->reps,
-            'peso_objetivo_kg' => $request->peso,
-            'descanso_segundos' => $request->descanso,
-            'notas_ejercicio' => $request->notas,
-        ]);
-        return back()->with('success', 'Ejercicio actualizado.');
-    })->name('rutina.exercise.update');
-
+    Route::post('detalle-rutina/{id}/update', [RutinaController::class, 'update'])->name('rutina.update');
+    Route::post('detalle-rutina/{id}/add-exercise', [RutinaController::class, 'addExercise'])->name('rutina.add_exercise');
+    Route::post('detalle-rutina/{id}/exercise/{exercise_id}/update', [RutinaController::class, 'updateExercise'])->name('rutina.exercise.update');
 
     Route::middleware(['admin'])->group(function () {
         Route::view('panel-admin', 'panel-admin')->name('panel-admin');

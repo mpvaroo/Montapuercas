@@ -22,30 +22,20 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
+            // Re-affirming gym rules as 'required' for registration (since trait has 'nullable')
             'objetivo_principal_usuario' => ['required', 'string', 'in:salud,definir,volumen,rendimiento'],
             'nivel_usuario' => ['required', 'string', 'in:principiante,intermedio,avanzado'],
             'dias_entrenamiento_semana_usuario' => ['required', 'integer', 'min:1', 'max:7'],
             'peso_kg_usuario' => ['required', 'numeric', 'min:30', 'max:300'],
             'altura_cm_usuario' => ['required', 'integer', 'min:100', 'max:250'],
-        ], [
-            'nombre_mostrado_usuario.unique' => 'Ese nombre de usuario ya está en uso.',
-            'nombre_mostrado_usuario.regex' => 'El nombre de usuario debe contener al menos una letra.',
-            'nombre_real_usuario.regex' => 'El nombre real debe contener al menos una letra.',
-            'correo_usuario.unique' => 'Ese correo electrónico ya está registrado.',
-            'telefono_usuario.required' => 'El teléfono es obligatorio.',
-            'telefono_usuario.min' => 'El teléfono debe tener al menos 9 caracteres.',
-            'telefono_usuario.max' => 'El teléfono no puede tener más de 20 caracteres.',
-            'telefono_usuario.unique' => 'Ese número de teléfono ya está registrado.',
-            'telefono_usuario.regex' => 'El formato del teléfono debe ser español válido.',
-            'telefono_usuario.not_in' => 'Ese número de teléfono no está permitido.',
-            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
-            'password.confirmed' => 'La confirmación de la contraseña no coincide.',
-            'password.required' => 'La contraseña es obligatoria.',
-            'peso_kg_usuario.min' => 'El peso mínimo debe ser 30 kg.',
-            'peso_kg_usuario.max' => 'Recomendamos verificar el peso ingresado.',
-            'altura_cm_usuario.min' => 'La altura mínima es de 100 cm.',
-            'altura_cm_usuario.max' => 'Recomendamos verificar la altura ingresada.',
-        ])->validate();
+        ], $this->profileMessages() + [
+                'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+                'password.confirmed' => 'La confirmación de la contraseña no coincide.',
+                'password.required' => 'La contraseña es obligatoria.',
+                // Specific overrides for registration context if needed
+                'peso_kg_usuario.required' => 'El peso es obligatorio para calcular tus rutinas.',
+                'altura_cm_usuario.required' => 'La altura es obligatoria para calcular tus rutinas.',
+            ])->validate();
 
         return \Illuminate\Support\Facades\DB::transaction(function () use ($input) {
             $user = User::create([

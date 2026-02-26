@@ -1,0 +1,103 @@
+﻿@extends('layouts.app')
+
+@section('title', 'Detalle de Rutina')
+
+@section('content')
+    <div class="main">
+        <div>
+            <header class="hero">
+                <a href="{{ route('rutinas') }}"
+                    style="color:rgba(239,231,214,.5); text-decoration:none; font-size:12px; margin-bottom:8px; display:block;">&larr;
+                    Volver a Rutinas</a>
+                <h1>Detalle de Rutina</h1>
+                <p>Constancia tÃ©cnica, evoluciÃ³n real.</p>
+            </header>
+
+            <div class="section-title">
+                <div class="left">
+                    <span class="dot"></span>
+                    <span>ConfiguraciÃ³n de la Rutina</span>
+                </div>
+                <div class="pill">{{ $routine->origen_rutina === 'ia_coach' ? 'Generada por IA' : 'Plantilla / Usuario' }}
+                </div>
+            </div>
+
+            <section class="panel">
+                <div class="rutina-head">
+                    <div class="rutina-title">
+                        <h2>{{ $routine->nombre_rutina_usuario }}</h2>
+                        <div class="sub">{{ $routine->instrucciones_rutina ?? 'Sin instrucciones adicionales.' }}</div>
+                    </div>
+                    <div class="chips">
+                        <span class="tag green">Nivel {{ ucfirst($routine->nivel_rutina_usuario) }}</span>
+                        <span class="tag bronze">{{ $routine->duracion_estimada_minutos }} min aprox.</span>
+                    </div>
+                </div>
+
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="k">Frecuencia</div>
+                        <div class="v">
+                            {{ $routine->dia_semana ? 'Semanal (' . ucfirst($routine->dia_semana) . ')' : 'Libre' }}</div>
+                    </div>
+                    <div class="metric">
+                        <div class="k">Intensidad</div>
+                        <div class="v">Objetivo: {{ ucfirst($routine->objetivo_rutina_usuario) }}</div>
+                    </div>
+                    <div class="metric">
+                        <div class="k">Ejercicios</div>
+                        <div class="v">{{ $routine->ejercicios->count() }} bloques</div>
+                    </div>
+                    <div class="metric">
+                        <div class="k">Origen</div>
+                        <div class="v">{{ ucfirst($routine->origen_rutina) }}</div>
+                    </div>
+                </div>
+
+                <div class="btn-row">
+
+                    <button class="btn-ghost" onclick="toggleModal('modalEdit')">Editar rutina</button>
+                    <button class="btn-ghost" onclick="toggleModal('modalAdd')">AÃ±adir ejercicio</button>
+                </div>
+            </section>
+
+            <div class="section-title">
+                <div class="left">
+                    <span class="dot"></span>
+                    <span>Bloques de Entrenamiento</span>
+                </div>
+            </div>
+
+            <div class="list">
+                @forelse($routine->ejercicios as $index => $ejercicio)
+                    <article class="item">
+                        <div class="num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</div>
+                        <div class="info">
+                            <div class="name">
+                                {{-- Siempre mostramos el nombre real del ejercicio como tÃ­tulo --}}
+                                {{ $ejercicio->nombre_ejercicio }}
+                            </div>
+                            <div class="muscle">
+                                {{ $ejercicio->grupo_muscular_principal
+                                    ? ucfirst($ejercicio->grupo_muscular_principal)
+                                    : ($routine->origen_rutina === 'ia_coach'
+                                        ? 'Generado por IA'
+                                        : 'Sin grupo') }}
+                            </div>
+                        </div>
+                        <div class="params">
+                            <div class="p">
+                                <div class="k">Series</div>
+                                <div class="v">{{ $ejercicio->pivot->series_objetivo }}</div>
+                            </div>
+                            <div class="p">
+                                <div class="k">Reps</div>
+                                <div class="v">{{ $ejercicio->pivot->repeticiones_objetivo }}</div>
+                            </div>
+                            <div class="p">
+                                <div class="k">Carga</div>
+                                <div class="v">{{ $ejercicio->pivot->peso_objetivo_kg ?? '0' }} kg</div>
+                            </div>
+                            <div class="p">
+                                <div class="k">Descanso</div>
+                                <div class="v">{{ $ejercicio->pivot->descanso_segundos ?? '60
