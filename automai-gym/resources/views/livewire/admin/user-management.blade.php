@@ -115,6 +115,21 @@ new class extends Component {
         $this->dispatch('notify', 'Usuario guardado correctamente.');
     }
 
+    public function deleteUser($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Prevent deleting oneself
+        if ($user->id_usuario === \Illuminate\Support\Facades\Auth::id()) {
+            $this->dispatch('error', 'No puedes eliminar tu propia cuenta.');
+            return;
+        }
+
+        $user->delete();
+        $this->dispatch('notify', 'Usuario eliminado correctamente.');
+        $this->resetPage();
+    }
+
     public function toggleStatus($id)
     {
         $user = User::findOrFail($id);
@@ -210,6 +225,8 @@ new class extends Component {
                                 <div class="actions">
                                     <button class="mini-btn warn"
                                         wire:click="editUser({{ $user->id_usuario }})">Edit</button>
+                                    <button class="mini-btn danger" wire:click="deleteUser({{ $user->id_usuario }})"
+                                        onclick="confirm('¿Estás seguro de que deseas eliminar a este usuario permanentemente? Esta acción no se puede deshacer.') || event.stopImmediatePropagation()">X</button>
                                 </div>
                             </td>
                         </tr>
