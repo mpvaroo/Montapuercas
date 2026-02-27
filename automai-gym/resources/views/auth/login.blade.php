@@ -245,6 +245,8 @@
 
         @if (session('status'))
             <div class="msg show ok" id="uiMsg">{{ session('status') }}</div>
+        @elseif ($errors->has('correo_usuario'))
+            <div class="msg show err" id="uiMsg">{{ $errors->first('correo_usuario') }}</div>
         @elseif ($errors->any())
             <div class="msg show err" id="uiMsg">Los datos son incorrectos</div>
         @else

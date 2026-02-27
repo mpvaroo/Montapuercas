@@ -39,6 +39,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('detalle-rutina/{id}/update', [RutinaController::class, 'update'])->name('rutina.update');
     Route::post('detalle-rutina/{id}/add-exercise', [RutinaController::class, 'addExercise'])->name('rutina.add_exercise');
     Route::post('detalle-rutina/{id}/exercise/{exercise_id}/update', [RutinaController::class, 'updateExercise'])->name('rutina.exercise.update');
+    Route::delete('detalle-rutina/{id}/exercise/{exercise_id}/remove', [RutinaController::class, 'removeExercise'])->name('rutina.exercise.remove');
 
     Route::middleware(['admin'])->group(function () {
         Route::view('panel-admin', 'panel-admin')->name('panel-admin');

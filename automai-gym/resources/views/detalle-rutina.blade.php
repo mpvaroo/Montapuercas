@@ -54,11 +54,17 @@
                     </div>
                 </div>
 
+                @if($routine->origen_rutina !== 'plantilla')
                 <div class="btn-row">
-
                     <button class="btn-ghost" onclick="toggleModal('modalEdit')">Editar rutina</button>
                     <button class="btn-ghost" onclick="toggleModal('modalAdd')">Añadir ejercicio</button>
                 </div>
+                @else
+                <div style="margin-top:16px; padding:12px 16px; border-radius:10px; background:rgba(190,145,85,0.10); border:1px solid rgba(190,145,85,0.25); color:rgba(190,145,85,0.90); font-size:12px; display:flex; align-items:center; gap:10px;">
+                    <span style="font-size:16px;">🔒</span>
+                    Esta es una <strong>plantilla pública</strong>. No puedes añadir, editar ni eliminar sus ejercicios.
+                </div>
+                @endif
             </section>
 
             <div class="section-title">
@@ -104,9 +110,17 @@
                             </div>
                         </div>
                         <div class="item-actions">
+                            @if($routine->origen_rutina !== 'plantilla')
                             <button class="mini"
-                                onclick="editExerciseBlock({{ json_encode($ejercicio->pivot) }}, '{{ $ejercicio->nombre_ejercicio }}', {{ $ejercicio->id_ejercicio }})">Editar
-                                bloque</button>
+                                onclick="editExerciseBlock({{ json_encode($ejercicio->pivot) }}, '{{ $ejercicio->nombre_ejercicio }}', {{ $ejercicio->id_ejercicio }})">Editar bloque</button>
+                            <form method="POST"
+                                action="{{ route('rutina.exercise.remove', [$routine->id_rutina_usuario, $ejercicio->id_ejercicio]) }}"
+                                onsubmit="return confirm('¿Eliminar este ejercicio de la rutina?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="mini" style="border-color:rgba(239,68,68,0.3); color:#ef4444;">Eliminar</button>
+                            </form>
+                            @endif
                         </div>
                     </article>
                 @empty
@@ -249,7 +263,7 @@
                         </div>
                         <div class="field">
                             <label class="label">Repeticiones</label>
-                            <input class="field-input" type="text" name="reps" placeholder="Ej: 10-12" required>
+                            <input class="field-input" type="number" name="reps" placeholder="Ej: 10" min="1" max="999" required>
                         </div>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
@@ -308,7 +322,7 @@
                         </div>
                         <div class="field">
                             <label class="label">Repeticiones</label>
-                            <input class="field-input" type="text" name="reps" id="editExReps" required>
+                            <input class="field-input" type="number" name="reps" id="editExReps" min="1" max="999" required>
                         </div>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">

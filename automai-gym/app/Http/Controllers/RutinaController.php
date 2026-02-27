@@ -28,6 +28,11 @@ class RutinaController extends Controller
         ]);
 
         $routine = RutinaUsuario::findOrFail($id);
+
+        if ($routine->origen_rutina === 'plantilla') {
+            return back()->with('error', 'No puedes modificar una plantilla p\u00fablica.');
+        }
+
         $routine->update($request->only([
             'nombre_rutina_usuario',
             'objetivo_rutina_usuario',
@@ -48,7 +53,7 @@ class RutinaController extends Controller
         $request->validateWithBag('addExercise', [
             'id_ejercicio' => 'required|exists:ejercicios,id_ejercicio',
             'series' => 'required|integer|min:1|max:50',
-            'reps' => 'required|string|max:50',
+            'reps' => 'required|integer|min:1|max:999',
             'peso' => 'nullable|numeric|min:0|max:1000',
             'descanso' => 'nullable|integer|min:0|max:3600',
             'notas' => 'nullable|string|max:500',
@@ -58,12 +63,18 @@ class RutinaController extends Controller
             'series.min' => 'Las series deben ser al menos 1.',
             'series.required' => 'Las series son obligatorias.',
             'reps.required' => 'Las repeticiones son obligatorias.',
-            'reps.max' => 'Las repeticiones son demasiado largas.',
+            'reps.integer' => 'Las repeticiones deben ser un número entero.',
+            'reps.min' => 'Las repeticiones deben ser al menos 1.',
+            'reps.max' => 'Las repeticiones no pueden superar 999.',
             'peso.min' => 'El peso no puede ser negativo.',
             'descanso.min' => 'El descanso no puede ser negativo.',
         ]);
 
         $routine = RutinaUsuario::findOrFail($id);
+
+        if ($routine->origen_rutina === 'plantilla') {
+            return back()->with('error', 'No puedes modificar los ejercicios de una plantilla p\u00fablica.');
+        }
 
         $routine->ejercicios()->attach($request->id_ejercicio, [
             'series_objetivo' => $request->series,
@@ -84,7 +95,7 @@ class RutinaController extends Controller
     {
         $request->validateWithBag('updateExercise', [
             'series' => 'required|integer|min:1|max:50',
-            'reps' => 'required|string|max:50',
+            'reps' => 'required|integer|min:1|max:999',
             'peso' => 'nullable|numeric|min:0|max:1000',
             'descanso' => 'nullable|integer|min:0|max:3600',
             'notas' => 'nullable|string|max:500',
@@ -92,11 +103,18 @@ class RutinaController extends Controller
             'series.min' => 'Las series deben ser al menos 1.',
             'series.required' => 'Las series son obligatorias.',
             'reps.required' => 'Las repeticiones son obligatorias.',
+            'reps.integer' => 'Las repeticiones deben ser un número entero.',
+            'reps.min' => 'Las repeticiones deben ser al menos 1.',
+            'reps.max' => 'Las repeticiones no pueden superar 999.',
             'peso.min' => 'El peso no puede ser negativo.',
             'descanso.min' => 'El descanso no puede ser negativo.',
         ]);
 
         $routine = RutinaUsuario::findOrFail($id);
+
+        if ($routine->origen_rutina === 'plantilla') {
+            return back()->with('error', 'No puedes modificar los ejercicios de una plantilla p\u00fablica.');
+        }
 
         $routine->ejercicios()->updateExistingPivot($exercise_id, [
             'series_objetivo' => $request->series,
@@ -107,5 +125,21 @@ class RutinaController extends Controller
         ]);
 
         return back()->with('success', 'Detalle del ejercicio actualizado.');
+    }
+
+    /**
+     * Remove an exercise from a routine (blocked for plantillas).
+     */
+    public function removeExercise(Request $request, $id, $exercise_id)
+    {
+        $routine = RutinaUsuario::findOrFail($id);
+
+        if ($routine->origen_rutina === 'plantilla') {
+            return back()->with('error', 'No puedes modificar los ejercicios de una plantilla pública.');
+        }
+
+        $routine->ejercicios()->detach($exercise_id);
+
+        return back()->with('success', 'Ejercicio eliminado de la rutina.');
     }
 }

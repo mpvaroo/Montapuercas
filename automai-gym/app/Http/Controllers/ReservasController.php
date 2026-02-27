@@ -16,10 +16,13 @@ class ReservasController extends Controller
     /**
      * Display a listing of upcoming classes and user's reservations.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $now = Carbon::now();
+
+        // Filtro activo: mis / disponibles / todas (default)
+        $ver = in_array($request->get('ver'), ['mis', 'disponibles', 'todas']) ? $request->get('ver') : 'todas';
 
         // Clases futuras disponibles para reservar
         $clases = ClaseGimnasio::with('tipoClase')
@@ -41,7 +44,7 @@ class ReservasController extends Controller
             ->get()
             ->filter(fn($r) => $r->clase !== null); // solo las que tienen clase asociada
 
-        return view('reservas', compact('clases', 'reservasUsuarioIds', 'misReservas'));
+        return view('reservas', compact('clases', 'reservasUsuarioIds', 'misReservas', 'ver'));
     }
 
     /**

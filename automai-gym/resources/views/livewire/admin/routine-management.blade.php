@@ -87,7 +87,7 @@ new class extends Component {
                 'objetivo' => 'required|string|in:salud,definir,volumen,rendimiento',
                 'nivel' => 'required|string|in:principiante,intermedio,avanzado',
                 'duracion' => 'nullable|integer|min:1|max:480',
-                'dia_semana' => 'nullable|string|in:lunes,martes,miercoles,jueves,viernes,sabado,domingo,descanso',
+                'dia_semana' => 'required|string|in:lunes,martes,miercoles,jueves,viernes,sabado,domingo,descanso',
                 'instrucciones' => 'nullable|string|max:1000',
             ],
             [
@@ -99,6 +99,7 @@ new class extends Component {
                 'nivel.in' => 'El nivel seleccionado no es válido.',
                 'duracion.min' => 'La duración debe ser al menos 1 minuto.',
                 'duracion.max' => 'La duración máxima permitida es de 480 minutos.',
+                'dia_semana.required' => 'El día de la semana es obligatorio.',
                 'dia_semana.in' => 'El día de la semana no es válido.',
                 'instrucciones.max' => 'Las instrucciones son demasiado largas.',
             ],
@@ -303,8 +304,8 @@ new class extends Component {
                         </div>
                         <div class="field">
                             <label>Día Programado</label>
-                            <select wire:model="dia_semana" class="field-input">
-                                <option value="">Sin asignar</option>
+                            <select wire:model="dia_semana" class="field-input" required>
+                                <option value="">Seleccionar día...</option>
                                 @foreach ($days as $day)
                                     <option value="{{ $day }}">{{ ucfirst($day) }}</option>
                                 @endforeach
